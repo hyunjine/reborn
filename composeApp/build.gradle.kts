@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -42,6 +43,9 @@ kotlin {
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.jetbrains.navigation3.ui)
+            implementation("org.jetbrains.androidx.navigation3:navigation3-runtime:1.0.0-alpha05")
+            implementation(libs.kotlin.serialization)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -79,4 +83,3 @@ android {
 dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
-

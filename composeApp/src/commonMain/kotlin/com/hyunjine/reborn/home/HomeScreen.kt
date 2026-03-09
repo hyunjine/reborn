@@ -19,9 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hyunjine.reborn.core.navigation.NavKey
 import kotlinx.serialization.Serializable
 import androidx.compose.ui.tooling.preview.Preview
+import com.hyunjine.reborn.core.navigation.AppNavKey
 import reborn.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import kotlinx.collections.immutable.persistentListOf
@@ -33,7 +33,7 @@ import org.koin.compose.viewmodel.koinViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Serializable
-object HomeScreen : NavKey {
+object HomeScreen : AppNavKey {
 
     /**
      * UiEvents for the HomeScreen.
@@ -72,11 +72,13 @@ object HomeScreen : NavKey {
      * Stateful Wrapper for the HomeScreen.
      * @param viewModel The Koin ViewModel.
      * @param onCenterClick Callback when a center is clicked.
+     * @param onNavClick Callback when a navigation item is clicked.
      */
     @Composable
     operator fun invoke(
         viewModel: HomeViewModel = koinViewModel(),
-        onCenterClick: (Long) -> Unit = {}
+        onCenterClick: (Long) -> Unit = {},
+        onNavClick: (String) -> Unit = {}
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -85,6 +87,7 @@ object HomeScreen : NavKey {
             onEvent = { event ->
                 when (event) {
                     is UiEvent.CenterClicked -> onCenterClick(event.id)
+                    is UiEvent.NavClicked -> onNavClick(event.route)
                     else -> viewModel.event(event)
                 }
             }

@@ -47,6 +47,10 @@ kotlin-native-windows-*/
 /package-temp/
 /dist/
 
+# [Kotlin Multiplatform]
+*.klib
+.kotlin/
+
 # [IntelliJ IDEA]
 .idea/modules.xml
 .idea/jarRepositories.xml
