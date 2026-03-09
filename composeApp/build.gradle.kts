@@ -48,12 +48,12 @@ kotlin {
 
 android {
     namespace = "com.hyunjine.reborn"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hyunjine.reborn"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk = 26
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }
