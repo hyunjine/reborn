@@ -2,13 +2,34 @@ package com.hyunjine.reborn.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -16,16 +37,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.serialization.Serializable
-import androidx.compose.ui.tooling.preview.Preview
-import com.hyunjine.reborn.core.navigation.AppNavKey
-import reborn.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.painterResource
+import androidx.navigation3.runtime.NavKey
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import reborn.composeapp.generated.resources.Res
+import reborn.composeapp.generated.resources.ic_location
+import reborn.composeapp.generated.resources.ic_location_header
+import reborn.composeapp.generated.resources.ic_nav_home
+import reborn.composeapp.generated.resources.ic_nav_my
+import reborn.composeapp.generated.resources.ic_nav_price
+import reborn.composeapp.generated.resources.ic_notification
+import reborn.composeapp.generated.resources.ic_search
 
 /**
  * HomeScreen for the Re-born app.
@@ -33,7 +61,7 @@ import org.koin.compose.viewmodel.koinViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Serializable
-object HomeScreen : AppNavKey {
+object HomeScreen : NavKey {
 
     /**
      * UiEvents for the HomeScreen.
@@ -243,18 +271,11 @@ fun HomeTopBar(
         
         Row {
             IconButton(onClick = onSearchClick) {
-                Box(modifier = Modifier.size(24.dp)) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_search_vector1),
-                        contentDescription = "Search",
-                        modifier = Modifier.padding(3.dp).fillMaxSize()
-                    )
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_search_vector2),
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 16.dp, top = 16.dp).size(6.dp)
-                    )
-                }
+                Icon(
+                    painter = painterResource(Res.drawable.ic_search),
+                    contentDescription = "Search",
+                    modifier = Modifier.size(24.dp)
+                )
             }
             Box {
                 IconButton(onClick = onNotificationClick) {
