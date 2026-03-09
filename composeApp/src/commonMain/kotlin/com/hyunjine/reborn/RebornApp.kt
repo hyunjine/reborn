@@ -13,6 +13,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.hyunjine.reborn.core.di.appModule
 import com.hyunjine.reborn.home.HomeScreen
+import com.hyunjine.reborn.my.MyScreen
 import com.hyunjine.reborn.regist_store.RegistStoreScreen
 import com.hyunjine.reborn.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
@@ -36,7 +37,12 @@ fun RebornApp() {
                     entryProvider = entryProvider {
                         entry<HomeScreen> {
                             HomeScreen(
-                                onCenterClick = { id -> backStack.add(StoreDetailScreen(id)) }
+                                onCenterClick = { id -> backStack.add(StoreDetailScreen(id)) },
+                                onNavClick = { route ->
+                                    when (route) {
+                                        "my" -> backStack.add(MyScreen)
+                                    }
+                                }
                             )
                         }
                         entry<StoreDetailScreen> { screen ->
@@ -44,6 +50,16 @@ fun RebornApp() {
                         }
                         entry<RegistStoreScreen> {
                             RegistStoreScreen(onBack = { backStack.removeLastOrNull() })
+                        }
+                        entry<MyScreen> {
+                            MyScreen(
+                                onRegisterStore = { backStack.add(RegistStoreScreen) },
+                                onNavClick = { route ->
+                                    when (route) {
+                                        "home" -> backStack.removeLastOrNull()
+                                    }
+                                }
+                            )
                         }
                     }
                 )
@@ -58,6 +74,7 @@ private val navConfig = SavedStateConfiguration {
             subclass(HomeScreen::class, HomeScreen.serializer())
             subclass(StoreDetailScreen::class, StoreDetailScreen.serializer())
             subclass(RegistStoreScreen::class, RegistStoreScreen.serializer())
+            subclass(MyScreen::class, MyScreen.serializer())
         }
     }
 }
