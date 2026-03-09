@@ -31,6 +31,7 @@ import org.koin.compose.viewmodel.koinViewModel
  * HomeScreen for the Re-born app.
  * Displays a list of garbage centers and filter chips.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Serializable
 object HomeScreen : NavKey {
 
@@ -275,6 +276,7 @@ fun HomeTopBar(
  * @param selectedFilter The currently selected filter.
  * @param onFilterSelected Callback when a filter is selected.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterChips(
     filters: List<String>,
