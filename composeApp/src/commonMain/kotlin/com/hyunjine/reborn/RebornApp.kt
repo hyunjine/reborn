@@ -13,6 +13,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.hyunjine.reborn.core.di.appModule
 import com.hyunjine.reborn.home.HomeScreen
+import com.hyunjine.reborn.regist_store.RegistStoreScreen
 import com.hyunjine.reborn.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -41,6 +42,9 @@ fun RebornApp() {
                         entry<StoreDetailScreen> { screen ->
                             screen.invoke(onBack = { backStack.removeLastOrNull() })
                         }
+                        entry<RegistStoreScreen> {
+                            RegistStoreScreen(onBack = { backStack.removeLastOrNull() })
+                        }
                     }
                 )
             }
@@ -53,6 +57,7 @@ private val navConfig = SavedStateConfiguration {
         polymorphic(NavKey::class) {
             subclass(HomeScreen::class, HomeScreen.serializer())
             subclass(StoreDetailScreen::class, StoreDetailScreen.serializer())
+            subclass(RegistStoreScreen::class, RegistStoreScreen.serializer())
         }
     }
 }
