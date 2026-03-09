@@ -1,5 +1,8 @@
 package com.hyunjine.reborn
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,10 +15,10 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.hyunjine.reborn.core.di.appModule
-import com.hyunjine.reborn.home.HomeScreen
-import com.hyunjine.reborn.my.MyScreen
-import com.hyunjine.reborn.regist_store.RegistStoreScreen
-import com.hyunjine.reborn.store_detail.StoreDetailScreen
+import com.hyunjine.reborn.ui.home.HomeScreen
+import com.hyunjine.reborn.ui.my.MyScreen
+import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
+import com.hyunjine.reborn.ui.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
@@ -34,6 +37,33 @@ fun RebornApp() {
                 val backStack = rememberNavBackStack(configuration = navConfig, HomeScreen)
                 NavDisplay(
                     backStack = backStack,
+                    transitionSpec = {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                            animationSpec = tween(300)
+                        ) togetherWith slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                            animationSpec = tween(600)
+                        )
+                    },
+                    popTransitionSpec = {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(300)
+                        ) togetherWith slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(300)
+                        )
+                    },
+                    predictivePopTransitionSpec = {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(300)
+                        ) togetherWith slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(300)
+                        )
+                    },
                     entryProvider = entryProvider {
                         entry<HomeScreen> {
                             HomeScreen(

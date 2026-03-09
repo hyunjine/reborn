@@ -1,5 +1,6 @@
-package com.hyunjine.reborn.regist_store
+package com.hyunjine.reborn.ui.regist_store
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -256,7 +256,7 @@ private fun PhotoSection(
             onClick = onAddPhoto,
             modifier = Modifier.size(96.dp),
             shape = RoundedCornerShape(14.dp),
-            border = androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFD1D5DC)),
+            border = BorderStroke(2.dp, Color(0xFFD1D5DC)),
             colors = ButtonDefaults.outlinedButtonColors(containerColor = Color(0xFFF9FAFB))
         ) {
             Column(
@@ -707,7 +707,7 @@ private fun PriceSection(
             onClick = onAddPriceItem,
             modifier = Modifier.fillMaxWidth().height(48.dp),
             shape = RoundedCornerShape(14.dp),
-            border = androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFD1D5DC)),
+            border = BorderStroke(2.dp, Color(0xFFD1D5DC)),
             colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
         ) {
             Icon(

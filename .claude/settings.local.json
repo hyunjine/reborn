@@ -4,7 +4,14 @@
       "Bash(claude mcp:*)",
       "Bash(curl:*)",
       "mcp__figma__get_design_context",
-      "mcp__figma__get_screenshot"
+      "mcp__figma__get_screenshot",
+      "Bash(./gradlew composeApp:compileKotlinAndroid:*)",
+      "Bash(./gradlew composeApp:compileDebugKotlinAndroid:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(./gradlew compileDebugKotlinAndroid:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

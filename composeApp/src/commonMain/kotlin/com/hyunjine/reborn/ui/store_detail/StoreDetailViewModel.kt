@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.store_detail
+package com.hyunjine.reborn.ui.store_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

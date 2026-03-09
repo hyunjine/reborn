@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.home
+package com.hyunjine.reborn.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -418,6 +418,9 @@ fun GarbageCenterItem(
 fun HomeScreenPreview() {
     HomeScreen(
         uiState = HomeModel(
+            location = "개포동",
+            filters = persistentListOf(),
+            selectedFilter = "전체",
             centers = persistentListOf(
                 GarbageCenterModel(
                     id = 1,
@@ -427,6 +430,56 @@ fun HomeScreenPreview() {
                     prices = persistentListOf(
                         PriceModel("고철", "450원/kg"),
                         PriceModel("알루미늄", "1,800원/kg")
+                    )
+                ),
+                GarbageCenterModel(
+                    id = 2,
+                    name = "금성스크랩",
+                    imageUrl = "",
+                    distance = "0.8km",
+                    prices = persistentListOf(
+                        PriceModel("고철", "480원/kg"),
+                        PriceModel("스텐", "1,200원/kg")
+                    )
+                ),
+                GarbageCenterModel(
+                    id = 3,
+                    name = "대한재활용센터",
+                    imageUrl = "",
+                    distance = "1.2km",
+                    prices = persistentListOf(
+                        PriceModel("구리", "8,800원/kg"),
+                        PriceModel("황동", "5,200원/kg")
+                    )
+                ),
+                GarbageCenterModel(
+                    id = 4,
+                    name = "진성고물상",
+                    imageUrl = "",
+                    distance = "1.5km",
+                    prices = persistentListOf(
+                        PriceModel("고철", "470원/kg"),
+                        PriceModel("구리", "8,600원/kg")
+                    )
+                ),
+                GarbageCenterModel(
+                    id = 5,
+                    name = "한강재활용",
+                    imageUrl = "",
+                    distance = "2.3km",
+                    prices = persistentListOf(
+                        PriceModel("기판", "12,000원/kg"),
+                        PriceModel("알루미늄", "1,750원/kg")
+                    )
+                ),
+                GarbageCenterModel(
+                    id = 6,
+                    name = "강남스크랩",
+                    imageUrl = "",
+                    distance = "3.1km",
+                    prices = persistentListOf(
+                        PriceModel("구리", "8,700원/kg"),
+                        PriceModel("스텐", "1,300원/kg")
                     )
                 )
             )

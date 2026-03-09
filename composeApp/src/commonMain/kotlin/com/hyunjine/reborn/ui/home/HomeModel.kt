@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.home
+package com.hyunjine.reborn.ui.home
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.regist_store
+package com.hyunjine.reborn.ui.regist_store
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

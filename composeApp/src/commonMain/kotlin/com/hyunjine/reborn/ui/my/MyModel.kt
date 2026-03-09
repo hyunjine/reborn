@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.my
+package com.hyunjine.reborn.ui.my
 
 /**
  * 내 정보 화면의 UI 상태 모델.

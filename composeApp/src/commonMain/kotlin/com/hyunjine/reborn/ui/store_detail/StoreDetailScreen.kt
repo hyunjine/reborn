@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.store_detail
+package com.hyunjine.reborn.ui.store_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

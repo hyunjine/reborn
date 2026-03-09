@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.my
+package com.hyunjine.reborn.ui.my
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.hyunjine.reborn.ui.home.HomeBottomNavigation
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -135,7 +136,7 @@ object MyScreen : NavKey {
     ) {
         Scaffold(
             bottomBar = {
-                com.hyunjine.reborn.home.HomeBottomNavigation(
+                HomeBottomNavigation(
                     selectedRoute = "my",
                     onNavClick = { onEvent(UiEvent.NavClicked(it)) }
                 )

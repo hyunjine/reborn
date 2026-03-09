@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.home
+package com.hyunjine.reborn.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
