@@ -1,0 +1,67 @@
+# [Kotlin/JVM]
+*.class
+*.log
+*.pyc
+*.swp
+.gradle
+build/
+!**/src/**/build/
+/buildsrc/build/
+.incremental
+.main.kts.compiled.cache
+
+# [Android]
+.navigation/
+captures/
+output.json
+.externalNativeBuild
+.cxx
+local.properties
+*.keystore
+!debug.keystore
+assetStore/
+/captures/
+*.apk
+*.aar
+*.ap_
+*.der
+
+# [iOS / Xcode]
+# 코포짓(CocoaPods)이나 Kotlin Native 빌드 관련
+.konan/
+kotlin-native-macos-*/
+kotlin-native-linux-*/
+kotlin-native-windows-*/
+**/iosApp/iosApp.xcworkspace/
+**/iosApp/Pods/
+**/iosApp/DerivedData/
+**/iosApp/build/
+**/iosApp/*.moved-aside
+**/iosApp/*.xcuserstate
+**/iosApp/.lsbundle/
+**/iosApp/.generated/
+.DS_Store
+
+# [Desktop / Compose HTML]
+/build/
+/package-temp/
+/dist/
+
+# [IntelliJ IDEA]
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+out/
+.idea/shelf/
+.idea/workspace.xml
+
+# [MCP / AI Tools]
+# Gemini CLI나 MCP 서버 관련 로컬 설정이 있다면 제외
+.mcp/
+mcp-config.json
+# 보안을 위해 API 키가 포함된 파일은 반드시 제외
+.env
