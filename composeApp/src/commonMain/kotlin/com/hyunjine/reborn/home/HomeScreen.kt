@@ -32,8 +32,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,51 +58,51 @@ import reborn.composeapp.generated.resources.ic_notification
 import reborn.composeapp.generated.resources.ic_search
 
 /**
- * HomeScreen for the Re-born app.
- * Displays a list of garbage centers and filter chips.
+ * Re-born 앱의 홈 화면입니다.
+ * 고물상 목록과 필터 칩을 표시합니다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Serializable
 object HomeScreen : NavKey {
 
     /**
-     * UiEvents for the HomeScreen.
+     * 홈 화면에서 발생하는 UI 이벤트들입니다.
      */
     sealed interface UiEvent {
         /**
-         * Event when a filter is selected.
-         * @param filter The name of the filter.
+         * 필터가 선택되었을 때 발생하는 이벤트입니다.
+         * @param filter 선택된 필터의 이름입니다.
          */
         data class FilterSelected(val filter: String) : UiEvent
         
         /**
-         * Event when a center is clicked.
-         * @param id The ID of the center.
+         * 고물상이 클릭되었을 때 발생하는 이벤트입니다.
+         * @param id 클릭된 고물상의 ID입니다.
          */
         data class CenterClicked(val id: Long) : UiEvent
         
         /**
-         * Event for search click.
+         * 검색 아이콘이 클릭되었을 때 발생하는 이벤트입니다.
          */
         data object SearchClicked : UiEvent
         
         /**
-         * Event for notification click.
+         * 알림 아이콘이 클릭되었을 때 발생하는 이벤트입니다.
          */
         data object NotificationClicked : UiEvent
 
         /**
-         * Event for bottom navigation click.
-         * @param route The route to navigate to.
+         * 하단 네비게이션 아이템이 클릭되었을 때 발생하는 이벤트입니다.
+         * @param route 이동할 경로(route)입니다.
          */
         data class NavClicked(val route: String) : UiEvent
     }
 
     /**
-     * Stateful Wrapper for the HomeScreen.
-     * @param viewModel The Koin ViewModel.
-     * @param onCenterClick Callback when a center is clicked.
-     * @param onNavClick Callback when a navigation item is clicked.
+     * 홈 화면의 Stateful Wrapper입니다.
+     * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
+     * @param onCenterClick 고물상 클릭 시 호출되는 콜백입니다.
+     * @param onNavClick 네비게이션 아이템 클릭 시 호출되는 콜백입니다.
      */
     @Composable
     operator fun invoke(
@@ -125,9 +125,9 @@ object HomeScreen : NavKey {
     }
 
     /**
-     * Stateless UI for the HomeScreen.
-     * @param uiState The current UI state.
-     * @param onEvent Callback for UI events.
+     * 홈 화면의 Stateless UI 구현체입니다.
+     * @param uiState 현재 화면의 UI 상태입니다.
+     * @param onEvent UI 이벤트 처리를 위한 콜백입니다.
      */
     @Composable
     operator fun invoke(
@@ -178,9 +178,9 @@ object HomeScreen : NavKey {
 }
 
 /**
- * Bottom Navigation for the HomeScreen.
- * @param selectedRoute The currently selected route.
- * @param onNavClick Callback for navigation item clicks.
+ * 홈 화면의 하단 네비게이션 바입니다.
+ * @param selectedRoute 현재 선택된 경로입니다.
+ * @param onNavClick 네비게이션 아이템 클릭 시 호출되는 콜백입니다.
  */
 @Composable
 fun HomeBottomNavigation(
@@ -235,10 +235,10 @@ fun HomeBottomNavigation(
 }
 
 /**
- * TopBar for the HomeScreen.
- * @param location The current location text.
- * @param onSearchClick Callback for search icon click.
- * @param onNotificationClick Callback for notification icon click.
+ * 홈 화면의 상단 바입니다.
+ * @param location 현재 표시될 위치 텍스트입니다.
+ * @param onSearchClick 검색 아이콘 클릭 시 호출되는 콜백입니다.
+ * @param onNotificationClick 알림 아이콘 클릭 시 호출되는 콜백입니다.
  */
 @Composable
 fun HomeTopBar(
@@ -285,7 +285,7 @@ fun HomeTopBar(
                 IconButton(onClick = onNotificationClick) {
                     Icon(painterResource(Res.drawable.ic_notification), contentDescription = "Notifications", modifier = Modifier.size(24.dp))
                 }
-                // Notification Badge
+                // 알림 배지
                 Box(
                     modifier = Modifier
                         .size(8.dp)
@@ -299,10 +299,10 @@ fun HomeTopBar(
 }
 
 /**
- * Filter chips for the HomeScreen.
- * @param filters List of filter names.
- * @param selectedFilter The currently selected filter.
- * @param onFilterSelected Callback when a filter is selected.
+ * 홈 화면의 필터 칩 목록입니다.
+ * @param filters 표시할 필터 이름 목록입니다.
+ * @param selectedFilter 현재 선택된 필터입니다.
+ * @param onFilterSelected 필터 선택 시 호출되는 콜백입니다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -336,9 +336,9 @@ fun FilterChips(
 }
 
 /**
- * Item for a garbage center.
- * @param center The garbage center data model.
- * @param onClick Callback when the item is clicked.
+ * 개별 고물상 정보를 표시하는 아이템입니다.
+ * @param center 고물상 데이터 모델입니다.
+ * @param onClick 아이템 클릭 시 호출되는 콜백입니다.
  */
 @Composable
 fun GarbageCenterItem(
@@ -352,14 +352,14 @@ fun GarbageCenterItem(
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Image Placeholder
+        // 이미지 플레이스홀더
         Box(
             modifier = Modifier
                 .size(112.dp)
                 .clip(RoundedCornerShape(14.dp))
                 .background(Color(0xFFF3F4F6))
         ) {
-            // Actual image loading would go here
+            // 실제 이미지 로딩 로직이 여기에 들어갑니다.
         }
         
         Column(
