@@ -14,6 +14,7 @@ fun interface LocationService {
 
 data class Location(val latitude: Double, val longitude: Double)
 
+
 @Single
 class LocationServiceImpl: LocationService {
     override suspend fun getCurrentLocation(): Location? {

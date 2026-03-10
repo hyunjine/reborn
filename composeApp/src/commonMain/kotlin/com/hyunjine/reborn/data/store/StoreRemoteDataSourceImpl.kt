@@ -1,10 +1,14 @@
 package com.hyunjine.reborn.data.store
 
+import com.hyunjine.reborn.Location
+import com.hyunjine.reborn.data.store.entity.StoreEntity
 import org.koin.core.annotation.Single
 
-@Single(binds = [StoreRemoteDataSource::class])
+@Single
 class StoreRemoteDataSourceImpl: StoreRemoteDataSource {
-    override suspend fun getData(): String {
-        return "hi"
+    override suspend fun getStores(location: Location): List<StoreEntity> {
+        return List(20) {
+            StoreEntity(id = it.toLong(), name = "name", imageUrl = "imageUrl", distance = 2324, prices = emptyList())
+        }
     }
 }
