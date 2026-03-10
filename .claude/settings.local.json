@@ -11,7 +11,20 @@
       "Bash(./gradlew compileDebugKotlinAndroid:*)",
       "Bash(git status:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__figma__get_variable_defs",
+      "mcp__figma__get_metadata",
+      "Bash(find \"C:\\\\AndroidProjects\\\\MyProjects\\\\Reborn\" -type f -name \"*.kt\" | xargs grep -l \"Color\\\\|Theme\\\\|MaterialTheme\" 2>/dev/null | grep -v \".gradle\\\\|.idea\\\\|build\" | head -15)",
+      "Bash(./gradlew composeApp:compileKotlinDesktop 2>&1 | tail -20)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn/composeApp/src -type f -name \"*.kt\" | xargs grep -l \"class.*Module\\\\|fun.*Module\" 2>/dev/null | head -20)",
+      "WebSearch",
+      "WebFetch(domain:insert-koin.io)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -name \"*Module.kt\" -o -name \"*module.kt\" 2>/dev/null | grep -E \"src/\\(commonMain|androidMain|main\\)\" | head -20)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn/composeApp/src -name \"*.kt\" -type f | xargs grep -l \"LocationService\" 2>/dev/null)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -name \"*.kt\" -type f | xargs grep -l \"Module\\\\|module\\\\|Koin\\\\|koin\\\\|viewModel\\\\|single\\\\|factory\" 2>/dev/null | grep -v build | grep -v \".gradle\" | head -30)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn/composeApp/src -name \"*.kt\" -type f | xargs grep -l \"class LocationService\\\\|fun LocationService\\\\|interface LocationService\" 2>/dev/null)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn/composeApp/src/commonMain/kotlin/com/hyunjine/reborn -name \"*.kt\" -type f | xargs grep -l \"@Module\\\\|@Single\\\\|@Factory\" 2>/dev/null)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -type f -name \"*.kt\" | xargs grep -l \"^@Module\\\\|^class.*Module\\\\|object.*Module\" 2>/dev/null | grep -v build)"
     ]
   }
 }

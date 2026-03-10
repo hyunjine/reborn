@@ -5,21 +5,17 @@ import kotlin.jvm.JvmInline
 import androidx.compose.runtime.Stable
 import kotlin.math.roundToInt
 
-/**
- * 홈 화면의 UI 상태 모델.
- * @param location 현재 위치 텍스트
- * @param filters 필터 목록
- * @param stores 고물상 목록
- */
-data class HomeModel(
-    val location: String,
-    val filters: ImmutableList<Filter>,
-    val stores: ImmutableList<StoreModel>
-) {
-    data class Filter(
-        val isSelected: Boolean,
-        val name: String
-    )
+@Stable
+sealed interface StoreState {
+    data object Loading: StoreState
+
+    /**
+     * 홈 화면의 UI 상태 모델.
+     * @param stores 고물상 목록
+     */
+    data class Loaded(
+        val stores: ImmutableList<StoreModel>
+    ): StoreState
 }
 
 /**
@@ -64,13 +60,8 @@ value class Distance private constructor(private val _meters: Int) {
     val meters: Int get() = _meters
     val kilometers: Int get() = meters / 1000
 
-    /**
-     * 리스트 화면 표시용 포맷팅
-     * 모든 거리를 km 단위로 소수점 한자리까지 표시
-     * 예: 1200m -> 1.2km, 500m -> 0.5km
-     */
-    fun display(): String {
-        // 100으로 나누고 반올림 후 다시 10으로 나누어 소수점 한 자리를 유지
+    // value class에서 toString을 오버라이드하면 display()와 일치시켜 혼선을 방지할 수 있습니다.
+    override fun toString(): String {
         val roundedKm = (meters / 100.0).roundToInt() / 10.0
         return "${roundedKm}km"
     }

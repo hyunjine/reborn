@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.hyunjine.reborn.common.*
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -183,7 +184,7 @@ private fun HeaderSection() {
             text = "내 정보",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF101828)
+            color = Gray900
         )
     }
 }
@@ -205,7 +206,7 @@ private fun ProfileSection(userName: String, email: String) {
         Box(
             modifier = Modifier
                 .size(80.dp)
-                .background(Color(0xFFD0FAE5), CircleShape),
+                .background(Green200, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -223,13 +224,13 @@ private fun ProfileSection(userName: String, email: String) {
                 text = userName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF101828)
+                color = Gray900
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = email,
                 fontSize = 14.sp,
-                color = Color(0xFF6A7282)
+                color = Gray600
             )
         }
     }
@@ -246,7 +247,7 @@ private fun RegisterStoreCta(onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .padding(top = 18.dp, bottom = 18.dp)
-            .background(Color(0xFFF9FAFB), RoundedCornerShape(16.dp))
+            .background(Gray50, RoundedCornerShape(16.dp))
             .padding(20.dp)
     ) {
         Row(verticalAlignment = Alignment.Top) {
@@ -254,14 +255,14 @@ private fun RegisterStoreCta(onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(Color(0xFFD0FAE5), RoundedCornerShape(12.dp)),
+                    .background(Green200, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_store),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = Color(0xFF22C55E)
+                    tint = Green500
                 )
             }
 
@@ -272,13 +273,13 @@ private fun RegisterStoreCta(onClick: () -> Unit) {
                     text = "고물상을 운영하시나요?",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF101828)
+                    color = Gray900
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "지금 리본 파트너로 등록하고\n더 많은 고객을 만나보세요!",
                     fontSize = 14.sp,
-                    color = Color(0xFF6A7282),
+                    color = Gray600,
                     lineHeight = 22.sp
                 )
             }
@@ -293,7 +294,7 @@ private fun RegisterStoreCta(onClick: () -> Unit) {
                 .height(46.dp),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF22C55E)
+                containerColor = Green500
             )
         ) {
             Text(
@@ -326,7 +327,7 @@ private fun MyStoreSection(
             text = "내 업체",
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF101828),
+            color = Gray900,
             modifier = Modifier.padding(vertical = 20.dp)
         )
 
@@ -342,7 +343,7 @@ private fun MyStoreSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(195.dp)
-                    .background(Color(0xFFF3F4F6))
+                    .background(Gray100)
             ) {
                 // Verified badge
                 if (storeInfo.isVerified) {
@@ -357,14 +358,14 @@ private fun MyStoreSection(
                             painter = painterResource(Res.drawable.ic_check),
                             contentDescription = null,
                             modifier = Modifier.size(14.dp),
-                            tint = Color(0xFF22C55E)
+                            tint = Green500
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "인증 업체",
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color(0xFF101828)
+                            color = Gray900
                         )
                     }
                 }
@@ -374,14 +375,14 @@ private fun MyStoreSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFF9FAFB))
+                    .background(Gray50)
                     .padding(16.dp)
             ) {
                 Text(
                     text = storeInfo.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF101828)
+                    color = Gray900
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -392,13 +393,13 @@ private fun MyStoreSection(
                         painter = painterResource(Res.drawable.ic_location_pin),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = Color(0xFF99A1AF)
+                        tint = Gray400
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = storeInfo.address,
                         fontSize = 14.sp,
-                        color = Color(0xFF6A7282)
+                        color = Gray600
                     )
                 }
 
@@ -413,16 +414,16 @@ private fun MyStoreSection(
                     Text(
                         text = "영업 상태",
                         fontSize = 14.sp,
-                        color = Color(0xFF4A5565)
+                        color = Gray700
                     )
                     Switch(
                         checked = storeInfo.isOpen,
                         onCheckedChange = onToggleOpen,
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = Color.White,
-                            checkedTrackColor = Color(0xFF22C55E),
+                            checkedTrackColor = Green500,
                             uncheckedThumbColor = Color.White,
-                            uncheckedTrackColor = Color(0xFFD1D5DB)
+                            uncheckedTrackColor = Gray300
                         )
                     )
                 }
@@ -436,7 +437,7 @@ private fun MyStoreSection(
                         text = if (storeInfo.isOpen) "영업 중" else "영업 종료",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = if (storeInfo.isOpen) Color(0xFF22C55E) else Color(0xFF99A1AF)
+                        color = if (storeInfo.isOpen) Green500 else Gray400
                     )
                 }
             }
@@ -459,7 +460,7 @@ private fun StoreManagementSection(onEvent: (MyScreen.UiEvent) -> Unit) {
             text = "업체 관리",
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF6A7282),
+            color = Gray600,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
         )
         MenuItem(
@@ -538,20 +539,20 @@ private fun MenuItem(
             painter = icon,
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            tint = Color(0xFF4A5565)
+            tint = Gray700
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = label,
             fontSize = 16.sp,
-            color = Color(0xFF101828),
+            color = Gray900,
             modifier = Modifier.weight(1f)
         )
         Icon(
             painter = painterResource(Res.drawable.ic_chevron_right),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            tint = Color(0xFF99A1AF)
+            tint = Gray400
         )
     }
 }
@@ -581,21 +582,21 @@ private fun MenuItemWithBadge(
             painter = icon,
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            tint = Color(0xFF4A5565)
+            tint = Gray700
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = label,
             fontSize = 16.sp,
-            color = Color(0xFF101828)
+            color = Gray900
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = badge,
             fontSize = 11.sp,
-            color = Color(0xFF99A1AF),
+            color = Gray400,
             modifier = Modifier
-                .background(Color(0xFFF3F4F6), RoundedCornerShape(4.dp))
+                .background(Gray100, RoundedCornerShape(4.dp))
                 .padding(horizontal = 8.dp, vertical = 2.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -603,7 +604,7 @@ private fun MenuItemWithBadge(
             painter = painterResource(Res.drawable.ic_chevron_right),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            tint = Color(0xFF99A1AF)
+            tint = Gray400
         )
     }
 }

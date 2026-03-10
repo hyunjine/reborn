@@ -38,16 +38,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.hyunjine.reborn.common.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
+import com.hyunjine.reborn.Location
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.logger.Logger
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_location
 import reborn.composeapp.generated.resources.ic_location_header
@@ -79,7 +84,7 @@ object HomeScreen : NavKey {
          * 고물상이 클릭되었을 때 발생하는 이벤트입니다.
          * @param id 클릭된 고물상의 ID입니다.
          */
-        data class CenterClicked(val id: Long) : UiEvent
+        data class StoreClicked(val id: Long) : UiEvent
         
         /**
          * 검색 아이콘이 클릭되었을 때 발생하는 이벤트입니다.
@@ -110,13 +115,14 @@ object HomeScreen : NavKey {
         onCenterClick: (Long) -> Unit = {},
         onNavClick: (String) -> Unit = {}
     ) {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        val location by viewModel.location.collectAsStateWithLifecycle()
         invoke(
-            uiState = uiState,
+            location = location,
+            state = state,
             onEvent = { event ->
                 when (event) {
-                    is UiEvent.CenterClicked -> onCenterClick(event.id)
+                    is UiEvent.StoreClicked -> onCenterClick(event.id)
                     is UiEvent.NavClicked -> onNavClick(event.route)
                     else -> viewModel.event(event)
                 }
@@ -131,45 +137,39 @@ object HomeScreen : NavKey {
      */
     @Composable
     operator fun invoke(
-        uiState: HomeModel,
+        location: Location?,
+        state: StoreState,
         onEvent: (UiEvent) -> Unit = {}
     ) {
-        Scaffold(
-            topBar = {
-                HomeTopBar(
-                    location = uiState.location,
-                    onSearchClick = { onEvent(UiEvent.SearchClicked) },
-                    onNotificationClick = { onEvent(UiEvent.NotificationClicked) }
-                )
-            },
-            bottomBar = {
-                HomeBottomNavigation(
-                    selectedRoute = "home",
-                    onNavClick = { onEvent(UiEvent.NavClicked(it)) }
-                )
-            }
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                FilterChips(
-                    filters = uiState.filters,
-                    selectedFilter = uiState.selectedFilter,
-                    onFilterSelected = { onEvent(UiEvent.FilterSelected(it)) }
-                )
-                
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(uiState.centers) { center ->
-                        GarbageCenterItem(
-                            center = center,
-                            onClick = { onEvent(UiEvent.CenterClicked(center.id)) }
-                        )
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            HomeTopBar(
+                location = location.toString(),
+                onSearchClick = { onEvent(UiEvent.SearchClicked) },
+                onNotificationClick = { onEvent(UiEvent.NotificationClicked) }
+            )
+            when (state) {
+                is StoreState.Loading -> {
+
+                }
+                is StoreState.Loaded -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1F),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(
+                            items = state.stores,
+                            key = { it.id }
+                        ) { store ->
+                            GarbageCenterItem(
+                                store = store,
+                                onClick = { onEvent(UiEvent.StoreClicked(store.id)) }
+                            )
+                        }
                     }
                 }
             }
@@ -198,10 +198,10 @@ fun HomeBottomNavigation(
             icon = { Icon(painterResource(Res.drawable.ic_nav_home), contentDescription = null, modifier = Modifier.size(24.dp)) },
             label = { Text("홈") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFF009966),
-                selectedTextColor = Color(0xFF009966),
-                unselectedIconColor = Color(0xFF6A7282),
-                unselectedTextColor = Color(0xFF6A7282),
+                selectedIconColor = Green700,
+                selectedTextColor = Green700,
+                unselectedIconColor = Gray600,
+                unselectedTextColor = Gray600,
                 indicatorColor = Color.Transparent
             )
         )
@@ -211,10 +211,10 @@ fun HomeBottomNavigation(
             icon = { Icon(painterResource(Res.drawable.ic_nav_price), contentDescription = null, modifier = Modifier.size(24.dp)) },
             label = { Text("시세") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFF009966),
-                selectedTextColor = Color(0xFF009966),
-                unselectedIconColor = Color(0xFF6A7282),
-                unselectedTextColor = Color(0xFF6A7282),
+                selectedIconColor = Green700,
+                selectedTextColor = Green700,
+                unselectedIconColor = Gray600,
+                unselectedTextColor = Gray600,
                 indicatorColor = Color.Transparent
             )
         )
@@ -224,10 +224,10 @@ fun HomeBottomNavigation(
             icon = { Icon(painterResource(Res.drawable.ic_nav_my), contentDescription = null, modifier = Modifier.size(24.dp)) },
             label = { Text("내정보") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFF009966),
-                selectedTextColor = Color(0xFF009966),
-                unselectedIconColor = Color(0xFF6A7282),
-                unselectedTextColor = Color(0xFF6A7282),
+                selectedIconColor = Green700,
+                selectedTextColor = Green700,
+                unselectedIconColor = Gray600,
+                unselectedTextColor = Gray600,
                 indicatorColor = Color.Transparent
             )
         )
@@ -261,7 +261,7 @@ fun HomeTopBar(
             Icon(
                 painter = painterResource(Res.drawable.ic_location_header),
                 contentDescription = null,
-                tint = Color(0xFF101828),
+                tint = Gray900,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -269,7 +269,7 @@ fun HomeTopBar(
                 text = location,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF101828)
+                color = Gray900
             )
         }
         
@@ -289,7 +289,7 @@ fun HomeTopBar(
                 Box(
                     modifier = Modifier
                         .size(8.dp)
-                        .background(Color(0xFF22C55E), CircleShape)
+                        .background(Green500, CircleShape)
                         .align(Alignment.TopEnd)
                         .offset(x = (-10).dp, y = 8.dp)
                 )
@@ -323,10 +323,10 @@ fun FilterChips(
                 onClick = { onFilterSelected(filter) },
                 label = { Text(filter) },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Color(0xFF22C55E),
+                    selectedContainerColor = Green500,
                     selectedLabelColor = Color.White,
-                    containerColor = Color(0xFFF3F4F6),
-                    labelColor = Color(0xFF364153)
+                    containerColor = Gray100,
+                    labelColor = Gray800
                 ),
                 border = null,
                 shape = RoundedCornerShape(20.dp)
@@ -337,12 +337,12 @@ fun FilterChips(
 
 /**
  * 개별 고물상 정보를 표시하는 아이템입니다.
- * @param center 고물상 데이터 모델입니다.
+ * @param store 고물상 데이터 모델입니다.
  * @param onClick 아이템 클릭 시 호출되는 콜백입니다.
  */
 @Composable
 fun GarbageCenterItem(
-    center: GarbageCenterModel,
+    store: StoreModel,
     onClick: () -> Unit
 ) {
     Row(
@@ -357,7 +357,7 @@ fun GarbageCenterItem(
             modifier = Modifier
                 .size(112.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .background(Color(0xFFF3F4F6))
+                .background(Gray100)
         ) {
             // 실제 이미지 로딩 로직이 여기에 들어갑니다.
         }
@@ -366,10 +366,10 @@ fun GarbageCenterItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = center.name,
+                text = store.name,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF101828)
+                color = Gray900
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -378,20 +378,21 @@ fun GarbageCenterItem(
                 Icon(
                     painter = painterResource(Res.drawable.ic_location),
                     contentDescription = null,
-                    tint = Color(0xFF6A7282),
+                    tint = Gray600,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
+
                 Text(
-                    text = center.distance,
+                    text = store.distance.toString(),
                     fontSize = 14.sp,
-                    color = Color(0xFF6A7282)
+                    color = Gray600
                 )
             }
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            center.prices.forEach { price ->
+            store.prices.forEach { price ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -399,13 +400,13 @@ fun GarbageCenterItem(
                     Text(
                         text = price.name,
                         fontSize = 14.sp,
-                        color = Color(0xFF4A5565)
+                        color = Gray700
                     )
                     Text(
-                        text = price.price,
+                        text = price.price.toString(),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF22C55E)
+                        color = Green500
                     )
                 }
             }
@@ -417,72 +418,20 @@ fun GarbageCenterItem(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        uiState = HomeModel(
-            location = "개포동",
-            filters = persistentListOf(),
-            selectedFilter = "전체",
-            centers = persistentListOf(
-                GarbageCenterModel(
-                    id = 1,
+        location = null,
+        state = StoreState.Loaded(
+            stores = List(10) {
+                StoreModel(
+                    id = it.toLong(),
                     name = "서울고물상",
                     imageUrl = "",
-                    distance = "0.2km",
+                    distance = Distance.meters(20),
                     prices = persistentListOf(
-                        PriceModel("고철", "450원/kg"),
-                        PriceModel("알루미늄", "1,800원/kg")
-                    )
-                ),
-                GarbageCenterModel(
-                    id = 2,
-                    name = "금성스크랩",
-                    imageUrl = "",
-                    distance = "0.8km",
-                    prices = persistentListOf(
-                        PriceModel("고철", "480원/kg"),
-                        PriceModel("스텐", "1,200원/kg")
-                    )
-                ),
-                GarbageCenterModel(
-                    id = 3,
-                    name = "대한재활용센터",
-                    imageUrl = "",
-                    distance = "1.2km",
-                    prices = persistentListOf(
-                        PriceModel("구리", "8,800원/kg"),
-                        PriceModel("황동", "5,200원/kg")
-                    )
-                ),
-                GarbageCenterModel(
-                    id = 4,
-                    name = "진성고물상",
-                    imageUrl = "",
-                    distance = "1.5km",
-                    prices = persistentListOf(
-                        PriceModel("고철", "470원/kg"),
-                        PriceModel("구리", "8,600원/kg")
-                    )
-                ),
-                GarbageCenterModel(
-                    id = 5,
-                    name = "한강재활용",
-                    imageUrl = "",
-                    distance = "2.3km",
-                    prices = persistentListOf(
-                        PriceModel("기판", "12,000원/kg"),
-                        PriceModel("알루미늄", "1,750원/kg")
-                    )
-                ),
-                GarbageCenterModel(
-                    id = 6,
-                    name = "강남스크랩",
-                    imageUrl = "",
-                    distance = "3.1km",
-                    prices = persistentListOf(
-                        PriceModel("구리", "8,700원/kg"),
-                        PriceModel("스텐", "1,300원/kg")
+                        MatterModel("고철", 540),
+                        MatterModel("고철", 540),
                     )
                 )
-            )
+            }.toImmutableList()
         )
     )
 }

@@ -23,9 +23,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Preview
-@Composable
-fun RebornAppAndroidPreview() {
-    RebornApp()
-}

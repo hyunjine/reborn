@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -7,6 +6,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.koin)
 }
 
 kotlin {
@@ -41,15 +41,25 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlin.serialization)
+            implementation(libs.jetbrains.navigation3.ui)
+            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-            implementation(libs.jetbrains.navigation3.ui)
-            implementation(libs.kotlin.serialization)
+            implementation(libs.koin.compose.navigation)
+            implementation(libs.koin.annotations)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+        configureEach {
+            kotlin.srcDir("build/generated/ksp/$name/kotlin")
+        }
     }
+}
+
+koinCompiler {
+    userLogs = true
 }
 
 android {

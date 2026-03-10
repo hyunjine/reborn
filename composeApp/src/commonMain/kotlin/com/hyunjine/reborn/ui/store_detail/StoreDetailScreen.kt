@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.hyunjine.reborn.common.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -118,12 +119,12 @@ data class StoreDetailScreen(
                     address = uiState.address,
                     onCopyClick = { onEvent(UiEvent.CopyAddressClicked) }
                 )
-                HorizontalDivider(color = Color(0xFFF3F4F6))
+                HorizontalDivider(color = Gray100)
                 StoreDescriptionSection(
                     description = uiState.description,
                     businessHours = uiState.businessHours
                 )
-                HorizontalDivider(color = Color(0xFFF3F4F6))
+                HorizontalDivider(color = Gray100)
                 StorePriceSection(
                     prices = uiState.prices,
                     lastUpdated = uiState.lastUpdated
@@ -147,7 +148,7 @@ private fun StoreImageSection(onBackClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(236.dp)
-            .background(Color(0xFFF3F4F6))
+            .background(Gray100)
     ) {
         // Back button
         IconButton(
@@ -161,7 +162,7 @@ private fun StoreImageSection(onBackClick: () -> Unit) {
                 painter = painterResource(Res.drawable.ic_back),
                 contentDescription = "뒤로가기",
                 modifier = Modifier.size(24.dp),
-                tint = Color(0xFF101828)
+                tint = Gray900
             )
         }
 
@@ -220,14 +221,14 @@ private fun StoreInfoSection(
                 text = name,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF101828)
+                color = Gray900
             )
             if (isVerified) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Box(
                     modifier = Modifier
                         .size(24.dp)
-                        .background(Color(0xFF22C55E), CircleShape),
+                        .background(Green500, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -248,13 +249,13 @@ private fun StoreInfoSection(
                 painter = painterResource(Res.drawable.ic_location_pin),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = Color(0xFF99A1AF)
+                tint = Gray400
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = address,
                 fontSize = 16.sp,
-                color = Color(0xFF364153),
+                color = Gray800,
                 modifier = Modifier.weight(1f)
             )
             IconButton(
@@ -265,7 +266,7 @@ private fun StoreInfoSection(
                     painter = painterResource(Res.drawable.ic_copy),
                     contentDescription = "주소 복사",
                     modifier = Modifier.size(16.dp),
-                    tint = Color(0xFF99A1AF)
+                    tint = Gray400
                 )
             }
         }
@@ -292,7 +293,7 @@ private fun StoreDescriptionSection(
             text = "업체 소개",
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF101828)
+            color = Gray900
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -301,7 +302,7 @@ private fun StoreDescriptionSection(
         Text(
             text = description,
             fontSize = 16.sp,
-            color = Color(0xFF364153),
+            color = Gray800,
             lineHeight = 26.sp
         )
 
@@ -312,7 +313,7 @@ private fun StoreDescriptionSection(
             text = "영업 시간",
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF101828)
+            color = Gray900
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -330,13 +331,13 @@ private fun StoreDescriptionSection(
                     Text(
                         text = hour.day,
                         fontSize = 16.sp,
-                        color = Color(0xFF4A5565)
+                        color = Gray700
                     )
                     Text(
                         text = hour.hours,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFF101828)
+                        color = Gray900
                     )
                 }
             }
@@ -369,12 +370,12 @@ private fun StorePriceSection(
                 text = "실시간 매입 시세",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF101828)
+                color = Gray900
             )
             Text(
                 text = lastUpdated,
                 fontSize = 14.sp,
-                color = Color(0xFF6A7282)
+                color = Gray600
             )
         }
 
@@ -386,7 +387,7 @@ private fun StorePriceSection(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFF9FAFB), RoundedCornerShape(10.dp))
+                        .background(Gray50, RoundedCornerShape(10.dp))
                         .padding(horizontal = 16.dp, vertical = 18.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -395,13 +396,13 @@ private fun StorePriceSection(
                         text = price.name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFF101828)
+                        color = Gray900
                     )
                     Text(
                         text = price.price,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF101828)
+                        color = Gray900
                     )
                 }
             }
@@ -432,7 +433,7 @@ private fun CallButton(
                 .height(56.dp),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF22C55E)
+                containerColor = Green500
             )
         ) {
             Text(

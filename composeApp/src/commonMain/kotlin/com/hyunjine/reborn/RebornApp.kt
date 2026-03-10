@@ -14,7 +14,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.hyunjine.reborn.core.di.appModule
+import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.home.HomeScreen
 import com.hyunjine.reborn.ui.my.MyScreen
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
@@ -22,13 +22,17 @@ import com.hyunjine.reborn.ui.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
+import org.koin.core.annotation.KoinApplication
+import org.koin.core.annotation.Module
+import org.koin.plugin.module.dsl.koinConfiguration
+
 
 @Composable
 @Preview
 fun RebornApp() {
-    KoinApplication(application = {
-        modules(appModule)
-    }) {
+    KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
         MaterialTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
