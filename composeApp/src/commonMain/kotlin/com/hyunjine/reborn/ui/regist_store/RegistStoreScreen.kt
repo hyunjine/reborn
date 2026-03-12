@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -454,7 +456,9 @@ private fun TimePickerField(
         Text(
             text = value.ifEmpty { "00:00" },
             style = typography.bodyMedium14,
-            color = if (value.isEmpty()) color.gray400 else color.gray900
+            color = if (value.isEmpty()) color.gray400 else color.gray900,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 
@@ -612,7 +616,7 @@ private fun DayScheduleRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.height(39.dp)
+        modifier = Modifier.heightIn(min = 39.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -654,7 +658,9 @@ private fun DayScheduleRow(
                 Text(
                     text = "휴무",
                     style = typography.bodyMedium14,
-                    color = color.gray400
+                    color = color.gray400,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
