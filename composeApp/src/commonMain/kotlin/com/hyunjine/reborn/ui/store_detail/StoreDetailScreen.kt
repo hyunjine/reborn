@@ -1,5 +1,7 @@
 package com.hyunjine.reborn.ui.store_detail
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +62,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import coil3.compose.AsyncImage
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_back
 import reborn.composeapp.generated.resources.ic_copy
@@ -124,7 +131,10 @@ data class StoreDetailScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = 100.dp)
             ) {
-                StoreImageSection(onBackClick = { onEvent(UiEvent.BackClicked) })
+                StoreImageSection(
+                    imageUrls = model.imageUrls,
+                    onBackClick = { onEvent(UiEvent.BackClicked) }
+                )
                 StoreInfoSection(
                     name = model.name,
                     address = model.address,
@@ -148,17 +158,43 @@ data class StoreDetailScreen(
 }
 
 /**
- * 업체 이미지 섹션. 이미지 캐러셀과 뒤로가기 버튼, 페이지 인디케이터를 표시합니다.
+ * 업체 이미지 섹션. 이미지 뷰페이저와 뒤로가기 버튼, 페이지 인디케이터를 표시합니다.
+ * @param imageUrls 업체 이미지 URL 목록
  * @param onBackClick 뒤로가기 버튼 클릭 콜백
  */
 @Composable
-private fun StoreImageSection(onBackClick: () -> Unit) {
+private fun StoreImageSection(
+    imageUrls: ImmutableList<String>,
+    onBackClick: () -> Unit
+) {
+    val pageCount = imageUrls.size.coerceAtLeast(1)
+    val pagerState = rememberPagerState { pageCount }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(236.dp)
-            .background(color.gray100)
+            .aspectRatio(378f / 236f)
     ) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            if (imageUrls.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color.gray100)
+                )
+            } else {
+                AsyncImage(
+                    model = imageUrls[page],
+                    contentDescription = "업체 이미지 ${page + 1}",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+
         // Back button
         IconButton(
             onClick = onBackClick,
@@ -176,31 +212,31 @@ private fun StoreImageSection(onBackClick: () -> Unit) {
         }
 
         // Page indicators
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Box(
+        if (pageCount > 1) {
+            Row(
                 modifier = Modifier
-                    .width(24.dp)
-                    .height(6.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-            )
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.6f))
-            )
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.6f))
-            )
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                repeat(pageCount) { index ->
+                    val isSelected = pagerState.currentPage == index
+                    val width by animateDpAsState(
+                        targetValue = if (isSelected) 24.dp else 6.dp,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .width(width)
+                            .height(6.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (isSelected) Color.White
+                                else Color.White.copy(alpha = 0.6f)
+                            )
+                    )
+                }
+            }
         }
     }
 }
@@ -434,6 +470,24 @@ private fun CallButton(
                 color = Color.White
             )
         }
+    }
+}
+
+/**
+ * 업체 이미지 섹션 미리보기.
+ */
+@Preview(showBackground = true)
+@Composable
+private fun StoreImageSectionPreview() {
+    RebornTheme {
+        StoreImageSection(
+            imageUrls = persistentListOf(
+                "https://picsum.photos/400/300",
+                "https://picsum.photos/400/301",
+                "https://picsum.photos/400/302"
+            ),
+            onBackClick = {}
+        )
     }
 }
 
