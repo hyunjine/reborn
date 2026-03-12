@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -33,6 +34,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.hyunjine.reborn.common.component.TimePickerBottomSheet
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
@@ -426,36 +431,74 @@ private fun FormTextField(
 }
 
 /**
- * 시간 입력 필드.
- * @param value 현재 값
- * @param onValueChange 값 변경 콜백
+ * 시간 선택 필드. 클릭 시 TimePickerBottomSheet를 표시합니다.
+ * @param value 현재 시간 값 (HH:mm 형식)
+ * @param onValueChange 시간 변경 콜백
  * @param modifier Modifier
+ * @param backgroundColor 배경색
  */
 @Composable
-private fun TimeTextField(
+private fun TimePickerField(
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = color.gray50
 ) {
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-        textStyle = typography.bodyMedium14.copy(color = color.gray900),
-        decorationBox = { innerTextField ->
-            Box(
-                modifier = modifier
-                    .height(39.dp)
-                    .background(color.gray50, RoundedCornerShape(10.dp))
-                    .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-                    .padding(horizontal = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                innerTextField()
-            }
-        }
-    )
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val (hour, minute) = parseTime(value)
+
+    Box(
+        modifier = modifier
+            .height(39.dp)
+            .background(backgroundColor, RoundedCornerShape(10.dp))
+            .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
+            .clickable { showBottomSheet = true }
+            .padding(horizontal = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = value.ifEmpty { "00:00" },
+            style = typography.bodyMedium14,
+            color = if (value.isEmpty()) color.gray400 else color.gray900
+        )
+    }
+
+    if (showBottomSheet) {
+        TimePickerBottomSheet(
+            initialHour = hour,
+            initialMinute = minute,
+            onConfirm = { h, m ->
+                onValueChange(formatTime(h, m))
+                showBottomSheet = false
+            },
+            onDismiss = { showBottomSheet = false }
+        )
+    }
 }
+
+/**
+ * 시간 문자열을 시/분으로 파싱합니다.
+ * @param time HH:mm 형식의 시간 문자열
+ * @return (hour, minute) Pair
+ */
+private fun parseTime(time: String): Pair<Int, Int> {
+    if (time.isBlank()) return Pair(0, 0)
+    val parts = time.split(":")
+    return if (parts.size == 2) {
+        Pair(parts[0].toIntOrNull() ?: 0, parts[1].toIntOrNull() ?: 0)
+    } else {
+        Pair(0, 0)
+    }
+}
+
+/**
+ * 시/분을 HH:mm 형식 문자열로 포맷합니다.
+ * @param hour 시간 (0~23)
+ * @param minute 분 (0~59)
+ * @return HH:mm 형식 문자열
+ */
+private fun formatTime(hour: Int, minute: Int): String =
+    "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
 
 /**
  * 영업 시간 섹션.
@@ -516,40 +559,18 @@ private fun BusinessHoursSection(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                BasicTextField(
-                    modifier = Modifier
-                        .weight(1f),
+                TimePickerField(
                     value = batchStartTime,
                     onValueChange = onBatchStartTimeChanged,
-                    singleLine = true,
-                    textStyle = typography.bodyRegular14.copy(color = color.gray900),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier
-                                .background(Color.White, RoundedCornerShape(10.dp))
-                                .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-                                .padding(horizontal = 12.dp),
-                            contentAlignment = Alignment.Center
-                        ) { innerTextField() }
-                    }
+                    modifier = Modifier.weight(1f),
+                    backgroundColor = Color.White
                 )
                 Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
-                BasicTextField(
-                    modifier = Modifier
-                        .weight(1f),
+                TimePickerField(
                     value = batchEndTime,
                     onValueChange = onBatchEndTimeChanged,
-                    singleLine = true,
-                    textStyle = typography.bodyRegular14.copy(color = color.gray900),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier
-                                .background(Color.White, RoundedCornerShape(10.dp))
-                                .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-                                .padding(horizontal = 12.dp),
-                            contentAlignment = Alignment.Center
-                        ) { innerTextField() }
-                    }
+                    modifier = Modifier.weight(1f),
+                    backgroundColor = Color.White
                 )
             }
             Button(
@@ -641,13 +662,13 @@ private fun DayScheduleRow(
                 color = color.gray800
             )
         }
-        TimeTextField(
+        TimePickerField(
             value = schedule.startTime,
             onValueChange = onStartTimeChanged,
             modifier = Modifier.weight(1f)
         )
         Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
-        TimeTextField(
+        TimePickerField(
             value = schedule.endTime,
             onValueChange = onEndTimeChanged,
             modifier = Modifier.weight(1f)
