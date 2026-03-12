@@ -66,6 +66,10 @@ kotlin {
     }
 }
 
+composeCompiler {
+    stabilityConfigurationFile = project.layout.projectDirectory.file("compose-stability.conf")
+}
+
 koinCompiler {
     userLogs = true
 }

@@ -48,6 +48,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -283,7 +285,7 @@ private fun StoreInfoSection(
 @Composable
 private fun StoreDescriptionSection(
     description: String,
-    businessHours: ImmutableList<BusinessHourModel>
+    businessHours: ImmutableList<OperationTimeModel>
 ) {
     Column(
         modifier = Modifier
@@ -332,9 +334,9 @@ private fun StoreDescriptionSection(
                         color = color.gray700
                     )
                     Text(
-                        text = hour.hours,
+                        text = hour.operation.toString(),
                         style = typography.bodyMedium16,
-                        color = color.gray900
+                        color = if (hour.operation == Operation.Closed) color.gray400 else color.gray900
                     )
                 }
             }
@@ -350,7 +352,7 @@ private fun StoreDescriptionSection(
 @Composable
 private fun StorePriceSection(
     prices: ImmutableList<StorePriceModel>,
-    lastUpdated: String
+    lastUpdated: LocalDateTime
 ) {
     Column(
         modifier = Modifier
@@ -369,7 +371,7 @@ private fun StorePriceSection(
                 color = color.gray900
             )
             Text(
-                text = lastUpdated,
+                text = "${lastUpdated.month.ordinal + 1}/${lastUpdated.day} ${lastUpdated.hour}:${lastUpdated.minute.toString().padStart(2, '0')} 업데이트",
                 style = typography.captionRegular14,
                 color = color.gray600
             )
@@ -449,7 +451,16 @@ fun StoreDetailScreenPreview() {
                 address = "서울특별시 강남구 역삼동 123-45",
                 description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
                 businessHours = DayOfWeek.entries.map {
-                    BusinessHourModel(dayOfWeek = it, hours = "08:00 - 17:00")
+                    OperationTimeModel(
+                        dayOfWeek = it,
+                        operation = if (it == DayOfWeek.THURSDAY) {
+                            Operation.Closed
+                        } else {
+                            Operation.Open(
+                                start = LocalTime(hour = 5, minute = 0), end = LocalTime(hour = 21, minute = 30)
+                            )
+                        }
+                    )
                 }.toImmutableList(),
                 prices = persistentListOf(
                     StorePriceModel("고철", "450원/kg"),
@@ -457,7 +468,7 @@ fun StoreDetailScreenPreview() {
                     StorePriceModel("구리", "8,500원/kg"),
                     StorePriceModel("스텐", "1,150원/kg")
                 ),
-                lastUpdated = "최종 업데이트: 2시간 전"
+                lastUpdated = LocalDateTime(2026, 3, 12, 14, 30)
             )
         )
     }
