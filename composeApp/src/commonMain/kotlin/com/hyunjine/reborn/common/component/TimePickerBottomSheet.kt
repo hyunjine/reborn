@@ -33,7 +33,7 @@ import com.hyunjine.reborn.common.theme.typography
  * 시간 선택 바텀시트.
  * 시/분을 WheelPicker로 선택할 수 있는 ModalBottomSheet입니다.
  * @param initialHour 초기 시간 (0~23)
- * @param initialMinute 초기 분 (0~59)
+ * @param initialMinute 초기 분 (0~55, 5분 단위)
  * @param onConfirm 확인 버튼 클릭 시 (hour, minute) 콜백
  * @param onDismiss 바텀시트 닫기 콜백
  */
@@ -47,10 +47,13 @@ fun TimePickerBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedHour by rememberSaveable { mutableIntStateOf(initialHour) }
-    var selectedMinute by rememberSaveable { mutableIntStateOf(initialMinute) }
+    var selectedMinuteIndex by rememberSaveable {
+        mutableIntStateOf((initialMinute / 5).coerceIn(0, 11))
+    }
 
     val hours = (0..23).map { it.toString().padStart(2, '0') }
-    val minutes = (0..59).map { it.toString().padStart(2, '0') }
+    val minuteValues = (0..55 step 5).toList()
+    val minutes = minuteValues.map { it.toString().padStart(2, '0') }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -91,8 +94,8 @@ fun TimePickerBottomSheet(
                 )
                 WheelPicker(
                     items = minutes,
-                    selectedIndex = selectedMinute,
-                    onSelectedChanged = { selectedMinute = it },
+                    selectedIndex = selectedMinuteIndex,
+                    onSelectedChanged = { selectedMinuteIndex = it },
                     modifier = Modifier.width(80.dp)
                 )
             }
@@ -100,7 +103,7 @@ fun TimePickerBottomSheet(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { onConfirm(selectedHour, selectedMinute) },
+                onClick = { onConfirm(selectedHour, minuteValues[selectedMinuteIndex]) },
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = color.green500)

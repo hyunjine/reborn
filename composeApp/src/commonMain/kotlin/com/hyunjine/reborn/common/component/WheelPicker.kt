@@ -48,10 +48,10 @@ fun WheelPicker(
     selectedIndex: Int,
     onSelectedChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    visibleCount: Int = 5,
+    visibleCount: Int = 7,
     itemHeight: Dp = 40.dp,
-    textStyle: TextStyle = typography.bodyRegular16.copy(color = color.gray400),
-    selectedTextStyle: TextStyle = typography.headingSemibold18.copy(color = color.gray900)
+    textStyle: TextStyle = typography.headingMedium20.copy(color = color.gray400),
+    selectedTextStyle: TextStyle = typography.headingBold24.copy(color = color.gray900)
 ) {
     val halfVisible = visibleCount / 2
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedIndex)
