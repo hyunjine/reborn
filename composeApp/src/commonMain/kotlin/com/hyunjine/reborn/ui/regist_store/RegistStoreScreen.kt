@@ -108,9 +108,6 @@ object RegistStoreScreen : NavKey {
         /** 요일별 종료 시간 변경 */
         data class DayEndTimeChanged(val index: Int, val time: String) : UiEvent
 
-        /** 공휴일 휴무 변경 */
-        data class HolidayClosedChanged(val closed: Boolean) : UiEvent
-
         /** 품목 추가 */
         data object AddPriceItem : UiEvent
 
@@ -213,14 +210,12 @@ object RegistStoreScreen : NavKey {
                     batchStartTime = uiState.batchStartTime,
                     batchEndTime = uiState.batchEndTime,
                     daySchedules = uiState.daySchedules,
-                    isHolidayClosed = uiState.isHolidayClosed,
                     onBatchStartTimeChanged = { onEvent(UiEvent.BatchStartTimeChanged(it)) },
                     onBatchEndTimeChanged = { onEvent(UiEvent.BatchEndTimeChanged(it)) },
                     onApplyBatchTime = { onEvent(UiEvent.ApplyBatchTime) },
                     onDayEnabledChanged = { i, e -> onEvent(UiEvent.DayEnabledChanged(i, e)) },
                     onDayStartTimeChanged = { i, t -> onEvent(UiEvent.DayStartTimeChanged(i, t)) },
-                    onDayEndTimeChanged = { i, t -> onEvent(UiEvent.DayEndTimeChanged(i, t)) },
-                    onHolidayClosedChanged = { onEvent(UiEvent.HolidayClosedChanged(it)) }
+                    onDayEndTimeChanged = { i, t -> onEvent(UiEvent.DayEndTimeChanged(i, t)) }
                 )
                 SectionDivider()
                 PriceSection(
@@ -505,28 +500,24 @@ private fun formatTime(hour: Int, minute: Int): String =
  * @param batchStartTime 일괄 시작 시간
  * @param batchEndTime 일괄 종료 시간
  * @param daySchedules 요일별 스케줄 목록
- * @param isHolidayClosed 공휴일 휴무 여부
  * @param onBatchStartTimeChanged 일괄 시작 시간 변경 콜백
  * @param onBatchEndTimeChanged 일괄 종료 시간 변경 콜백
  * @param onApplyBatchTime 일괄 적용 버튼 클릭 콜백
  * @param onDayEnabledChanged 요일 활성화 변경 콜백
  * @param onDayStartTimeChanged 요일 시작 시간 변경 콜백
  * @param onDayEndTimeChanged 요일 종료 시간 변경 콜백
- * @param onHolidayClosedChanged 공휴일 휴무 변경 콜백
  */
 @Composable
 private fun BusinessHoursSection(
     batchStartTime: String,
     batchEndTime: String,
     daySchedules: ImmutableList<DayScheduleModel>,
-    isHolidayClosed: Boolean,
     onBatchStartTimeChanged: (String) -> Unit,
     onBatchEndTimeChanged: (String) -> Unit,
     onApplyBatchTime: () -> Unit,
     onDayEnabledChanged: (Int, Boolean) -> Unit,
     onDayStartTimeChanged: (Int, String) -> Unit,
-    onDayEndTimeChanged: (Int, String) -> Unit,
-    onHolidayClosedChanged: (Boolean) -> Unit
+    onDayEndTimeChanged: (Int, String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
@@ -601,26 +592,6 @@ private fun BusinessHoursSection(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Holiday closed checkbox
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = isHolidayClosed,
-                onCheckedChange = onHolidayClosedChanged,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = color.green500,
-                    uncheckedColor = color.gray300
-                ),
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "공휴일 휴무",
-                style = typography.bodyMedium14,
-                color = color.gray800
-            )
-        }
     }
 }
 
@@ -662,17 +633,30 @@ private fun DayScheduleRow(
                 color = color.gray800
             )
         }
-        TimePickerField(
-            value = schedule.startTime,
-            onValueChange = onStartTimeChanged,
-            modifier = Modifier.weight(1f)
-        )
-        Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
-        TimePickerField(
-            value = schedule.endTime,
-            onValueChange = onEndTimeChanged,
-            modifier = Modifier.weight(1f)
-        )
+        if (schedule.isEnabled) {
+            TimePickerField(
+                value = schedule.startTime,
+                onValueChange = onStartTimeChanged,
+                modifier = Modifier.weight(1f)
+            )
+            Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
+            TimePickerField(
+                value = schedule.endTime,
+                onValueChange = onEndTimeChanged,
+                modifier = Modifier.weight(1f)
+            )
+        } else {
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "휴무",
+                    style = typography.bodyMedium14,
+                    color = color.gray400
+                )
+            }
+        }
     }
 }
 
@@ -987,14 +971,12 @@ private fun BusinessHoursSectionPreview() {
                 DayScheduleModel("토", false),
                 DayScheduleModel("일", false)
             ),
-            isHolidayClosed = true,
             onBatchStartTimeChanged = {},
             onBatchEndTimeChanged = {},
             onApplyBatchTime = {},
             onDayEnabledChanged = { _, _ -> },
             onDayStartTimeChanged = { _, _ -> },
-            onDayEndTimeChanged = { _, _ -> },
-            onHolidayClosedChanged = {}
+            onDayEndTimeChanged = { _, _ -> }
         )
     }
 }

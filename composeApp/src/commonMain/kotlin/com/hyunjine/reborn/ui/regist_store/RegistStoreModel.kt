@@ -13,7 +13,6 @@ import kotlinx.collections.immutable.persistentListOf
  * @param batchStartTime 일괄 적용 시작 시간
  * @param batchEndTime 일괄 적용 종료 시간
  * @param daySchedules 요일별 영업 시간 목록
- * @param isHolidayClosed 공휴일 휴무 여부
  * @param priceItems 매입 단가 항목 목록
  */
 data class RegistStoreModel(
@@ -33,7 +32,6 @@ data class RegistStoreModel(
         DayScheduleModel("토", true),
         DayScheduleModel("일", true)
     ),
-    val isHolidayClosed: Boolean = false,
     val priceItems: ImmutableList<PriceItemModel> = persistentListOf()
 )
 
