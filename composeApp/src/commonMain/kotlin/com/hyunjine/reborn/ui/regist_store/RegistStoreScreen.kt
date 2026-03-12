@@ -904,7 +904,7 @@ private fun SubmitButton(onClick: () -> Unit) {
 /**
  * 전체 업체 등록 화면 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun RegistStoreScreenPreview() {
     RebornTheme {
@@ -917,7 +917,7 @@ private fun RegistStoreScreenPreview() {
 /**
  * 사진 등록 섹션 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PhotoSectionPreview() {
     RebornTheme {
@@ -932,7 +932,7 @@ private fun PhotoSectionPreview() {
 /**
  * 기본 정보 섹션 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun BasicInfoSectionPreview() {
     RebornTheme {
@@ -950,7 +950,7 @@ private fun BasicInfoSectionPreview() {
 /**
  * 영업 시간 섹션 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun BusinessHoursSectionPreview() {
     RebornTheme {
@@ -981,7 +981,7 @@ private fun BusinessHoursSectionPreview() {
 /**
  * 매입 단가 섹션 미리보기 (품목 있음).
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PriceSectionPreview() {
     RebornTheme {
@@ -1001,7 +1001,7 @@ private fun PriceSectionPreview() {
 /**
  * 매입 단가 품목 카드 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PriceItemCardPreview() {
     RebornTheme {
@@ -1017,7 +1017,7 @@ private fun PriceItemCardPreview() {
 /**
  * 하단 안내 메시지 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun InfoNoticePreview() {
     RebornTheme {
@@ -1028,7 +1028,7 @@ private fun InfoNoticePreview() {
 /**
  * 등록하기 버튼 미리보기.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SubmitButtonPreview() {
     RebornTheme {

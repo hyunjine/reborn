@@ -154,6 +154,7 @@ class ReservationDetailViewModel(
 
 ## 10. Extra Convention
 - Preview 어노테이션 사용 시 org.jetbrains.compose.ui.tooling.preview.Preview가 아닌 androidx.compose.ui.tooling.preview.Preview를 사용한다.
+- Preview 어노테이션에는 반드시 `showBackground = true`를 설정한다. 예: `@Preview(showBackground = true)`
 
 ## 11. Figma
 - 모든 vector 이미지들은 Android Vector Drawable XML로 변환하여 Drawable에 저장하여 사용한다.
