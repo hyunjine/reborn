@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -22,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -31,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
@@ -41,21 +40,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
-import com.hyunjine.reborn.common.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.Location
+import com.hyunjine.reborn.common.theme.PretendardFontFamily
+import com.hyunjine.reborn.common.theme.Gray100
+import com.hyunjine.reborn.common.theme.Gray600
+import com.hyunjine.reborn.common.theme.Gray800
+import com.hyunjine.reborn.common.theme.Gray900
+import com.hyunjine.reborn.common.theme.Green500
+import com.hyunjine.reborn.common.theme.Green700
+import com.hyunjine.reborn.common.util.readable
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.logger.Logger
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_location
 import reborn.composeapp.generated.resources.ic_location_header
@@ -206,7 +211,7 @@ fun HomeBottomNavigation(
             selected = selectedRoute == "home",
             onClick = { onNavClick("home") },
             icon = { Icon(painterResource(Res.drawable.ic_nav_home), contentDescription = null, modifier = Modifier.size(24.dp)) },
-            label = { Text("홈") },
+            label = { Text("홈", fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 12.sp) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Green700,
                 selectedTextColor = Green700,
@@ -219,7 +224,7 @@ fun HomeBottomNavigation(
             selected = selectedRoute == "price",
             onClick = { onNavClick("price") },
             icon = { Icon(painterResource(Res.drawable.ic_nav_price), contentDescription = null, modifier = Modifier.size(24.dp)) },
-            label = { Text("시세") },
+            label = { Text("시세", fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 12.sp) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Green700,
                 selectedTextColor = Green700,
@@ -232,7 +237,7 @@ fun HomeBottomNavigation(
             selected = selectedRoute == "my",
             onClick = { onNavClick("my") },
             icon = { Icon(painterResource(Res.drawable.ic_nav_my), contentDescription = null, modifier = Modifier.size(24.dp)) },
-            label = { Text("내정보") },
+            label = { Text("내정보", fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 12.sp) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Green700,
                 selectedTextColor = Green700,
@@ -250,6 +255,7 @@ fun HomeBottomNavigation(
  * @param onSearchClick 검색 아이콘 클릭 시 호출되는 콜백입니다.
  * @param onNotificationClick 알림 아이콘 클릭 시 호출되는 콜백입니다.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
     location: String,
@@ -266,7 +272,9 @@ fun HomeTopBar(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { /* TODO: Change location */ }
+            modifier = Modifier
+                .weight(1F)
+                .clickable { /* TODO: Change location */ }
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_location_header),
@@ -277,9 +285,13 @@ fun HomeTopBar(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = location,
-                fontSize = 18.sp,
+                fontFamily = PretendardFontFamily(),
+                fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Gray900
+                lineHeight = 24.sp,
+                color = Gray900,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
         }
         
@@ -291,18 +303,22 @@ fun HomeTopBar(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            Box {
-                IconButton(onClick = onNotificationClick) {
-                    Icon(painterResource(Res.drawable.ic_notification), contentDescription = "Notifications", modifier = Modifier.size(24.dp))
+            BadgedBox(
+                badge = {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .background(Green500, CircleShape)
+                    )
                 }
-                // 알림 배지
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .background(Green500, CircleShape)
-                        .align(Alignment.TopEnd)
-                        .offset(x = (-10).dp, y = 8.dp)
-                )
+            ) {
+                IconButton(onClick = onNotificationClick) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_notification),
+                        contentDescription = "Notifications",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }
@@ -331,7 +347,7 @@ fun FilterChips(
             FilterChip(
                 selected = isSelected,
                 onClick = { onFilterSelected(filter) },
-                label = { Text(filter) },
+                label = { Text(filter, fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = Green500,
                     selectedLabelColor = Color.White,
@@ -377,8 +393,10 @@ fun GarbageCenterItem(
         ) {
             Text(
                 text = store.name,
+                fontFamily = PretendardFontFamily(),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
+                lineHeight = 27.sp,
                 color = Gray900
             )
             Row(
@@ -395,7 +413,9 @@ fun GarbageCenterItem(
 
                 Text(
                     text = store.distance.toString(),
+                    fontFamily = PretendardFontFamily(),
                     fontSize = 14.sp,
+                    lineHeight = 20.sp,
                     color = Gray600
                 )
             }
@@ -409,14 +429,18 @@ fun GarbageCenterItem(
                 ) {
                     Text(
                         text = price.name,
+                        fontFamily = PretendardFontFamily(),
                         fontSize = 14.sp,
-                        color = Gray700
+                        lineHeight = 20.sp,
+                        color = Gray900
                     )
                     Text(
-                        text = price.price.toString(),
+                        text = price.price.readable(),
+                        fontFamily = PretendardFontFamily(),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Green500
+                        lineHeight = 20.sp,
+                        color = Gray900
                     )
                 }
             }
@@ -437,7 +461,7 @@ fun HomeScreenPreview() {
                     imageUrl = "",
                     distance = Distance.meters(20),
                     prices = persistentListOf(
-                        MatterModel("고철", 540),
+                        MatterModel("고철", 59040),
                         MatterModel("고철", 540),
                     )
                 )
