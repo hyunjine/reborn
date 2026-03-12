@@ -32,7 +32,7 @@ data class RegistStoreModel(
         DayScheduleModel("토", true),
         DayScheduleModel("일", true)
     ),
-    val priceItems: ImmutableList<PriceItemModel> = persistentListOf()
+    val priceItems: ImmutableList<PriceItemModel> = persistentListOf(PriceItemModel())
 )
 
 /**
