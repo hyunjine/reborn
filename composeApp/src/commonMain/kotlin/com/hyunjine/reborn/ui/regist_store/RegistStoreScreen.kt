@@ -38,9 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
+import com.hyunjine.reborn.common.theme.typography
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
@@ -158,8 +157,7 @@ object RegistStoreScreen : NavKey {
                     title = {
                         Text(
                             text = "업체 등록",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium,
+                            style = typography.headingMedium18,
                             color = color.gray900
                         )
                     },
@@ -193,7 +191,7 @@ object RegistStoreScreen : NavKey {
                 )
                 SectionDivider()
                 BasicInfoSection(
-                    storeName = uiState.storeName,
+                    storeName = uiState.name,
                     address = uiState.address,
                     description = uiState.description,
                     onStoreNameChanged = { onEvent(UiEvent.StoreNameChanged(it)) },
@@ -243,14 +241,13 @@ private fun PhotoSection(
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = "사진 등록",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
+            style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "최대 ${maxPhotoCount}장까지 등록 가능합니다",
-            fontSize = 14.sp,
+            style = typography.bodyRegular14,
             color = color.gray600
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -274,8 +271,7 @@ private fun PhotoSection(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "$photoCount/$maxPhotoCount",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = typography.captionMedium12,
                     color = color.gray600
                 )
             }
@@ -317,8 +313,7 @@ private fun BasicInfoSection(
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = "기본 정보",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
+            style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -348,8 +343,7 @@ private fun BasicInfoSection(
         // 업체 소개
         Text(
             text = "업체 소개",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
+            style = typography.bodyMedium14,
             color = color.gray800
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -376,8 +370,7 @@ private fun RequiredLabel(text: String) {
                 append("*")
             }
         },
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Medium,
+        style = typography.bodyMedium14,
         color = color.gray800
     )
 }
@@ -402,7 +395,7 @@ private fun FormTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = singleLine,
-        textStyle = TextStyle(fontSize = 16.sp, color = color.gray900),
+        textStyle = typography.bodyRegular16.copy(color = color.gray900),
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier
@@ -416,7 +409,7 @@ private fun FormTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = placeholder,
-                        fontSize = 16.sp,
+                        style = typography.bodyRegular16,
                         color = color.gray500
                     )
                 }
@@ -442,7 +435,7 @@ private fun TimeTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
-        textStyle = TextStyle(fontSize = 14.sp, color = color.gray900),
+        textStyle = typography.bodyMedium14.copy(color = color.gray900),
         decorationBox = { innerTextField ->
             Box(
                 modifier = modifier
@@ -489,8 +482,7 @@ private fun BusinessHoursSection(
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = "영업 시간",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
+            style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -511,8 +503,7 @@ private fun BusinessHoursSection(
         ) {
             Text(
                 text = "일괄 입력",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
+                style = typography.bodyMedium14,
                 color = color.gray900
             )
             Row(
@@ -523,7 +514,7 @@ private fun BusinessHoursSection(
                     value = batchStartTime,
                     onValueChange = onBatchStartTimeChanged,
                     singleLine = true,
-                    textStyle = TextStyle(fontSize = 14.sp, color = color.gray900),
+                    textStyle = typography.bodyRegular14.copy(color = color.gray900),
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
@@ -536,12 +527,12 @@ private fun BusinessHoursSection(
                         ) { innerTextField() }
                     }
                 )
-                Text(text = "~", fontSize = 14.sp, color = color.gray400)
+                Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
                 BasicTextField(
                     value = batchEndTime,
                     onValueChange = onBatchEndTimeChanged,
                     singleLine = true,
-                    textStyle = TextStyle(fontSize = 14.sp, color = color.gray900),
+                    textStyle = typography.bodyRegular14.copy(color = color.gray900),
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
@@ -563,8 +554,7 @@ private fun BusinessHoursSection(
             ) {
                 Text(
                     text = "모두 적용",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = typography.bodyMedium14,
                     color = Color.White
                 )
             }
@@ -600,8 +590,7 @@ private fun BusinessHoursSection(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "공휴일 휴무",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
+                style = typography.bodyMedium14,
                 color = color.gray800
             )
         }
@@ -642,8 +631,7 @@ private fun DayScheduleRow(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = schedule.day,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
+                style = typography.bodyMedium14,
                 color = color.gray800
             )
         }
@@ -652,7 +640,7 @@ private fun DayScheduleRow(
             onValueChange = onStartTimeChanged,
             modifier = Modifier.weight(1f)
         )
-        Text(text = "~", fontSize = 14.sp, color = color.gray400)
+        Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
         TimeTextField(
             value = schedule.endTime,
             onValueChange = onEndTimeChanged,
@@ -678,14 +666,13 @@ private fun PriceSection(
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = "매입 단가",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
+            style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "취급하시는 품목과 kg당 매입 단가를 입력해주세요",
-            fontSize = 14.sp,
+            style = typography.bodyRegular14,
             color = color.gray600
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -721,8 +708,7 @@ private fun PriceSection(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "품목 추가하기",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
+                style = typography.bodyMedium14,
                 color = color.gray700
             )
         }
@@ -757,9 +743,8 @@ private fun InfoNotice() {
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = "등록하신 정보는 고객들에게 공개되며,\n투명한 거래를 위해 정확한 정보를 입력해주세요.",
-            fontSize = 14.sp,
-            color = color.gray800,
-            lineHeight = 22.75.sp
+            style = typography.bodyRegular14.copy(lineHeight = 22.75.sp),
+            color = color.gray800
         )
     }
 }
@@ -783,8 +768,7 @@ private fun SubmitButton(onClick: () -> Unit) {
         ) {
             Text(
                 text = "등록하기",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
+                style = typography.bodyMedium14,
                 color = Color.White
             )
         }

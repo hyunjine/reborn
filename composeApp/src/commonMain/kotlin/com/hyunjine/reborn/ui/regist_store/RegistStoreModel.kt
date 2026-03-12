@@ -5,7 +5,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 /**
  * 업체 등록 화면의 UI 상태 모델.
- * @param storeName 업체명
+ * @param name 업체명
  * @param address 업체 주소
  * @param description 업체 소개
  * @param photoCount 등록된 사진 수
@@ -17,7 +17,7 @@ import kotlinx.collections.immutable.persistentListOf
  * @param priceItems 매입 단가 항목 목록
  */
 data class RegistStoreModel(
-    val storeName: String = "",
+    val name: String = "",
     val address: String = "",
     val description: String = "",
     val photoCount: Int = 0,

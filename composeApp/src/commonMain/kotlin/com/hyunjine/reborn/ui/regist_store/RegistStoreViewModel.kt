@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class RegistStoreViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegistStoreModel())
@@ -18,7 +20,7 @@ class RegistStoreViewModel : ViewModel() {
             _uiEvent.emit(event)
             when (event) {
                 is RegistStoreScreen.UiEvent.StoreNameChanged -> {
-                    _uiState.update { it.copy(storeName = event.name) }
+                    _uiState.update { it.copy(name = event.name) }
                 }
                 is RegistStoreScreen.UiEvent.AddressChanged -> {
                     _uiState.update { it.copy(address = event.address) }

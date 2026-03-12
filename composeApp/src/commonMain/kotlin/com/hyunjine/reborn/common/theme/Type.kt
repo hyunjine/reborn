@@ -30,8 +30,10 @@ fun PretendardFontFamily(): FontFamily = FontFamily(
 @Immutable
 data class AppTypography(
     val headingBold24: TextStyle,
+    val headingMedium20: TextStyle,
     val headingBold18: TextStyle,
     val headingSemibold18: TextStyle,
+    val headingMedium18: TextStyle,
     val titleSemibold16: TextStyle,
     val bodyRegular16: TextStyle,
     val bodyMedium16: TextStyle,
@@ -59,6 +61,12 @@ fun appTypography(fontFamily: FontFamily = PretendardFontFamily()): AppTypograph
         fontSize = 24.sp,
         lineHeight = 32.sp,
     ),
+    headingMedium20 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+    ),
     headingBold18 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Bold,
@@ -68,6 +76,12 @@ fun appTypography(fontFamily: FontFamily = PretendardFontFamily()): AppTypograph
     headingSemibold18 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
+        lineHeight = 28.sp,
+    ),
+    headingMedium18 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         lineHeight = 28.sp,
     ),
