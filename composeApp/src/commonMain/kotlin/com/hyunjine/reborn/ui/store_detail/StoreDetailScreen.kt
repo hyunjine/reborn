@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,25 +23,22 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
@@ -49,10 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import coil3.compose.AsyncImage
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.fullName
+import com.hyunjine.reborn.common.util.ClipboardManager
+import com.hyunjine.reborn.common.util.clickable
 import com.hyunjine.reborn.common.util.pad
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -61,12 +62,10 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.number
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import coil3.compose.AsyncImage
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_back
 import reborn.composeapp.generated.resources.ic_copy
@@ -90,7 +89,7 @@ data class StoreDetailScreen(
         data object BackClicked : UiEvent
 
         /** 주소 복사 버튼 클릭 */
-        data object CopyAddressClicked : UiEvent
+        data class CopyAddressClicked(val value: String) : UiEvent
 
         /** 전화 문의하기 버튼 클릭 */
         data object CallClicked : UiEvent
@@ -107,15 +106,13 @@ data class StoreDetailScreen(
         onBack: () -> Unit = {}
     ) {
         val model by viewModel.model.collectAsStateWithLifecycle()
-        val clipboard = LocalClipboard.current
-        val scope = rememberCoroutineScope()
         invoke(
             model = model,
             onEvent = { event ->
                 when (event) {
                     is UiEvent.BackClicked -> onBack()
                     is UiEvent.CopyAddressClicked -> {
-                        scope.launch { clipboard.setText(AnnotatedString(model.address)) }
+                        ClipboardManager().copyToClipboard(event.value)
                     }
                     else -> viewModel.event(event)
                 }
@@ -147,7 +144,7 @@ data class StoreDetailScreen(
                 StoreInfoSection(
                     name = model.name,
                     address = model.address,
-                    onCopyClick = { onEvent(UiEvent.CopyAddressClicked) }
+                    onCopyClick = { onEvent(UiEvent.CopyAddressClicked(it)) }
                 )
                 StoreDescriptionSection(
                     description = model.description,
@@ -260,7 +257,7 @@ private fun StoreImageSection(
 private fun StoreInfoSection(
     name: String,
     address: String,
-    onCopyClick: () -> Unit
+    onCopyClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -316,7 +313,7 @@ private fun StoreInfoSection(
                 color = color.gray800,
                 modifier = Modifier
                     .weight(1f)
-                    .clickable(onClick = onCopyClick)
+                    .clickable { onCopyClick(address) }
             )
         }
     }
