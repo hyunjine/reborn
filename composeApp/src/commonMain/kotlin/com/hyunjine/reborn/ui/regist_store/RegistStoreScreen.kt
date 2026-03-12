@@ -611,7 +611,8 @@ private fun DayScheduleRow(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.height(39.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
