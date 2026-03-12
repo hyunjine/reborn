@@ -84,7 +84,7 @@ fun TimePickerBottomSheet(
                     items = hours,
                     selectedIndex = selectedHour,
                     onSelectedChanged = { selectedHour = it },
-                    modifier = Modifier.width(80.dp)
+                    modifier = Modifier.width(100.dp)
                 )
                 Text(
                     text = ":",
@@ -96,7 +96,7 @@ fun TimePickerBottomSheet(
                     items = minutes,
                     selectedIndex = selectedMinuteIndex,
                     onSelectedChanged = { selectedMinuteIndex = it },
-                    modifier = Modifier.width(80.dp)
+                    modifier = Modifier.width(100.dp)
                 )
             }
 

@@ -49,7 +49,7 @@ fun WheelPicker(
     onSelectedChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
     visibleCount: Int = 7,
-    itemHeight: Dp = 40.dp,
+    itemHeight: Dp = 48.dp,
     textStyle: TextStyle = typography.headingMedium20.copy(color = color.gray400),
     selectedTextStyle: TextStyle = typography.headingBold24.copy(color = color.gray900)
 ) {
