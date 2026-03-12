@@ -285,7 +285,15 @@ private fun PhotoSection(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 추가 버튼
+                // 선택된 사진 썸네일
+                itemsIndexed(photos) { index, photoBytes ->
+                    PhotoThumbnail(
+                        photoBytes = photoBytes,
+                        onRemove = { onPhotoRemoved(index) }
+                    )
+                }
+
+                // 추가 버튼 (사진이 최대 수 미만일 때만 표시)
                 if (photos.size < maxPhotoCount) {
                     item {
                         OutlinedButton(
@@ -317,14 +325,6 @@ private fun PhotoSection(
                         }
                     }
                 }
-
-                // 선택된 사진 썸네일
-                itemsIndexed(photos) { index, photoBytes ->
-                    PhotoThumbnail(
-                        photoBytes = photoBytes,
-                        onRemove = { onPhotoRemoved(index) }
-                    )
-                }
             }
         }
     }
@@ -351,18 +351,19 @@ private fun PhotoThumbnail(
                 .clip(RoundedCornerShape(14.dp)),
             contentScale = ContentScale.Crop
         )
-        IconButton(
-            onClick = onRemove,
+        Box(
             modifier = Modifier
-                .size(24.dp)
+                .size(20.dp)
                 .align(Alignment.TopEnd)
-                .padding(2.dp)
+                .padding(top = 4.dp, end = 4.dp)
                 .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                .clickable { onRemove() },
+            contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_close),
                 contentDescription = "사진 삭제",
-                modifier = Modifier.size(12.dp),
+                modifier = Modifier.size(10.dp),
                 tint = Color.White
             )
         }
