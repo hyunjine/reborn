@@ -840,7 +840,9 @@ private fun PriceSection(
                 item = item,
                 onNameChanged = { onNameChanged(index, it) },
                 onPriceChanged = { onPriceChanged(index, it) },
-                onRemove = { onRemoveItem(index) }
+                onRemove = if (priceItems.size > 1) {
+                    { onRemoveItem(index) }
+                } else null
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -878,14 +880,14 @@ private fun PriceSection(
  * @param item 품목 데이터
  * @param onNameChanged 품목명 변경 콜백
  * @param onPriceChanged 단가 변경 콜백
- * @param onRemove 삭제 콜백
+ * @param onRemove 삭제 콜백 (null이면 삭제 버튼 숨김)
  */
 @Composable
 private fun PriceItemCard(
     item: PriceItemModel,
     onNameChanged: (String) -> Unit,
     onPriceChanged: (String) -> Unit,
-    onRemove: () -> Unit
+    onRemove: (() -> Unit)?
 ) {
     val priceFocusRequester = remember { FocusRequester() }
 
@@ -986,18 +988,20 @@ private fun PriceItemCard(
         }
 
         // X 삭제 버튼
-        IconButton(
-            onClick = onRemove,
-            modifier = Modifier
-                .size(28.dp)
-                .align(Alignment.TopEnd)
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_close),
-                contentDescription = "품목 삭제",
-                modifier = Modifier.size(16.dp),
-                tint = color.gray500
-            )
+        if (onRemove != null) {
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier
+                    .size(28.dp)
+                    .align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_close),
+                    contentDescription = "품목 삭제",
+                    modifier = Modifier.size(16.dp),
+                    tint = color.gray500
+                )
+            }
         }
     }
 }
