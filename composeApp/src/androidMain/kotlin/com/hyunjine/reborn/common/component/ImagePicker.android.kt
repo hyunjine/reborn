@@ -23,8 +23,15 @@ actual fun ImagePickerLauncher(
 ) {
     val context = LocalContext.current
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = maxSelection)
+    val singleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        val byteArrays = listOfNotNull(uri?.let { uriToByteArray(context, it) })
+        onResult(byteArrays)
+    }
+
+    val multiLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = maxSelection.coerceAtLeast(2))
     ) { uris: List<Uri> ->
         val byteArrays = uris.mapNotNull { uri ->
             uriToByteArray(context, uri)
@@ -33,9 +40,12 @@ actual fun ImagePickerLauncher(
     }
 
     content {
-        launcher.launch(
-            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-        )
+        val request = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        if (maxSelection <= 1) {
+            singleLauncher.launch(request)
+        } else {
+            multiLauncher.launch(request)
+        }
     }
 }
 
