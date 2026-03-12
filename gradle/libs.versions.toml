@@ -19,6 +19,7 @@ koin-plugin = "0.3.0"
 kotlinx-collections-immutable = "0.3.8"
 coil = "3.2.0"
 napier = "2.7.1"
+kotlinx-datetime = "0.6.2"
 
 
 [libraries]
@@ -60,6 +61,7 @@ kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collec
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
