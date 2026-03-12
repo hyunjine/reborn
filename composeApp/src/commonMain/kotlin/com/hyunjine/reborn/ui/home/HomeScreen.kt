@@ -32,29 +32,23 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import coil3.compose.AsyncImage
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import coil3.compose.AsyncImage
 import com.hyunjine.reborn.Location
-import com.hyunjine.reborn.common.theme.PretendardFontFamily
-import com.hyunjine.reborn.common.theme.Gray100
-import com.hyunjine.reborn.common.theme.Gray600
-import com.hyunjine.reborn.common.theme.Gray800
-import com.hyunjine.reborn.common.theme.Gray900
-import com.hyunjine.reborn.common.theme.Green500
-import com.hyunjine.reborn.common.theme.Green700
+import com.hyunjine.reborn.common.theme.RebornTheme
+import com.hyunjine.reborn.common.theme.color
+import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.readable
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -87,18 +81,18 @@ object HomeScreen : NavKey {
          * @param filter 선택된 필터의 이름입니다.
          */
         data class FilterSelected(val filter: String) : UiEvent
-        
+
         /**
          * 고물상이 클릭되었을 때 발생하는 이벤트입니다.
          * @param id 클릭된 고물상의 ID입니다.
          */
         data class StoreClicked(val id: Long) : UiEvent
-        
+
         /**
          * 검색 아이콘이 클릭되었을 때 발생하는 이벤트입니다.
          */
         data object SearchClicked : UiEvent
-        
+
         /**
          * 알림 아이콘이 클릭되었을 때 발생하는 이벤트입니다.
          */
@@ -140,7 +134,8 @@ object HomeScreen : NavKey {
 
     /**
      * 홈 화면의 Stateless UI 구현체입니다.
-     * @param uiState 현재 화면의 UI 상태입니다.
+     * @param location 현재 위치 정보입니다.
+     * @param state 현재 화면의 UI 상태입니다.
      * @param onEvent UI 이벤트 처리를 위한 콜백입니다.
      */
     @Composable
@@ -164,7 +159,7 @@ object HomeScreen : NavKey {
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.align(Alignment.Center),
-                            color = Green500
+                            color = color.green500
                         )
                     }
                 }
@@ -211,12 +206,12 @@ fun HomeBottomNavigation(
             selected = selectedRoute == "home",
             onClick = { onNavClick("home") },
             icon = { Icon(painterResource(Res.drawable.ic_nav_home), contentDescription = null, modifier = Modifier.size(24.dp)) },
-            label = { Text("홈", fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 12.sp) },
+            label = { Text("홈", style = typography.captionMedium12) },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Green700,
-                selectedTextColor = Green700,
-                unselectedIconColor = Gray600,
-                unselectedTextColor = Gray600,
+                selectedIconColor = color.green700,
+                selectedTextColor = color.green700,
+                unselectedIconColor = color.gray600,
+                unselectedTextColor = color.gray600,
                 indicatorColor = Color.Transparent
             )
         )
@@ -224,12 +219,12 @@ fun HomeBottomNavigation(
             selected = selectedRoute == "price",
             onClick = { onNavClick("price") },
             icon = { Icon(painterResource(Res.drawable.ic_nav_price), contentDescription = null, modifier = Modifier.size(24.dp)) },
-            label = { Text("시세", fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 12.sp) },
+            label = { Text("시세", style = typography.captionMedium12) },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Green700,
-                selectedTextColor = Green700,
-                unselectedIconColor = Gray600,
-                unselectedTextColor = Gray600,
+                selectedIconColor = color.green700,
+                selectedTextColor = color.green700,
+                unselectedIconColor = color.gray600,
+                unselectedTextColor = color.gray600,
                 indicatorColor = Color.Transparent
             )
         )
@@ -237,12 +232,12 @@ fun HomeBottomNavigation(
             selected = selectedRoute == "my",
             onClick = { onNavClick("my") },
             icon = { Icon(painterResource(Res.drawable.ic_nav_my), contentDescription = null, modifier = Modifier.size(24.dp)) },
-            label = { Text("내정보", fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 12.sp) },
+            label = { Text("내정보", style = typography.captionMedium12) },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Green700,
-                selectedTextColor = Green700,
-                unselectedIconColor = Gray600,
-                unselectedTextColor = Gray600,
+                selectedIconColor = color.green700,
+                selectedTextColor = color.green700,
+                unselectedIconColor = color.gray600,
+                unselectedTextColor = color.gray600,
                 indicatorColor = Color.Transparent
             )
         )
@@ -279,22 +274,19 @@ fun HomeTopBar(
             Icon(
                 painter = painterResource(Res.drawable.ic_location_header),
                 contentDescription = null,
-                tint = Gray900,
+                tint = color.gray900,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = location,
-                fontFamily = PretendardFontFamily(),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 24.sp,
-                color = Gray900,
+                style = typography.titleSemibold16,
+                color = color.gray900,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
         }
-        
+
         Row {
             IconButton(onClick = onSearchClick) {
                 Icon(
@@ -308,7 +300,7 @@ fun HomeTopBar(
                     Box(
                         modifier = Modifier
                             .size(8.dp)
-                            .background(Green500, CircleShape)
+                            .background(color.green500, CircleShape)
                     )
                 }
             ) {
@@ -347,12 +339,12 @@ fun FilterChips(
             FilterChip(
                 selected = isSelected,
                 onClick = { onFilterSelected(filter) },
-                label = { Text(filter, fontFamily = PretendardFontFamily(), fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp) },
+                label = { Text(filter, style = typography.bodyMedium14) },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Green500,
+                    selectedContainerColor = color.green500,
                     selectedLabelColor = Color.White,
-                    containerColor = Gray100,
-                    labelColor = Gray800
+                    containerColor = color.gray100,
+                    labelColor = color.gray800
                 ),
                 border = null,
                 shape = RoundedCornerShape(20.dp)
@@ -385,19 +377,16 @@ fun GarbageCenterItem(
             modifier = Modifier
                 .size(112.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .background(Gray100)
+                .background(color.gray100)
         )
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = store.name,
-                fontFamily = PretendardFontFamily(),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 27.sp,
-                color = Gray900
+                style = typography.headingSemibold18,
+                color = color.gray900
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -406,22 +395,20 @@ fun GarbageCenterItem(
                 Icon(
                     painter = painterResource(Res.drawable.ic_location),
                     contentDescription = null,
-                    tint = Gray600,
+                    tint = color.gray600,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
 
                 Text(
                     text = store.distance.toString(),
-                    fontFamily = PretendardFontFamily(),
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    color = Gray600
+                    style = typography.bodyRegular14,
+                    color = color.gray600
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             store.prices.forEach { price ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -429,18 +416,13 @@ fun GarbageCenterItem(
                 ) {
                     Text(
                         text = price.name,
-                        fontFamily = PretendardFontFamily(),
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        color = Gray900
+                        style = typography.bodyRegular14,
+                        color = color.gray900
                     )
                     Text(
                         text = price.price.readable(),
-                        fontFamily = PretendardFontFamily(),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        lineHeight = 20.sp,
-                        color = Gray900
+                        style = typography.bodySemibold14,
+                        color = color.gray900
                     )
                 }
             }
@@ -448,24 +430,29 @@ fun GarbageCenterItem(
     }
 }
 
+/**
+ * 홈 화면 프리뷰입니다.
+ */
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(
-        location = null,
-        state = StoreState.Loaded(
-            stores = List(10) {
-                StoreModel(
-                    id = it.toLong(),
-                    name = "서울고물상",
-                    imageUrl = "",
-                    distance = Distance.meters(20),
-                    prices = persistentListOf(
-                        MatterModel("고철", 59040),
-                        MatterModel("고철", 540),
+    RebornTheme {
+        HomeScreen(
+            location = null,
+            state = StoreState.Loaded(
+                stores = List(10) {
+                    StoreModel(
+                        id = it.toLong(),
+                        name = "서울고물상",
+                        imageUrl = "",
+                        distance = Distance.meters(20),
+                        prices = persistentListOf(
+                            MatterModel("고철", 59040),
+                            MatterModel("고철", 540),
+                        )
                     )
-                )
-            }.toImmutableList()
+                }.toImmutableList()
+            )
         )
-    )
+    }
 }

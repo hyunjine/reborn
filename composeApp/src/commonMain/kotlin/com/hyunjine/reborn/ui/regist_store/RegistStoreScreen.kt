@@ -37,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.hyunjine.reborn.common.*
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.hyunjine.reborn.common.theme.RebornTheme
+import com.hyunjine.reborn.common.theme.color
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
@@ -159,7 +160,7 @@ object RegistStoreScreen : NavKey {
                             text = "업체 등록",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Gray900
+                            color = color.gray900
                         )
                     },
                     navigationIcon = {
@@ -168,7 +169,7 @@ object RegistStoreScreen : NavKey {
                                 painter = painterResource(Res.drawable.ic_back),
                                 contentDescription = "뒤로가기",
                                 modifier = Modifier.size(24.dp),
-                                tint = Gray900
+                                tint = color.gray900
                             )
                         }
                     },
@@ -244,21 +245,21 @@ private fun PhotoSection(
             text = "사진 등록",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            color = Gray900
+            color = color.gray900
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "최대 ${maxPhotoCount}장까지 등록 가능합니다",
             fontSize = 14.sp,
-            color = Gray600
+            color = color.gray600
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedButton(
             onClick = onAddPhoto,
             modifier = Modifier.size(96.dp),
             shape = RoundedCornerShape(14.dp),
-            border = BorderStroke(2.dp, Gray300),
-            colors = ButtonDefaults.outlinedButtonColors(containerColor = Gray50)
+            border = BorderStroke(2.dp, color.gray300),
+            colors = ButtonDefaults.outlinedButtonColors(containerColor = color.gray50)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -268,14 +269,14 @@ private fun PhotoSection(
                     painter = painterResource(Res.drawable.ic_camera),
                     contentDescription = "사진 추가",
                     modifier = Modifier.size(24.dp),
-                    tint = Gray400
+                    tint = color.gray400
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "$photoCount/$maxPhotoCount",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Gray600
+                    color = color.gray600
                 )
             }
         }
@@ -291,7 +292,7 @@ private fun SectionDivider() {
         modifier = Modifier
             .fillMaxWidth()
             .height(8.dp)
-            .background(Gray50)
+            .background(color.gray50)
     )
 }
 
@@ -318,7 +319,7 @@ private fun BasicInfoSection(
             text = "기본 정보",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            color = Gray900
+            color = color.gray900
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -349,7 +350,7 @@ private fun BasicInfoSection(
             text = "업체 소개",
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = Gray800
+            color = color.gray800
         )
         Spacer(modifier = Modifier.height(8.dp))
         FormTextField(
@@ -371,13 +372,13 @@ private fun RequiredLabel(text: String) {
     Text(
         text = buildAnnotatedString {
             append("$text ")
-            withStyle(SpanStyle(color = Red500)) {
+            withStyle(SpanStyle(color = color.red500)) {
                 append("*")
             }
         },
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
-        color = Gray800
+        color = color.gray800
     )
 }
 
@@ -401,14 +402,14 @@ private fun FormTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = singleLine,
-        textStyle = TextStyle(fontSize = 16.sp, color = Gray900),
+        textStyle = TextStyle(fontSize = 16.sp, color = color.gray900),
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(minHeight.dp)
-                    .background(Gray50, RoundedCornerShape(8.dp))
-                    .border(1.dp, Gray200, RoundedCornerShape(8.dp))
+                    .background(color.gray50, RoundedCornerShape(8.dp))
+                    .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = if (singleLine) 0.dp else 8.dp),
                 contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
             ) {
@@ -416,7 +417,7 @@ private fun FormTextField(
                     Text(
                         text = placeholder,
                         fontSize = 16.sp,
-                        color = Gray500
+                        color = color.gray500
                     )
                 }
                 innerTextField()
@@ -441,13 +442,13 @@ private fun TimeTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
-        textStyle = TextStyle(fontSize = 14.sp, color = Gray900),
+        textStyle = TextStyle(fontSize = 14.sp, color = color.gray900),
         decorationBox = { innerTextField ->
             Box(
                 modifier = modifier
                     .height(39.dp)
-                    .background(Gray50, RoundedCornerShape(10.dp))
-                    .border(1.dp, Gray200, RoundedCornerShape(10.dp))
+                    .background(color.gray50, RoundedCornerShape(10.dp))
+                    .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
                     .padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -490,7 +491,7 @@ private fun BusinessHoursSection(
             text = "영업 시간",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            color = Gray900
+            color = color.gray900
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -500,11 +501,11 @@ private fun BusinessHoursSection(
                 .fillMaxWidth()
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(Green50, Green100)
+                        colors = listOf(color.green50, color.green100)
                     ),
                     shape = RoundedCornerShape(14.dp)
                 )
-                .border(1.dp, Green300, RoundedCornerShape(14.dp))
+                .border(1.dp, color.green300, RoundedCornerShape(14.dp))
                 .padding(17.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -512,7 +513,7 @@ private fun BusinessHoursSection(
                 text = "일괄 입력",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Gray900
+                color = color.gray900
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -522,32 +523,32 @@ private fun BusinessHoursSection(
                     value = batchStartTime,
                     onValueChange = onBatchStartTimeChanged,
                     singleLine = true,
-                    textStyle = TextStyle(fontSize = 14.sp, color = Gray900),
+                    textStyle = TextStyle(fontSize = 14.sp, color = color.gray900),
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(43.dp)
                                 .background(Color.White, RoundedCornerShape(10.dp))
-                                .border(1.dp, Gray200, RoundedCornerShape(10.dp))
+                                .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
                                 .padding(horizontal = 12.dp),
                             contentAlignment = Alignment.Center
                         ) { innerTextField() }
                     }
                 )
-                Text(text = "~", fontSize = 14.sp, color = Gray400)
+                Text(text = "~", fontSize = 14.sp, color = color.gray400)
                 BasicTextField(
                     value = batchEndTime,
                     onValueChange = onBatchEndTimeChanged,
                     singleLine = true,
-                    textStyle = TextStyle(fontSize = 14.sp, color = Gray900),
+                    textStyle = TextStyle(fontSize = 14.sp, color = color.gray900),
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(43.dp)
                                 .background(Color.White, RoundedCornerShape(10.dp))
-                                .border(1.dp, Gray200, RoundedCornerShape(10.dp))
+                                .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
                                 .padding(horizontal = 12.dp),
                             contentAlignment = Alignment.Center
                         ) { innerTextField() }
@@ -558,7 +559,7 @@ private fun BusinessHoursSection(
                 onClick = onApplyBatchTime,
                 modifier = Modifier.fillMaxWidth().height(40.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Green500)
+                colors = ButtonDefaults.buttonColors(containerColor = color.green500)
             ) {
                 Text(
                     text = "모두 적용",
@@ -591,8 +592,8 @@ private fun BusinessHoursSection(
                 checked = isHolidayClosed,
                 onCheckedChange = onHolidayClosedChanged,
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Green500,
-                    uncheckedColor = Gray300
+                    checkedColor = color.green500,
+                    uncheckedColor = color.gray300
                 ),
                 modifier = Modifier.size(16.dp)
             )
@@ -601,7 +602,7 @@ private fun BusinessHoursSection(
                 text = "공휴일 휴무",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Gray800
+                color = color.gray800
             )
         }
     }
@@ -633,8 +634,8 @@ private fun DayScheduleRow(
                 checked = schedule.isEnabled,
                 onCheckedChange = onEnabledChanged,
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Green500,
-                    uncheckedColor = Gray300
+                    checkedColor = color.green500,
+                    uncheckedColor = color.gray300
                 ),
                 modifier = Modifier.size(16.dp)
             )
@@ -643,7 +644,7 @@ private fun DayScheduleRow(
                 text = schedule.day,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Gray800
+                color = color.gray800
             )
         }
         TimeTextField(
@@ -651,7 +652,7 @@ private fun DayScheduleRow(
             onValueChange = onStartTimeChanged,
             modifier = Modifier.weight(1f)
         )
-        Text(text = "~", fontSize = 14.sp, color = Gray400)
+        Text(text = "~", fontSize = 14.sp, color = color.gray400)
         TimeTextField(
             value = schedule.endTime,
             onValueChange = onEndTimeChanged,
@@ -679,13 +680,13 @@ private fun PriceSection(
             text = "매입 단가",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            color = Gray900
+            color = color.gray900
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "취급하시는 품목과 kg당 매입 단가를 입력해주세요",
             fontSize = 14.sp,
-            color = Gray600
+            color = color.gray600
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -708,21 +709,21 @@ private fun PriceSection(
             onClick = onAddPriceItem,
             modifier = Modifier.fillMaxWidth().height(48.dp),
             shape = RoundedCornerShape(14.dp),
-            border = BorderStroke(2.dp, Gray300),
+            border = BorderStroke(2.dp, color.gray300),
             colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = Gray700
+                tint = color.gray700
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "품목 추가하기",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Gray700
+                color = color.gray700
             )
         }
     }
@@ -737,14 +738,14 @@ private fun InfoNotice() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .background(Green50, RoundedCornerShape(14.dp))
-            .border(1.dp, Green300, RoundedCornerShape(14.dp))
+            .background(color.green50, RoundedCornerShape(14.dp))
+            .border(1.dp, color.green300, RoundedCornerShape(14.dp))
             .padding(17.dp)
     ) {
         Box(
             modifier = Modifier
                 .size(20.dp)
-                .background(Green500, CircleShape),
+                .background(color.green500, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -757,7 +758,7 @@ private fun InfoNotice() {
         Text(
             text = "등록하신 정보는 고객들에게 공개되며,\n투명한 거래를 위해 정확한 정보를 입력해주세요.",
             fontSize = 14.sp,
-            color = Gray800,
+            color = color.gray800,
             lineHeight = 22.75.sp
         )
     }
@@ -778,7 +779,7 @@ private fun SubmitButton(onClick: () -> Unit) {
             onClick = onClick,
             modifier = Modifier.fillMaxWidth().height(52.dp),
             shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Green500)
+            colors = ButtonDefaults.buttonColors(containerColor = color.green500)
         ) {
             Text(
                 text = "등록하기",

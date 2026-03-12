@@ -15,6 +15,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.home.HomeScreen
 import com.hyunjine.reborn.ui.my.MyScreen
@@ -44,7 +45,7 @@ fun RebornApp() {
             .build()
     }
     KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
-        MaterialTheme {
+        RebornTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background

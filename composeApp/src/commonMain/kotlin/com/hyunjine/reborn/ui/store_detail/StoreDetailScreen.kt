@@ -29,13 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import com.hyunjine.reborn.common.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.hyunjine.reborn.common.theme.RebornTheme
+import com.hyunjine.reborn.common.theme.color
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
@@ -119,12 +120,12 @@ data class StoreDetailScreen(
                     address = uiState.address,
                     onCopyClick = { onEvent(UiEvent.CopyAddressClicked) }
                 )
-                HorizontalDivider(color = Gray100)
+                HorizontalDivider(color = color.gray100)
                 StoreDescriptionSection(
                     description = uiState.description,
                     businessHours = uiState.businessHours
                 )
-                HorizontalDivider(color = Gray100)
+                HorizontalDivider(color = color.gray100)
                 StorePriceSection(
                     prices = uiState.prices,
                     lastUpdated = uiState.lastUpdated
@@ -148,7 +149,7 @@ private fun StoreImageSection(onBackClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(236.dp)
-            .background(Gray100)
+            .background(color.gray100)
     ) {
         // Back button
         IconButton(
@@ -162,7 +163,7 @@ private fun StoreImageSection(onBackClick: () -> Unit) {
                 painter = painterResource(Res.drawable.ic_back),
                 contentDescription = "뒤로가기",
                 modifier = Modifier.size(24.dp),
-                tint = Gray900
+                tint = color.gray900
             )
         }
 
@@ -221,14 +222,14 @@ private fun StoreInfoSection(
                 text = name,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Gray900
+                color = color.gray900
             )
             if (isVerified) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Box(
                     modifier = Modifier
                         .size(24.dp)
-                        .background(Green500, CircleShape),
+                        .background(color.green500, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -249,13 +250,13 @@ private fun StoreInfoSection(
                 painter = painterResource(Res.drawable.ic_location_pin),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = Gray400
+                tint = color.gray400
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = address,
                 fontSize = 16.sp,
-                color = Gray800,
+                color = color.gray800,
                 modifier = Modifier.weight(1f)
             )
             IconButton(
@@ -266,7 +267,7 @@ private fun StoreInfoSection(
                     painter = painterResource(Res.drawable.ic_copy),
                     contentDescription = "주소 복사",
                     modifier = Modifier.size(16.dp),
-                    tint = Gray400
+                    tint = color.gray400
                 )
             }
         }
@@ -293,7 +294,7 @@ private fun StoreDescriptionSection(
             text = "업체 소개",
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Gray900
+            color = color.gray900
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -302,7 +303,7 @@ private fun StoreDescriptionSection(
         Text(
             text = description,
             fontSize = 16.sp,
-            color = Gray800,
+            color = color.gray800,
             lineHeight = 26.sp
         )
 
@@ -313,7 +314,7 @@ private fun StoreDescriptionSection(
             text = "영업 시간",
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Gray900
+            color = color.gray900
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -331,13 +332,13 @@ private fun StoreDescriptionSection(
                     Text(
                         text = hour.day,
                         fontSize = 16.sp,
-                        color = Gray700
+                        color = color.gray700
                     )
                     Text(
                         text = hour.hours,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Gray900
+                        color = color.gray900
                     )
                 }
             }
@@ -370,12 +371,12 @@ private fun StorePriceSection(
                 text = "실시간 매입 시세",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Gray900
+                color = color.gray900
             )
             Text(
                 text = lastUpdated,
                 fontSize = 14.sp,
-                color = Gray600
+                color = color.gray600
             )
         }
 
@@ -387,7 +388,7 @@ private fun StorePriceSection(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Gray50, RoundedCornerShape(10.dp))
+                        .background(color.gray50, RoundedCornerShape(10.dp))
                         .padding(horizontal = 16.dp, vertical = 18.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -396,13 +397,13 @@ private fun StorePriceSection(
                         text = price.name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Gray900
+                        color = color.gray900
                     )
                     Text(
                         text = price.price,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Gray900
+                        color = color.gray900
                     )
                 }
             }
@@ -433,7 +434,7 @@ private fun CallButton(
                 .height(56.dp),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Green500
+                containerColor = color.green500
             )
         ) {
             Text(
@@ -449,29 +450,31 @@ private fun CallButton(
 @Preview
 @Composable
 fun StoreDetailScreenPreview() {
-    StoreDetailScreen(storeId = 1).invoke(
-        uiState = StoreDetailModel(
-            name = "서울고물상",
-            isVerified = true,
-            address = "서울특별시 강남구 역삼동 123-45",
-            description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
-            businessHours = persistentListOf(
-                BusinessHourModel("월요일", "08:00 - 18:00"),
-                BusinessHourModel("화요일", "08:00 - 18:00"),
-                BusinessHourModel("수요일", "08:00 - 18:00"),
-                BusinessHourModel("목요일", "08:00 - 18:00"),
-                BusinessHourModel("금요일", "08:00 - 18:00"),
-                BusinessHourModel("토요일", "08:00 - 15:00"),
-                BusinessHourModel("일요일", "08:00 - 15:00"),
-                BusinessHourModel("공휴일", "영업 종료")
-            ),
-            prices = persistentListOf(
-                StorePriceModel("고철", "450원/kg"),
-                StorePriceModel("알루미늄", "1,800원/kg"),
-                StorePriceModel("구리", "8,500원/kg"),
-                StorePriceModel("스텐", "1,150원/kg")
-            ),
-            lastUpdated = "최종 업데이트: 2시간 전"
+    RebornTheme {
+        StoreDetailScreen(storeId = 1).invoke(
+            uiState = StoreDetailModel(
+                name = "서울고물상",
+                isVerified = true,
+                address = "서울특별시 강남구 역삼동 123-45",
+                description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
+                businessHours = persistentListOf(
+                    BusinessHourModel("월요일", "08:00 - 18:00"),
+                    BusinessHourModel("화요일", "08:00 - 18:00"),
+                    BusinessHourModel("수요일", "08:00 - 18:00"),
+                    BusinessHourModel("목요일", "08:00 - 18:00"),
+                    BusinessHourModel("금요일", "08:00 - 18:00"),
+                    BusinessHourModel("토요일", "08:00 - 15:00"),
+                    BusinessHourModel("일요일", "08:00 - 15:00"),
+                    BusinessHourModel("공휴일", "영업 종료")
+                ),
+                prices = persistentListOf(
+                    StorePriceModel("고철", "450원/kg"),
+                    StorePriceModel("알루미늄", "1,800원/kg"),
+                    StorePriceModel("구리", "8,500원/kg"),
+                    StorePriceModel("스텐", "1,150원/kg")
+                ),
+                lastUpdated = "최종 업데이트: 2시간 전"
+            )
         )
-    )
+    }
 }
