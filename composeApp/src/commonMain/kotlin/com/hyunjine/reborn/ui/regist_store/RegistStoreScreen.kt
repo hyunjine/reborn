@@ -794,7 +794,9 @@ private fun SubmitButton(onClick: () -> Unit) {
 @Preview
 @Composable
 fun RegistStoreScreenPreview() {
-    RegistStoreScreen(
-        uiState = RegistStoreModel()
-    )
+    RebornTheme {
+        RegistStoreScreen(
+            uiState = RegistStoreModel()
+        )
+    }
 }

@@ -31,8 +31,14 @@ class HomeViewModel(
 
     val state: StateFlow<StoreState> = location
         .filterNotNull()
-        .map {
-            StoreState.Loaded(storeRepository.getStores(it))
+        .map { location ->
+            StoreState.Loaded(
+                storeRepository.getStores(location).map { store ->
+                    store.copy(
+                        prices = store.prices.take(2).toImmutableList()
+                    )
+                }.toImmutableList()
+            )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StoreState.Loading)
 
 
