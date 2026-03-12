@@ -33,7 +33,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,6 +61,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.number
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -103,11 +107,16 @@ data class StoreDetailScreen(
         onBack: () -> Unit = {}
     ) {
         val model by viewModel.model.collectAsStateWithLifecycle()
+        val clipboard = LocalClipboard.current
+        val scope = rememberCoroutineScope()
         invoke(
             model = model,
             onEvent = { event ->
                 when (event) {
                     is UiEvent.BackClicked -> onBack()
+                    is UiEvent.CopyAddressClicked -> {
+                        scope.launch { clipboard.setText(AnnotatedString(model.address)) }
+                    }
                     else -> viewModel.event(event)
                 }
             }
@@ -470,24 +479,6 @@ private fun CallButton(
                 color = Color.White
             )
         }
-    }
-}
-
-/**
- * 업체 이미지 섹션 미리보기.
- */
-@Preview(showBackground = true)
-@Composable
-private fun StoreImageSectionPreview() {
-    RebornTheme {
-        StoreImageSection(
-            imageUrls = persistentListOf(
-                "https://picsum.photos/400/300",
-                "https://picsum.photos/400/301",
-                "https://picsum.photos/400/302"
-            ),
-            onBackClick = {}
-        )
     }
 }
 
