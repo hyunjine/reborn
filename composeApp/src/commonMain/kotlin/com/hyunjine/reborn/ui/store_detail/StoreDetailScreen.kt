@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,8 +42,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
+import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.fullName
-import com.hyunjine.reborn.common.util.shortName
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -225,8 +224,7 @@ private fun StoreInfoSection(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = name,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                style = typography.headingBold24,
                 color = color.gray900
             )
         }
@@ -246,7 +244,7 @@ private fun StoreInfoSection(
             val copyIconId = "copy_icon"
             val annotatedAddress = buildAnnotatedString {
                 append("$address ")
-                appendInlineContent(copyIconId, "[복사]")
+                appendInlineContent(copyIconId)
             }
             val inlineContent = mapOf(
                 copyIconId to InlineTextContent(
@@ -267,7 +265,7 @@ private fun StoreInfoSection(
             Text(
                 text = annotatedAddress,
                 inlineContent = inlineContent,
-                fontSize = 16.sp,
+                style = typography.bodyRegular16,
                 color = color.gray800,
                 modifier = Modifier
                     .weight(1f)
@@ -295,8 +293,7 @@ private fun StoreDescriptionSection(
         // Section title
         Text(
             text = "업체 소개",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
+            style = typography.headingSemibold18,
             color = color.gray900
         )
 
@@ -305,9 +302,8 @@ private fun StoreDescriptionSection(
         // Description
         Text(
             text = description,
-            fontSize = 16.sp,
-            color = color.gray800,
-            lineHeight = 26.sp
+            style = typography.bodyRegular16.copy(lineHeight = 26.sp),
+            color = color.gray800
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -315,8 +311,7 @@ private fun StoreDescriptionSection(
         // Business hours title
         Text(
             text = "영업 시간",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
+            style = typography.titleSemibold16,
             color = color.gray900
         )
 
@@ -324,7 +319,6 @@ private fun StoreDescriptionSection(
 
         // Business hours list
         Column(
-            modifier = Modifier.padding(start = 28.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             businessHours.forEach { hour ->
@@ -334,13 +328,12 @@ private fun StoreDescriptionSection(
                 ) {
                     Text(
                         text = hour.dayOfWeek.fullName,
-                        fontSize = 16.sp,
+                        style = typography.bodyRegular16,
                         color = color.gray700
                     )
                     Text(
                         text = hour.hours,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = typography.bodyMedium16,
                         color = color.gray900
                     )
                 }
@@ -372,13 +365,12 @@ private fun StorePriceSection(
         ) {
             Text(
                 text = "실시간 매입 시세",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = typography.headingSemibold18,
                 color = color.gray900
             )
             Text(
                 text = lastUpdated,
-                fontSize = 14.sp,
+                style = typography.captionRegular14,
                 color = color.gray600
             )
         }
@@ -398,14 +390,12 @@ private fun StorePriceSection(
                 ) {
                     Text(
                         text = price.name,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = typography.bodyMedium16,
                         color = color.gray900
                     )
                     Text(
                         text = price.price,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
+                        style = typography.headingBold18,
                         color = color.gray900
                     )
                 }
@@ -442,8 +432,7 @@ private fun CallButton(
         ) {
             Text(
                 text = "전화 문의하기",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = typography.titleSemibold16,
                 color = Color.White
             )
         }

@@ -29,11 +29,16 @@ fun PretendardFontFamily(): FontFamily = FontFamily(
 
 @Immutable
 data class AppTypography(
+    val headingBold24: TextStyle,
+    val headingBold18: TextStyle,
     val headingSemibold18: TextStyle,
     val titleSemibold16: TextStyle,
+    val bodyRegular16: TextStyle,
+    val bodyMedium16: TextStyle,
     val bodyRegular14: TextStyle,
     val bodySemibold14: TextStyle,
     val bodyMedium14: TextStyle,
+    val captionRegular14: TextStyle,
     val captionMedium12: TextStyle,
 )
 
@@ -48,15 +53,39 @@ val typography: AppTypography
 
 @Composable
 fun appTypography(fontFamily: FontFamily = PretendardFontFamily()): AppTypography = AppTypography(
+    headingBold24 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+    ),
+    headingBold18 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 28.sp,
+    ),
     headingSemibold18 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
-        lineHeight = 27.sp,
+        lineHeight = 28.sp,
     ),
     titleSemibold16 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+    ),
+    bodyRegular16 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+    ),
+    bodyMedium16 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 24.sp,
     ),
@@ -75,6 +104,12 @@ fun appTypography(fontFamily: FontFamily = PretendardFontFamily()): AppTypograph
     bodyMedium14 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+    ),
+    captionRegular14 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp,
     ),
