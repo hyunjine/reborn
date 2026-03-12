@@ -24,6 +24,27 @@ class RegistStoreViewModel : BaseViewModel() {
     private val uiEvent = MutableSharedFlow<UiEvent>()
 
     init {
+        uiEvent.filterIsInstance<UiEvent.PhotosAdded>()
+            .onEach { event ->
+                _uiState.update { state ->
+                    val newPhotos = (state.photos + event.photos)
+                        .take(state.maxPhotoCount)
+                        .toImmutableList()
+                    state.copy(photos = newPhotos)
+                }
+            }.launchIn(viewModelScope)
+
+        uiEvent.filterIsInstance<UiEvent.PhotoRemoved>()
+            .onEach { event ->
+                _uiState.update { state ->
+                    state.copy(
+                        photos = state.photos.filterIndexed { i, _ ->
+                            i != event.index
+                        }.toImmutableList()
+                    )
+                }
+            }.launchIn(viewModelScope)
+
         uiEvent.filterIsInstance<UiEvent.StoreNameChanged>()
             .onEach { event -> _uiState.update { it.copy(name = event.name) } }
             .launchIn(viewModelScope)

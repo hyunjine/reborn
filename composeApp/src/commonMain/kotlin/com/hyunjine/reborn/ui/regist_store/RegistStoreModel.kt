@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.persistentListOf
  * @param name 업체명
  * @param address 업체 주소
  * @param description 업체 소개
- * @param photoCount 등록된 사진 수
+ * @param photos 등록된 사진 ByteArray 목록
  * @param maxPhotoCount 최대 사진 수
  * @param batchStartTime 일괄 적용 시작 시간
  * @param batchEndTime 일괄 적용 종료 시간
@@ -19,7 +19,7 @@ data class RegistStoreModel(
     val name: String = "",
     val address: String = "",
     val description: String = "",
-    val photoCount: Int = 0,
+    val photos: ImmutableList<ByteArray> = persistentListOf(),
     val maxPhotoCount: Int = 5,
     val batchStartTime: String = "",
     val batchEndTime: String = "",

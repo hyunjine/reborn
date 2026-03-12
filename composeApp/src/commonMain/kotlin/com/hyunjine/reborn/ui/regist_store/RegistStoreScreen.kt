@@ -51,8 +51,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import com.hyunjine.reborn.common.component.ImagePickerLauncher
 import com.hyunjine.reborn.common.component.TimePickerBottomSheet
 import com.hyunjine.reborn.common.theme.RebornTheme
+import com.hyunjine.reborn.common.util.decodeToImageBitmap
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import kotlinx.collections.immutable.ImmutableList
@@ -80,8 +87,11 @@ object RegistStoreScreen : NavKey {
         /** 뒤로가기 */
         data object BackClicked : UiEvent
 
-        /** 사진 추가 클릭 */
-        data object AddPhotoClicked : UiEvent
+        /** 사진 추가 */
+        data class PhotosAdded(val photos: List<ByteArray>) : UiEvent
+
+        /** 사진 삭제 */
+        data class PhotoRemoved(val index: Int) : UiEvent
 
         /** 업체명 변경 */
         data class StoreNameChanged(val name: String) : UiEvent
@@ -194,9 +204,10 @@ object RegistStoreScreen : NavKey {
                     .verticalScroll(rememberScrollState())
             ) {
                 PhotoSection(
-                    photoCount = uiState.photoCount,
+                    photos = uiState.photos,
                     maxPhotoCount = uiState.maxPhotoCount,
-                    onAddPhoto = { onEvent(UiEvent.AddPhotoClicked) }
+                    onPhotosAdded = { onEvent(UiEvent.PhotosAdded(it)) },
+                    onPhotoRemoved = { onEvent(UiEvent.PhotoRemoved(it)) }
                 )
                 SectionDivider()
                 BasicInfoSection(
@@ -236,16 +247,21 @@ object RegistStoreScreen : NavKey {
 
 /**
  * 사진 등록 섹션.
- * @param photoCount 현재 등록된 사진 수
+ * 갤러리에서 이미지를 선택하고 선택된 이미지를 썸네일로 표시합니다.
+ * @param photos 현재 등록된 사진 ByteArray 목록
  * @param maxPhotoCount 최대 등록 가능 사진 수
- * @param onAddPhoto 사진 추가 버튼 클릭 콜백
+ * @param onPhotosAdded 사진 추가 콜백
+ * @param onPhotoRemoved 사진 삭제 콜백
  */
 @Composable
 private fun PhotoSection(
-    photoCount: Int,
+    photos: ImmutableList<ByteArray>,
     maxPhotoCount: Int,
-    onAddPhoto: () -> Unit
+    onPhotosAdded: (List<ByteArray>) -> Unit,
+    onPhotoRemoved: (Int) -> Unit
 ) {
+    val remaining = maxPhotoCount - photos.size
+
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = "사진 등록",
@@ -259,30 +275,96 @@ private fun PhotoSection(
             color = color.gray600
         )
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedButton(
-            onClick = onAddPhoto,
-            modifier = Modifier.size(96.dp),
-            shape = RoundedCornerShape(14.dp),
-            border = BorderStroke(2.dp, color.gray300),
-            colors = ButtonDefaults.outlinedButtonColors(containerColor = color.gray50)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_camera),
-                    contentDescription = "사진 추가",
-                    modifier = Modifier.size(24.dp),
-                    tint = color.gray400
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "$photoCount/$maxPhotoCount",
-                    style = typography.captionMedium12,
-                    color = color.gray600
-                )
+
+        ImagePickerLauncher(
+            maxSelection = remaining.coerceAtLeast(1),
+            onResult = { selected ->
+                if (selected.isNotEmpty()) onPhotosAdded(selected)
             }
+        ) { launch ->
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // 추가 버튼
+                if (photos.size < maxPhotoCount) {
+                    item {
+                        OutlinedButton(
+                            onClick = launch,
+                            modifier = Modifier.size(96.dp),
+                            shape = RoundedCornerShape(14.dp),
+                            border = BorderStroke(2.dp, color.gray300),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = color.gray50
+                            )
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_camera),
+                                    contentDescription = "사진 추가",
+                                    modifier = Modifier.size(24.dp),
+                                    tint = color.gray400
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "${photos.size}/$maxPhotoCount",
+                                    style = typography.captionMedium12,
+                                    color = color.gray600
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // 선택된 사진 썸네일
+                itemsIndexed(photos) { index, photoBytes ->
+                    PhotoThumbnail(
+                        photoBytes = photoBytes,
+                        onRemove = { onPhotoRemoved(index) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 사진 썸네일. 선택된 이미지를 표시하고 삭제 버튼을 제공합니다.
+ * @param photoBytes 이미지 ByteArray
+ * @param onRemove 삭제 콜백
+ */
+@Composable
+private fun PhotoThumbnail(
+    photoBytes: ByteArray,
+    onRemove: () -> Unit
+) {
+    Box(modifier = Modifier.size(96.dp)) {
+        Image(
+            bitmap = remember(photoBytes) {
+                photoBytes.decodeToImageBitmap()
+            },
+            contentDescription = "등록된 사진",
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(14.dp)),
+            contentScale = ContentScale.Crop
+        )
+        IconButton(
+            onClick = onRemove,
+            modifier = Modifier
+                .size(24.dp)
+                .align(Alignment.TopEnd)
+                .padding(2.dp)
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_close),
+                contentDescription = "사진 삭제",
+                modifier = Modifier.size(12.dp),
+                tint = Color.White
+            )
         }
     }
 }
@@ -616,7 +698,7 @@ private fun DayScheduleRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.heightIn(min = 39.dp)
+        modifier = Modifier.heightIn(min = 40.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -934,9 +1016,10 @@ private fun RegistStoreScreenPreview() {
 private fun PhotoSectionPreview() {
     RebornTheme {
         PhotoSection(
-            photoCount = 2,
+            photos = persistentListOf(),
             maxPhotoCount = 5,
-            onAddPhoto = {}
+            onPhotosAdded = {},
+            onPhotoRemoved = {}
         )
     }
 }
