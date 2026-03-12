@@ -44,12 +44,14 @@ import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.fullName
+import com.hyunjine.reborn.common.util.pad
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.number
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -93,9 +95,9 @@ data class StoreDetailScreen(
         viewModel: StoreDetailViewModel = koinViewModel { parametersOf(storeId) },
         onBack: () -> Unit = {}
     ) {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val model by viewModel.model.collectAsStateWithLifecycle()
         invoke(
-            uiState = uiState,
+            model = model,
             onEvent = { event ->
                 when (event) {
                     is UiEvent.BackClicked -> onBack()
@@ -107,12 +109,12 @@ data class StoreDetailScreen(
 
     /**
      * Stateless UI. 순수 Composable로 UI를 그립니다.
-     * @param uiState 현재 UI 상태
+     * @param model 현재 UI 상태
      * @param onEvent UI 이벤트 콜백
      */
     @Composable
     operator fun invoke(
-        uiState: StoreDetailModel,
+        model: StoreDetailModel,
         onEvent: (UiEvent) -> Unit = {}
     ) {
         Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
@@ -124,19 +126,17 @@ data class StoreDetailScreen(
             ) {
                 StoreImageSection(onBackClick = { onEvent(UiEvent.BackClicked) })
                 StoreInfoSection(
-                    name = uiState.name,
-                    address = uiState.address,
+                    name = model.name,
+                    address = model.address,
                     onCopyClick = { onEvent(UiEvent.CopyAddressClicked) }
                 )
-                HorizontalDivider(color = color.gray100)
                 StoreDescriptionSection(
-                    description = uiState.description,
-                    businessHours = uiState.businessHours
+                    description = model.description,
+                    businessHours = model.businessHours
                 )
-                HorizontalDivider(color = color.gray100)
                 StorePriceSection(
-                    prices = uiState.prices,
-                    lastUpdated = uiState.lastUpdated
+                    prices = model.prices,
+                    lastUpdated = model.lastUpdated
                 )
             }
             CallButton(
@@ -359,25 +359,21 @@ private fun StorePriceSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 20.dp)
     ) {
-        // Header
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "실시간 매입 시세",
-                style = typography.headingSemibold18,
-                color = color.gray900
-            )
-            Text(
-                text = "${lastUpdated.month.ordinal + 1}/${lastUpdated.day} ${lastUpdated.hour}:${lastUpdated.minute.toString().padStart(2, '0')} 업데이트",
-                style = typography.captionRegular14,
-                color = color.gray600
-            )
+        val lastUpdated = lastUpdated.run {
+            "${year}.${month.number.pad()}.${day.pad()} ${hour.pad()}:${minute.pad()}"
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "실시간 매입 시세",
+            style = typography.headingSemibold18,
+            color = color.gray900
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = "최근 업데이트: $lastUpdated",
+            style = typography.captionRegular14,
+            color = color.gray600
+        )
+        Spacer(modifier = Modifier.height(6.dp))
 
         // Price list
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -441,12 +437,31 @@ private fun CallButton(
     }
 }
 
-@Preview
+/**
+ * 실시간 매입 시세 섹션 미리보기.
+ */
+@Preview(showBackground = true)
+@Composable
+private fun StorePriceSectionPreview() {
+    RebornTheme {
+        StorePriceSection(
+            prices = persistentListOf(
+                StorePriceModel("고철", "450원/kg"),
+                StorePriceModel("알루미늄", "1,800원/kg"),
+                StorePriceModel("구리", "8,500원/kg"),
+                StorePriceModel("스텐", "1,150원/kg")
+            ),
+            lastUpdated = LocalDateTime(2026, 3, 12, 14, 30)
+        )
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 fun StoreDetailScreenPreview() {
     RebornTheme {
         StoreDetailScreen(storeId = 1).invoke(
-            uiState = StoreDetailModel(
+            model = StoreDetailModel(
                 name = "서울고물상",
                 address = "서울특별시 강남구 역삼동 123-45",
                 description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
@@ -468,7 +483,9 @@ fun StoreDetailScreenPreview() {
                     StorePriceModel("구리", "8,500원/kg"),
                     StorePriceModel("스텐", "1,150원/kg")
                 ),
-                lastUpdated = LocalDateTime(2026, 3, 12, 14, 30)
+                lastUpdated = LocalDateTime(2026, 3, 12, 14, 30),
+                phoneNumber = "010-1234-5678",
+                id = 1
             )
         )
     }
