@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.hyunjine.reborn.di.RebornAppKoin
@@ -26,12 +27,22 @@ import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.KoinApplication
 import org.koin.core.annotation.Module
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.ImageLoader
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import org.koin.plugin.module.dsl.koinConfiguration
 
 
 @Composable
 @Preview
 fun RebornApp() {
+    setSingletonImageLoaderFactory { context ->
+        ImageLoader.Builder(context)
+            .components {
+                add(KtorNetworkFetcherFactory())
+            }
+            .build()
+    }
     KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
         MaterialTheme {
             Surface(
@@ -68,6 +79,13 @@ fun RebornApp() {
                             animationSpec = tween(300)
                         )
                     },
+                    onBack = { backStack.removeLastOrNull() },
+                    entryDecorators = listOf(
+                        // Add the default decorators for managing scenes and saving state
+                        rememberSaveableStateHolderNavEntryDecorator(),
+                        // Then add the view model store decorator
+//                        rememberViewModelStoreNavEntryDecorator()
+                    ),
                     entryProvider = entryProvider {
                         entry<HomeScreen> {
                             HomeScreen(
