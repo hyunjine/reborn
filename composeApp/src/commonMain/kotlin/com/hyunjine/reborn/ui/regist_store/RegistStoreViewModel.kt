@@ -49,6 +49,10 @@ class RegistStoreViewModel : BaseViewModel() {
             .onEach { event -> _uiState.update { it.copy(name = event.name) } }
             .launchIn(viewModelScope)
 
+        uiEvent.filterIsInstance<UiEvent.PhoneChanged>()
+            .onEach { event -> _uiState.update { it.copy(phone = event.phone) } }
+            .launchIn(viewModelScope)
+
         uiEvent.filterIsInstance<UiEvent.AddressChanged>()
             .onEach { event -> _uiState.update { it.copy(address = event.address) } }
             .launchIn(viewModelScope)

@@ -6,6 +6,7 @@ import kotlinx.collections.immutable.persistentListOf
 /**
  * 업체 등록 화면의 UI 상태 모델.
  * @param name 업체명
+ * @param phone 전화번호 (숫자만)
  * @param address 업체 주소
  * @param description 업체 소개
  * @param photos 등록된 사진 ByteArray 목록
@@ -17,6 +18,7 @@ import kotlinx.collections.immutable.persistentListOf
  */
 data class RegistStoreModel(
     val name: String = "",
+    val phone: String = "",
     val address: String = "",
     val description: String = "",
     val photos: ImmutableList<ByteArray> = persistentListOf(),

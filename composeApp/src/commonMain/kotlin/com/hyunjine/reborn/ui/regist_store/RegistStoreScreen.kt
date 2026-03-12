@@ -106,6 +106,9 @@ object RegistStoreScreen : NavKey {
         /** 업체명 변경 */
         data class StoreNameChanged(val name: String) : UiEvent
 
+        /** 전화번호 변경 */
+        data class PhoneChanged(val phone: String) : UiEvent
+
         /** 주소 변경 */
         data class AddressChanged(val address: String) : UiEvent
 
@@ -222,9 +225,11 @@ object RegistStoreScreen : NavKey {
                 SectionDivider()
                 BasicInfoSection(
                     storeName = uiState.name,
+                    phone = uiState.phone,
                     address = uiState.address,
                     description = uiState.description,
                     onStoreNameChanged = { onEvent(UiEvent.StoreNameChanged(it)) },
+                    onPhoneChanged = { onEvent(UiEvent.PhoneChanged(it)) },
                     onAddressChanged = { onEvent(UiEvent.AddressChanged(it)) },
                     onDescriptionChanged = { onEvent(UiEvent.DescriptionChanged(it)) }
                 )
@@ -396,18 +401,22 @@ private fun SectionDivider() {
 /**
  * 기본 정보 섹션.
  * @param storeName 업체명
+ * @param phone 전화번호
  * @param address 주소
  * @param description 업체 소개
  * @param onStoreNameChanged 업체명 변경 콜백
+ * @param onPhoneChanged 전화번호 변경 콜백
  * @param onAddressChanged 주소 변경 콜백
  * @param onDescriptionChanged 업체 소개 변경 콜백
  */
 @Composable
 private fun BasicInfoSection(
     storeName: String,
+    phone: String,
     address: String,
     description: String,
     onStoreNameChanged: (String) -> Unit,
+    onPhoneChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit
 ) {
@@ -426,6 +435,43 @@ private fun BasicInfoSection(
             value = storeName,
             onValueChange = onStoreNameChanged,
             placeholder = "업체명을 입력해주세요"
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // 전화번호
+        RequiredLabel("전화번호")
+        Spacer(modifier = Modifier.height(8.dp))
+        BasicTextField(
+            value = phone,
+            onValueChange = { newValue ->
+                val digits = newValue.filter { it.isDigit() }.take(11)
+                onPhoneChanged(digits)
+            },
+            singleLine = true,
+            textStyle = typography.bodyRegular16.copy(color = color.gray900),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            visualTransformation = PhoneNumberTransformation,
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .background(color.gray50, RoundedCornerShape(8.dp))
+                        .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    if (phone.isEmpty()) {
+                        Text(
+                            text = "전화번호를 입력해주세요",
+                            style = typography.bodyRegular16,
+                            color = color.gray500
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -591,6 +637,44 @@ private fun parseTime(time: String): Pair<Int, Int> {
  */
 private fun formatTime(hour: Int, minute: Int): String =
     "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
+
+/**
+ * 전화번호 포맷 VisualTransformation.
+ * 숫자를 010-1234-5678 형식으로 표시합니다.
+ */
+private object PhoneNumberTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val digits = text.text
+        if (digits.isEmpty()) return TransformedText(text, OffsetMapping.Identity)
+
+        val formatted = buildString {
+            digits.forEachIndexed { index, c ->
+                if (index == 3 || index == 7) append('-')
+                append(c)
+            }
+        }
+
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                return when {
+                    offset <= 3 -> offset
+                    offset <= 7 -> offset + 1
+                    else -> offset + 2
+                }.coerceAtMost(formatted.length)
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                return when {
+                    offset <= 3 -> offset
+                    offset <= 8 -> offset - 1
+                    else -> offset - 2
+                }.coerceAtMost(digits.length)
+            }
+        }
+
+        return TransformedText(AnnotatedString(formatted), offsetMapping)
+    }
+}
 
 /**
  * 숫자를 3자리마다 콤마로 구분하는 VisualTransformation.
@@ -1104,9 +1188,11 @@ private fun BasicInfoSectionPreview() {
     RebornTheme {
         BasicInfoSection(
             storeName = "재활용 고물상",
+            phone = "01012345678",
             address = "서울시 강남구 테헤란로 123",
             description = "20년 경력의 신뢰할 수 있는 고물상입니다.",
             onStoreNameChanged = {},
+            onPhoneChanged = {},
             onAddressChanged = {},
             onDescriptionChanged = {}
         )
