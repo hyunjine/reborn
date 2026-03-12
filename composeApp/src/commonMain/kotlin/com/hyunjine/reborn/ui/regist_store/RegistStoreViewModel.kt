@@ -85,6 +85,15 @@ class RegistStoreViewModel : ViewModel() {
                         )
                     }
                 }
+                is RegistStoreScreen.UiEvent.RemovePriceItem -> {
+                    _uiState.update { state ->
+                        state.copy(
+                            priceItems = state.priceItems.filterIndexed { i, _ ->
+                                i != event.index
+                            }.toImmutableList()
+                        )
+                    }
+                }
                 is RegistStoreScreen.UiEvent.PriceItemNameChanged -> {
                     _uiState.update { state ->
                         state.copy(

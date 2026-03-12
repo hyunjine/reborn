@@ -56,6 +56,7 @@ import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_add
 import reborn.composeapp.generated.resources.ic_back
 import reborn.composeapp.generated.resources.ic_camera
+import reborn.composeapp.generated.resources.ic_close
 
 /**
  * 업체 등록 화면.
@@ -106,6 +107,9 @@ object RegistStoreScreen : NavKey {
 
         /** 품목 추가 */
         data object AddPriceItem : UiEvent
+
+        /** 품목 삭제 */
+        data class RemovePriceItem(val index: Int) : UiEvent
 
         /** 품목명 변경 */
         data class PriceItemNameChanged(val index: Int, val name: String) : UiEvent
@@ -216,6 +220,7 @@ object RegistStoreScreen : NavKey {
                 PriceSection(
                     priceItems = uiState.priceItems,
                     onAddPriceItem = { onEvent(UiEvent.AddPriceItem) },
+                    onRemoveItem = { onEvent(UiEvent.RemovePriceItem(it)) },
                     onNameChanged = { i, n -> onEvent(UiEvent.PriceItemNameChanged(i, n)) },
                     onPriceChanged = { i, p -> onEvent(UiEvent.PriceItemPriceChanged(i, p)) }
                 )
@@ -653,6 +658,7 @@ private fun DayScheduleRow(
  * 매입 단가 섹션.
  * @param priceItems 매입 품목 목록
  * @param onAddPriceItem 품목 추가 콜백
+ * @param onRemoveItem 품목 삭제 콜백
  * @param onNameChanged 품목명 변경 콜백
  * @param onPriceChanged 품목 단가 변경 콜백
  */
@@ -660,6 +666,7 @@ private fun DayScheduleRow(
 private fun PriceSection(
     priceItems: ImmutableList<PriceItemModel>,
     onAddPriceItem: () -> Unit,
+    onRemoveItem: (Int) -> Unit,
     onNameChanged: (Int, String) -> Unit,
     onPriceChanged: (Int, String) -> Unit
 ) {
@@ -677,26 +684,25 @@ private fun PriceSection(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Added price items
         priceItems.forEachIndexed { index, item ->
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FormTextField(
-                    value = item.name,
-                    onValueChange = { onNameChanged(index, it) },
-                    placeholder = "품목명"
-                )
-            }
+            PriceItemCard(
+                item = item,
+                onNameChanged = { onNameChanged(index, it) },
+                onPriceChanged = { onPriceChanged(index, it) },
+                onRemove = { onRemoveItem(index) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Add button
+        // 품목 추가하기 버튼
         OutlinedButton(
             onClick = onAddPriceItem,
             modifier = Modifier.fillMaxWidth().height(48.dp),
             shape = RoundedCornerShape(14.dp),
-            border = BorderStroke(2.dp, color.gray300),
+            border = BorderStroke(
+                width = 2.dp,
+                color = color.gray300
+            ),
             colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
         ) {
             Icon(
@@ -710,6 +716,125 @@ private fun PriceSection(
                 text = "품목 추가하기",
                 style = typography.bodyMedium14,
                 color = color.gray700
+            )
+        }
+    }
+}
+
+/**
+ * 매입 단가 품목 카드.
+ * 품목명 입력, kg당 매입가 입력, 삭제 버튼을 포함합니다.
+ * @param item 품목 데이터
+ * @param onNameChanged 품목명 변경 콜백
+ * @param onPriceChanged 단가 변경 콜백
+ * @param onRemove 삭제 콜백
+ */
+@Composable
+private fun PriceItemCard(
+    item: PriceItemModel,
+    onNameChanged: (String) -> Unit,
+    onPriceChanged: (String) -> Unit,
+    onRemove: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color.gray50.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+            .border(1.dp, color.gray200, RoundedCornerShape(14.dp))
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 28.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 품목
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "품목",
+                    style = typography.bodyMedium14,
+                    color = color.gray800
+                )
+                BasicTextField(
+                    value = item.name,
+                    onValueChange = onNameChanged,
+                    singleLine = true,
+                    textStyle = typography.bodyRegular16.copy(color = color.gray900),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(36.dp)
+                                .background(Color.White, RoundedCornerShape(10.dp))
+                                .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
+                                .padding(horizontal = 12.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) { innerTextField() }
+                    }
+                )
+            }
+
+            // kg당 매입가
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "kg당 매입가",
+                    style = typography.bodyMedium14,
+                    color = color.gray800
+                )
+                BasicTextField(
+                    value = item.price,
+                    onValueChange = onPriceChanged,
+                    singleLine = true,
+                    textStyle = typography.bodyRegular16.copy(color = color.gray900),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(36.dp)
+                                .background(Color.White, RoundedCornerShape(8.dp))
+                                .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
+                                .padding(horizontal = 12.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (item.price.isEmpty()) {
+                                Text(
+                                    text = "매입 단가를 입력하세요",
+                                    style = typography.bodyRegular16,
+                                    color = color.gray500
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(modifier = Modifier.weight(1f)) {
+                                    innerTextField()
+                                }
+                                Text(
+                                    text = "원 / kg",
+                                    style = typography.bodyRegular14,
+                                    color = color.gray600
+                                )
+                            }
+                        }
+                    }
+                )
+            }
+        }
+
+        // X 삭제 버튼
+        IconButton(
+            onClick = onRemove,
+            modifier = Modifier
+                .size(28.dp)
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_close),
+                contentDescription = "품목 삭제",
+                modifier = Modifier.size(16.dp),
+                tint = color.gray500
             )
         }
     }
