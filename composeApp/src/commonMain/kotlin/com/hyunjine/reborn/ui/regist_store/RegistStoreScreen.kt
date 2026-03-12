@@ -49,6 +49,7 @@ import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -516,6 +517,8 @@ private fun BusinessHoursSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 BasicTextField(
+                    modifier = Modifier
+                        .weight(1f),
                     value = batchStartTime,
                     onValueChange = onBatchStartTimeChanged,
                     singleLine = true,
@@ -523,8 +526,6 @@ private fun BusinessHoursSection(
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .height(43.dp)
                                 .background(Color.White, RoundedCornerShape(10.dp))
                                 .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
                                 .padding(horizontal = 12.dp),
@@ -534,6 +535,8 @@ private fun BusinessHoursSection(
                 )
                 Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
                 BasicTextField(
+                    modifier = Modifier
+                        .weight(1f),
                     value = batchEndTime,
                     onValueChange = onBatchEndTimeChanged,
                     singleLine = true,
@@ -541,8 +544,6 @@ private fun BusinessHoursSection(
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .height(43.dp)
                                 .background(Color.White, RoundedCornerShape(10.dp))
                                 .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
                                 .padding(horizontal = 12.dp),
@@ -900,12 +901,137 @@ private fun SubmitButton(onClick: () -> Unit) {
     }
 }
 
+/**
+ * 전체 업체 등록 화면 미리보기.
+ */
 @Preview
 @Composable
-fun RegistStoreScreenPreview() {
+private fun RegistStoreScreenPreview() {
     RebornTheme {
         RegistStoreScreen(
             uiState = RegistStoreModel()
         )
+    }
+}
+
+/**
+ * 사진 등록 섹션 미리보기.
+ */
+@Preview
+@Composable
+private fun PhotoSectionPreview() {
+    RebornTheme {
+        PhotoSection(
+            photoCount = 2,
+            maxPhotoCount = 5,
+            onAddPhoto = {}
+        )
+    }
+}
+
+/**
+ * 기본 정보 섹션 미리보기.
+ */
+@Preview
+@Composable
+private fun BasicInfoSectionPreview() {
+    RebornTheme {
+        BasicInfoSection(
+            storeName = "재활용 고물상",
+            address = "서울시 강남구 테헤란로 123",
+            description = "20년 경력의 신뢰할 수 있는 고물상입니다.",
+            onStoreNameChanged = {},
+            onAddressChanged = {},
+            onDescriptionChanged = {}
+        )
+    }
+}
+
+/**
+ * 영업 시간 섹션 미리보기.
+ */
+@Preview
+@Composable
+private fun BusinessHoursSectionPreview() {
+    RebornTheme {
+        BusinessHoursSection(
+            batchStartTime = "09:00",
+            batchEndTime = "18:00",
+            daySchedules = persistentListOf(
+                DayScheduleModel("월", true, "09:00", "18:00"),
+                DayScheduleModel("화", true, "09:00", "18:00"),
+                DayScheduleModel("수", true, "09:00", "18:00"),
+                DayScheduleModel("목", true, "09:00", "18:00"),
+                DayScheduleModel("금", true, "09:00", "18:00"),
+                DayScheduleModel("토", false),
+                DayScheduleModel("일", false)
+            ),
+            isHolidayClosed = true,
+            onBatchStartTimeChanged = {},
+            onBatchEndTimeChanged = {},
+            onApplyBatchTime = {},
+            onDayEnabledChanged = { _, _ -> },
+            onDayStartTimeChanged = { _, _ -> },
+            onDayEndTimeChanged = { _, _ -> },
+            onHolidayClosedChanged = {}
+        )
+    }
+}
+
+/**
+ * 매입 단가 섹션 미리보기 (품목 있음).
+ */
+@Preview
+@Composable
+private fun PriceSectionPreview() {
+    RebornTheme {
+        PriceSection(
+            priceItems = persistentListOf(
+                PriceItemModel(name = "구리", price = "8500"),
+                PriceItemModel(name = "알루미늄", price = "")
+            ),
+            onAddPriceItem = {},
+            onRemoveItem = {},
+            onNameChanged = { _, _ -> },
+            onPriceChanged = { _, _ -> }
+        )
+    }
+}
+
+/**
+ * 매입 단가 품목 카드 미리보기.
+ */
+@Preview
+@Composable
+private fun PriceItemCardPreview() {
+    RebornTheme {
+        PriceItemCard(
+            item = PriceItemModel(name = "구리", price = "8500"),
+            onNameChanged = {},
+            onPriceChanged = {},
+            onRemove = {}
+        )
+    }
+}
+
+/**
+ * 하단 안내 메시지 미리보기.
+ */
+@Preview
+@Composable
+private fun InfoNoticePreview() {
+    RebornTheme {
+        InfoNotice()
+    }
+}
+
+/**
+ * 등록하기 버튼 미리보기.
+ */
+@Preview
+@Composable
+private fun SubmitButtonPreview() {
+    RebornTheme {
+        SubmitButton(onClick = {})
     }
 }
