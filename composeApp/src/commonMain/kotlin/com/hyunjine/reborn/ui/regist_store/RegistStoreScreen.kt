@@ -20,6 +20,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,6 +49,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -583,6 +589,51 @@ private fun formatTime(hour: Int, minute: Int): String =
     "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
 
 /**
+ * 숫자를 3자리마다 콤마로 구분하는 VisualTransformation.
+ * 원본 텍스트는 순수 숫자이며, 표시 시 콤마가 삽입됩니다.
+ */
+private object ThousandSeparatorTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val original = text.text
+        if (original.isEmpty()) return TransformedText(text, OffsetMapping.Identity)
+
+        val formatted = buildString {
+            original.reversed().forEachIndexed { index, c ->
+                if (index > 0 && index % 3 == 0) append(',')
+                append(c)
+            }
+        }.reversed()
+
+        // originalOffset[i] = i번째 원본 문자의 변환 후 위치
+        val originalToTransformedArray = IntArray(original.length + 1)
+        var origIdx = 0
+        formatted.forEachIndexed { transformedIdx, c ->
+            if (c != ',') {
+                originalToTransformedArray[origIdx] = transformedIdx
+                origIdx++
+            }
+        }
+        originalToTransformedArray[original.length] = formatted.length
+
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int =
+                originalToTransformedArray[offset.coerceIn(0, original.length)]
+
+            override fun transformedToOriginal(offset: Int): Int {
+                var count = 0
+                for (i in formatted.indices) {
+                    if (i >= offset) break
+                    if (formatted[i] != ',') count++
+                }
+                return count.coerceAtMost(original.length)
+            }
+        }
+
+        return TransformedText(AnnotatedString(formatted), offsetMapping)
+    }
+}
+
+/**
  * 영업 시간 섹션.
  * @param batchStartTime 일괄 시작 시간
  * @param batchEndTime 일괄 종료 시간
@@ -880,9 +931,13 @@ private fun PriceItemCard(
                 )
                 BasicTextField(
                     value = item.price,
-                    onValueChange = onPriceChanged,
+                    onValueChange = { newValue ->
+                        onPriceChanged(newValue.filter { it.isDigit() })
+                    },
                     singleLine = true,
                     textStyle = typography.bodyRegular16.copy(color = color.gray900),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    visualTransformation = ThousandSeparatorTransformation,
                     decorationBox = { innerTextField ->
                         Box(
                             modifier = Modifier
