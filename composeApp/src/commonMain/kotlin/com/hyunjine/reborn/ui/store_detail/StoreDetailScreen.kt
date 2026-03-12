@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
@@ -106,6 +107,7 @@ data class StoreDetailScreen(
         onBack: () -> Unit = {}
     ) {
         val model by viewModel.model.collectAsStateWithLifecycle()
+        val uriHandler = LocalUriHandler.current
         invoke(
             model = model,
             onEvent = { event ->
@@ -113,6 +115,9 @@ data class StoreDetailScreen(
                     is UiEvent.BackClicked -> onBack()
                     is UiEvent.CopyAddressClicked -> {
                         ClipboardManager().copyToClipboard(event.value)
+                    }
+                    is UiEvent.CallClicked -> {
+                        uriHandler.openUri("tel:${model.phoneNumber}")
                     }
                     else -> viewModel.event(event)
                 }
