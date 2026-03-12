@@ -1,6 +1,7 @@
 package com.hyunjine.reborn.ui.store_detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -29,6 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,15 +43,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
+import com.hyunjine.reborn.common.util.fullName
+import com.hyunjine.reborn.common.util.shortName
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.datetime.DayOfWeek
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_back
-import reborn.composeapp.generated.resources.ic_check
 import reborn.composeapp.generated.resources.ic_copy
 import reborn.composeapp.generated.resources.ic_location_pin
 
@@ -84,7 +93,6 @@ data class StoreDetailScreen(
         onBack: () -> Unit = {}
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
         invoke(
             uiState = uiState,
             onEvent = { event ->
@@ -116,7 +124,6 @@ data class StoreDetailScreen(
                 StoreImageSection(onBackClick = { onEvent(UiEvent.BackClicked) })
                 StoreInfoSection(
                     name = uiState.name,
-                    isVerified = uiState.isVerified,
                     address = uiState.address,
                     onCopyClick = { onEvent(UiEvent.CopyAddressClicked) }
                 )
@@ -200,14 +207,12 @@ private fun StoreImageSection(onBackClick: () -> Unit) {
 /**
  * 업체 기본 정보 섹션. 업체명, 인증 배지, 주소를 표시합니다.
  * @param name 업체명
- * @param isVerified 인증 여부
  * @param address 업체 주소
  * @param onCopyClick 주소 복사 버튼 클릭 콜백
  */
 @Composable
 private fun StoreInfoSection(
     name: String,
-    isVerified: Boolean,
     address: String,
     onCopyClick: () -> Unit
 ) {
@@ -224,27 +229,11 @@ private fun StoreInfoSection(
                 fontWeight = FontWeight.Bold,
                 color = color.gray900
             )
-            if (isVerified) {
-                Spacer(modifier = Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(color.green500, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_check),
-                        contentDescription = "인증됨",
-                        modifier = Modifier.size(16.dp),
-                        tint = Color.White
-                    )
-                }
-            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Address with copy button
+        // Address with inline copy icon
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(Res.drawable.ic_location_pin),
@@ -253,23 +242,37 @@ private fun StoreInfoSection(
                 tint = color.gray400
             )
             Spacer(modifier = Modifier.width(8.dp))
+
+            val copyIconId = "copy_icon"
+            val annotatedAddress = buildAnnotatedString {
+                append("$address ")
+                appendInlineContent(copyIconId, "[복사]")
+            }
+            val inlineContent = mapOf(
+                copyIconId to InlineTextContent(
+                    Placeholder(
+                        width = 16.sp,
+                        height = 16.sp,
+                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_copy),
+                        contentDescription = "주소 복사",
+                        modifier = Modifier.size(16.dp),
+                        tint = color.gray400
+                    )
+                }
+            )
             Text(
-                text = address,
+                text = annotatedAddress,
+                inlineContent = inlineContent,
                 fontSize = 16.sp,
                 color = color.gray800,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable(onClick = onCopyClick)
             )
-            IconButton(
-                onClick = onCopyClick,
-                modifier = Modifier.size(28.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_copy),
-                    contentDescription = "주소 복사",
-                    modifier = Modifier.size(16.dp),
-                    tint = color.gray400
-                )
-            }
         }
     }
 }
@@ -330,7 +333,7 @@ private fun StoreDescriptionSection(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = hour.day,
+                        text = hour.dayOfWeek.fullName,
                         fontSize = 16.sp,
                         color = color.gray700
                     )
@@ -454,19 +457,11 @@ fun StoreDetailScreenPreview() {
         StoreDetailScreen(storeId = 1).invoke(
             uiState = StoreDetailModel(
                 name = "서울고물상",
-                isVerified = true,
                 address = "서울특별시 강남구 역삼동 123-45",
                 description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
-                businessHours = persistentListOf(
-                    BusinessHourModel("월요일", "08:00 - 18:00"),
-                    BusinessHourModel("화요일", "08:00 - 18:00"),
-                    BusinessHourModel("수요일", "08:00 - 18:00"),
-                    BusinessHourModel("목요일", "08:00 - 18:00"),
-                    BusinessHourModel("금요일", "08:00 - 18:00"),
-                    BusinessHourModel("토요일", "08:00 - 15:00"),
-                    BusinessHourModel("일요일", "08:00 - 15:00"),
-                    BusinessHourModel("공휴일", "영업 종료")
-                ),
+                businessHours = DayOfWeek.entries.map {
+                    BusinessHourModel(dayOfWeek = it, hours = "08:00 - 17:00")
+                }.toImmutableList(),
                 prices = persistentListOf(
                     StorePriceModel("고철", "450원/kg"),
                     StorePriceModel("알루미늄", "1,800원/kg"),
