@@ -8,7 +8,7 @@ import org.koin.core.annotation.Single
 class StoreRemoteDataSourceImpl: StoreRemoteDataSource {
     override suspend fun getStores(location: Location): List<StoreEntity> {
         return List(20) {
-            StoreEntity(id = it.toLong(), name = "name", imageUrl = "imageUrl", distance = 2324, prices = emptyList())
+            StoreEntity(id = it.toLong(), name = "name", imageUrl = "https://picsum.photos/seed/$it/200", distance = 2324, prices = emptyList())
         }
     }
 }
