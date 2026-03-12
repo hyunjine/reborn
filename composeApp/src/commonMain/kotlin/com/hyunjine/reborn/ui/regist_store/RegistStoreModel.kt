@@ -18,7 +18,7 @@ import kotlinx.collections.immutable.persistentListOf
  */
 data class RegistStoreModel(
     val name: String = "",
-    val phone: String = "",
+    val phone: String = "010",
     val address: String = "",
     val description: String = "",
     val photos: ImmutableList<ByteArray> = persistentListOf(),
