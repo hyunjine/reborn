@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -38,6 +39,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import com.hyunjine.reborn.common.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -151,7 +154,14 @@ object HomeScreen : NavKey {
             )
             when (state) {
                 is StoreState.Loading -> {
-
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center),
+                            color = Green500
+                        )
+                    }
                 }
                 is StoreState.Loaded -> {
                     LazyColumn(
@@ -352,15 +362,15 @@ fun GarbageCenterItem(
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // 이미지 플레이스홀더
-        Box(
+        AsyncImage(
+            model = store.imageUrl,
+            contentDescription = "${store.name} 이미지",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(112.dp)
                 .clip(RoundedCornerShape(14.dp))
                 .background(Gray100)
-        ) {
-            // 실제 이미지 로딩 로직이 여기에 들어갑니다.
-        }
+        )
         
         Column(
             modifier = Modifier.weight(1f)
@@ -414,7 +424,7 @@ fun GarbageCenterItem(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(

@@ -17,6 +17,7 @@ multiplatform-nav3-ui = "1.0.0-alpha05"
 koin = "4.2.0-RC1"
 koin-plugin = "0.3.0"
 kotlinx-collections-immutable = "0.3.8"
+coil = "3.2.0"
 
 
 [libraries]
@@ -54,6 +55,9 @@ koin-compose-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navi
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin" }
 
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
