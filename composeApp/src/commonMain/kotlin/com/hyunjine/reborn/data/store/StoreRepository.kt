@@ -5,6 +5,7 @@ import com.hyunjine.reborn.data.store.entity.StoreEntity
 import com.hyunjine.reborn.ui.home.Distance
 import com.hyunjine.reborn.ui.home.MatterModel
 import com.hyunjine.reborn.ui.home.StoreModel
+import com.hyunjine.reborn.ui.store_detail.StoreDetailModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.core.annotation.Single
@@ -31,5 +32,9 @@ class StoreRepository(
                 }.toImmutableList()
             )
         }.toImmutableList()
+    }
+
+    suspend fun getStoreDetail(id: Long): StoreDetailModel {
+        return storeRemoteDataSource.getStoreDetail(id)
     }
 }

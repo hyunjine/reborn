@@ -19,7 +19,7 @@ koin-plugin = "0.3.0"
 kotlinx-collections-immutable = "0.3.8"
 coil = "3.2.0"
 napier = "2.7.1"
-kotlinx-datetime = "0.6.2"
+kotlinx-datetime = "0.7.1"
 
 
 [libraries]
