@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class StoreDetailViewModel(
     private val storeId: Long
 ) : ViewModel() {

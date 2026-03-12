@@ -46,77 +46,72 @@ fun RebornApp() {
     }
     KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
         RebornTheme {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                val backStack = rememberNavBackStack(configuration = navConfig, HomeScreen)
-                NavDisplay(
-                    backStack = backStack,
-                    transitionSpec = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                            animationSpec = tween(300)
-                        ) togetherWith slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                            animationSpec = tween(600)
-                        )
-                    },
-                    popTransitionSpec = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.End,
-                            animationSpec = tween(300)
-                        ) togetherWith slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.End,
-                            animationSpec = tween(300)
-                        )
-                    },
-                    predictivePopTransitionSpec = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.End,
-                            animationSpec = tween(300)
-                        ) togetherWith slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.End,
-                            animationSpec = tween(300)
-                        )
-                    },
-                    onBack = { backStack.removeLastOrNull() },
-                    entryDecorators = listOf(
-                        // Add the default decorators for managing scenes and saving state
-                        rememberSaveableStateHolderNavEntryDecorator(),
-                        // Then add the view model store decorator
+            val backStack = rememberNavBackStack(configuration = navConfig, HomeScreen)
+            NavDisplay(
+                backStack = backStack,
+                transitionSpec = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(300)
+                    ) togetherWith slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(600)
+                    )
+                },
+                popTransitionSpec = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    ) togetherWith slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    )
+                },
+                predictivePopTransitionSpec = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    ) togetherWith slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    )
+                },
+                onBack = { backStack.removeLastOrNull() },
+                entryDecorators = listOf(
+                    // Add the default decorators for managing scenes and saving state
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    // Then add the view model store decorator
 //                        rememberViewModelStoreNavEntryDecorator()
-                    ),
-                    entryProvider = entryProvider {
-                        entry<HomeScreen> {
-                            HomeScreen(
-                                onCenterClick = { id -> backStack.add(StoreDetailScreen(id)) },
-                                onNavClick = { route ->
-                                    when (route) {
-                                        "my" -> backStack.add(MyScreen)
-                                    }
+                ),
+                entryProvider = entryProvider {
+                    entry<HomeScreen> {
+                        HomeScreen(
+                            onCenterClick = { id -> backStack.add(StoreDetailScreen(id)) },
+                            onNavClick = { route ->
+                                when (route) {
+                                    "my" -> backStack.add(MyScreen)
                                 }
-                            )
-                        }
-                        entry<StoreDetailScreen> { screen ->
-                            screen.invoke(onBack = { backStack.removeLastOrNull() })
-                        }
-                        entry<RegistStoreScreen> {
-                            RegistStoreScreen(onBack = { backStack.removeLastOrNull() })
-                        }
-                        entry<MyScreen> {
-                            MyScreen(
-                                onRegisterStore = { backStack.add(RegistStoreScreen) },
-                                onNavClick = { route ->
-                                    when (route) {
-                                        "home" -> backStack.removeLastOrNull()
-                                    }
-                                }
-                            )
-                        }
+                            }
+                        )
                     }
-                )
-            }
+                    entry<StoreDetailScreen> { screen ->
+                        screen.invoke(onBack = { backStack.removeLastOrNull() })
+                    }
+                    entry<RegistStoreScreen> {
+                        RegistStoreScreen(onBack = { backStack.removeLastOrNull() })
+                    }
+                    entry<MyScreen> {
+                        MyScreen(
+                            onRegisterStore = { backStack.add(RegistStoreScreen) },
+                            onNavClick = { route ->
+                                when (route) {
+                                    "home" -> backStack.removeLastOrNull()
+                                }
+                            }
+                        )
+                    }
+                }
+            )
         }
     }
 }
