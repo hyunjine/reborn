@@ -524,49 +524,23 @@ private fun BasicInfoSection(
         // 주소
         RequiredLabel("주소")
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(color.gray50, RoundedCornerShape(8.dp))
+                .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
+                .clickable { requestAddressSearchState(true) }
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.CenterStart
         ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp)
-                    .background(color.gray50, RoundedCornerShape(8.dp))
-                    .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
-                    .clickable { requestAddressSearchState(true) }
-                    .padding(horizontal = 12.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = address.ifEmpty { "주소를 검색해주세요" },
-                    style = typography.bodyRegular16,
-                    color = if (address.isEmpty()) color.gray500 else color.gray900,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            OutlinedButton(
-                onClick = { requestAddressSearchState(true) },
-                modifier = Modifier.width(78.dp).height(48.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, color.green500),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_search),
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = color.green500
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "검색",
-                    style = typography.bodyMedium14,
-                    color = color.green500
-                )
-            }
+            Text(
+                text = address.ifEmpty { "주소를 검색해주세요" },
+                style = typography.bodyRegular16,
+                color = if (address.isEmpty()) color.gray500 else color.gray900,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
         if (isShowingAddressSearch) {
             AddressSearchDialog(
