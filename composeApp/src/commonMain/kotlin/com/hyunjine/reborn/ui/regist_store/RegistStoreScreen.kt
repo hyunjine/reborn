@@ -69,7 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
-import com.hyunjine.reborn.common.component.AddressSearchBottomSheet
+import com.hyunjine.reborn.common.component.AddressSearchDialog
 import com.hyunjine.reborn.common.component.ImagePickerLauncher
 import com.hyunjine.reborn.common.component.TimePickerBottomSheet
 import com.hyunjine.reborn.common.theme.RebornTheme
@@ -529,7 +529,7 @@ private fun BasicInfoSection(
             )
         }
         if (showAddressSearch) {
-            AddressSearchBottomSheet(
+            AddressSearchDialog(
                 onAddressSelected = { selectedAddress ->
                     onAddressChanged(selectedAddress)
                     showAddressSearch = false
