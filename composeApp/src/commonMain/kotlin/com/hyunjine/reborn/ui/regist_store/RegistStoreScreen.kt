@@ -1083,7 +1083,8 @@ private fun PriceItemCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(36.dp)
-                        .background(Color.White, RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color.White)
                         .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
                         .clickable { showPicker = true }
                         .padding(horizontal = 12.dp),
