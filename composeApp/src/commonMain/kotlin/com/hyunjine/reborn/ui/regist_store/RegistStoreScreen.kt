@@ -69,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import com.hyunjine.reborn.common.component.AddressSearchBottomSheet
 import com.hyunjine.reborn.common.component.ImagePickerLauncher
 import com.hyunjine.reborn.common.component.TimePickerBottomSheet
 import com.hyunjine.reborn.common.theme.RebornTheme
@@ -424,7 +425,6 @@ private fun BasicInfoSection(
     onDescriptionChanged: (String) -> Unit
 ) {
     val phoneFocusRequester = remember { FocusRequester() }
-    val addressFocusRequester = remember { FocusRequester() }
     val descriptionFocusRequester = remember { FocusRequester() }
 
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
@@ -470,7 +470,7 @@ private fun BasicInfoSection(
                 imeAction = ImeAction.Next
             ),
             keyboardActions = KeyboardActions(
-                onNext = { addressFocusRequester.requestFocus() }
+                onNext = { descriptionFocusRequester.requestFocus() }
             ),
             modifier = Modifier
                 .focusRequester(phoneFocusRequester)
@@ -509,16 +509,34 @@ private fun BasicInfoSection(
         // 주소
         RequiredLabel("주소")
         Spacer(modifier = Modifier.height(8.dp))
-        FormTextField(
-            value = address,
-            onValueChange = onAddressChanged,
-            placeholder = "주소를 검색해주세요",
-            modifier = Modifier.focusRequester(addressFocusRequester),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(
-                onNext = { descriptionFocusRequester.requestFocus() }
+        var showAddressSearch by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(color.gray50, RoundedCornerShape(8.dp))
+                .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
+                .clickable { showAddressSearch = true }
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = address.ifEmpty { "주소를 검색해주세요" },
+                style = typography.bodyRegular16,
+                color = if (address.isEmpty()) color.gray500 else color.gray900,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-        )
+        }
+        if (showAddressSearch) {
+            AddressSearchBottomSheet(
+                onAddressSelected = { selectedAddress ->
+                    onAddressChanged(selectedAddress)
+                    showAddressSearch = false
+                },
+                onDismiss = { showAddressSearch = false }
+            )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
