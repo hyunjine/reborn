@@ -528,7 +528,8 @@ private fun BasicInfoSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
-                .background(color.gray50, RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(8.dp))
+                .background(color.gray50)
                 .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
                 .clickable { requestAddressSearchState(true) }
                 .padding(horizontal = 12.dp),
