@@ -664,7 +664,8 @@ private fun TimePickerField(
     Box(
         modifier = modifier
             .height(39.dp)
-            .background(backgroundColor, RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(10.dp))
+            .background(backgroundColor)
             .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
             .clickable { showBottomSheet = true }
             .padding(horizontal = 12.dp),
