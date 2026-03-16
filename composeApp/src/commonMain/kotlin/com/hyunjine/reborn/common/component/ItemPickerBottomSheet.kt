@@ -42,7 +42,7 @@ fun ItemPickerBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val items = persistentListOf(
-        "고철", "스텐", "구리", "알루미늄", "기판", "납", "비철", "철", "황동", "전선", "모터", "기타"
+        "고철", "스텐", "구리", "알루미늄", "기판", "납", "비철", "철", "황동", "전선", "모터", "기타", "직접 입력"
     )
 
     ModalBottomSheet(
