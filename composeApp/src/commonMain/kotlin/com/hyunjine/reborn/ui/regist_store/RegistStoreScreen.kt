@@ -88,6 +88,9 @@ import reborn.composeapp.generated.resources.ic_back
 import reborn.composeapp.generated.resources.ic_camera
 import reborn.composeapp.generated.resources.ic_close
 import reborn.composeapp.generated.resources.ic_search
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 
 /**
  * 업체 등록 화면.
@@ -166,15 +169,28 @@ object RegistStoreScreen : NavKey {
      * @param viewModel Koin에서 주입받는 ViewModel
      * @param onBack 뒤로가기 콜백
      */
+
     @Composable
     operator fun invoke(
         viewModel: RegistStoreViewModel = koinViewModel(),
         onBack: () -> Unit = {}
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        LaunchedEffect(Unit) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is RegistStoreViewModel.Effect.ShowSnackbar -> {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
+                }
+            }
+        }
 
         invoke(
             uiState = uiState,
+            snackbarHostState = snackbarHostState,
             onEvent = { event ->
                 when (event) {
                     is UiEvent.BackClicked -> onBack()
@@ -187,12 +203,14 @@ object RegistStoreScreen : NavKey {
     /**
      * Stateless UI. 순수 Composable로 UI를 그립니다.
      * @param uiState 현재 UI 상태
+     * @param snackbarHostState 스낵바 호스트 상태
      * @param onEvent UI 이벤트 콜백
      */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     operator fun invoke(
         uiState: RegistStoreModel,
+        snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
         onEvent: (UiEvent) -> Unit = {}
     ) {
         Scaffold(
@@ -220,6 +238,7 @@ object RegistStoreScreen : NavKey {
                     )
                 )
             },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             containerColor = Color.White
         ) { padding ->
             Column(
