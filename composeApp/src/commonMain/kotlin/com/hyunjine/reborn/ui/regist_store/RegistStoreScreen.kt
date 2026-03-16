@@ -420,6 +420,10 @@ private fun BasicInfoSection(
     onAddressChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit
 ) {
+    val phoneFocusRequester = remember { FocusRequester() }
+    val addressFocusRequester = remember { FocusRequester() }
+    val descriptionFocusRequester = remember { FocusRequester() }
+
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = "기본 정보",
@@ -434,7 +438,11 @@ private fun BasicInfoSection(
         FormTextField(
             value = storeName,
             onValueChange = onStoreNameChanged,
-            placeholder = "업체명을 입력해주세요"
+            placeholder = "업체명을 입력해주세요",
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { phoneFocusRequester.requestFocus() }
+            )
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -450,7 +458,14 @@ private fun BasicInfoSection(
             },
             singleLine = true,
             textStyle = typography.bodyRegular16.copy(color = color.gray900),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { addressFocusRequester.requestFocus() }
+            ),
+            modifier = Modifier.focusRequester(phoneFocusRequester),
             visualTransformation = PhoneNumberTransformation,
             decorationBox = { innerTextField ->
                 Box(
@@ -482,7 +497,12 @@ private fun BasicInfoSection(
         FormTextField(
             value = address,
             onValueChange = onAddressChanged,
-            placeholder = "주소를 검색해주세요"
+            placeholder = "주소를 검색해주세요",
+            modifier = Modifier.focusRequester(addressFocusRequester),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { descriptionFocusRequester.requestFocus() }
+            )
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -499,7 +519,9 @@ private fun BasicInfoSection(
             onValueChange = onDescriptionChanged,
             placeholder = "업체를 소개해주세요\n예) 20년 경력의 신뢰할 수 있는 고물상입니다.",
             minHeight = 120,
-            singleLine = false
+            singleLine = false,
+            modifier = Modifier.focusRequester(descriptionFocusRequester),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
         )
     }
 }
@@ -529,6 +551,9 @@ private fun RequiredLabel(text: String) {
  * @param placeholder 플레이스홀더 텍스트
  * @param minHeight 최소 높이 (dp)
  * @param singleLine 한 줄 입력 여부
+ * @param modifier Modifier
+ * @param keyboardOptions 키보드 옵션
+ * @param keyboardActions 키보드 액션
  */
 @Composable
 private fun FormTextField(
@@ -536,13 +561,19 @@ private fun FormTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     minHeight: Int = 48,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = singleLine,
         textStyle = typography.bodyRegular16.copy(color = color.gray900),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        modifier = modifier,
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier
