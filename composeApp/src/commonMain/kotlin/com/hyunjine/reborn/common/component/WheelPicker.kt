@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -55,6 +57,7 @@ fun WheelPicker(
 ) {
     val halfVisible = visibleCount / 2
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedIndex)
+    val haptic = LocalHapticFeedback.current
 
     val currentIndex by remember {
         derivedStateOf {
@@ -71,7 +74,10 @@ fun WheelPicker(
     LaunchedEffect(Unit) {
         snapshotFlow { currentIndex }
             .distinctUntilChanged()
-            .collect { onSelectedChanged(it) }
+            .collect { 
+                onSelectedChanged(it)
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            }
     }
 
     Box(
