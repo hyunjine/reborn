@@ -1067,27 +1067,29 @@ private fun PriceItemCard(
                     style = typography.bodyMedium14,
                     color = color.gray800
                 )
-                BasicTextField(
-                    value = item.name,
-                    onValueChange = onNameChanged,
-                    singleLine = true,
-                    textStyle = typography.bodyRegular16.copy(color = color.gray900),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(
-                        onNext = { priceFocusRequester.requestFocus() }
-                    ),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(36.dp)
-                                .background(Color.White, RoundedCornerShape(10.dp))
-                                .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-                                .padding(horizontal = 12.dp),
-                            contentAlignment = Alignment.CenterStart
-                        ) { innerTextField() }
-                    }
-                )
+                var showPicker by remember { mutableStateOf(false) }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(36.dp)
+                        .background(Color.White, RoundedCornerShape(10.dp))
+                        .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
+                        .clickable { showPicker = true }
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = item.name.ifEmpty { "품목을 선택하세요" },
+                        style = typography.bodyRegular16,
+                        color = if (item.name.isEmpty()) color.gray500 else color.gray900
+                    )
+                }
+                if (showPicker) {
+                    ItemPickerBottomSheet(
+                        onItemSelected = onNameChanged,
+                        onDismiss = { showPicker = false }
+                    )
+                }
             }
 
             // kg당 매입가
