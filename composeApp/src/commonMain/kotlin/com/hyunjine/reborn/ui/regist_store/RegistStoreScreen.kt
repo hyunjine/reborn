@@ -149,6 +149,9 @@ object RegistStoreScreen : NavKey {
         /** 품목 단가 변경 */
         data class PriceItemPriceChanged(val index: Int, val price: String) : UiEvent
 
+        /** 주소 검색 다이얼로그 표시 상태 변경 */
+        data class AddressSearchState(val isShow: Boolean) : UiEvent
+
         /** 등록하기 클릭 */
         data object SubmitClicked : UiEvent
     }
@@ -232,10 +235,12 @@ object RegistStoreScreen : NavKey {
                     phone = uiState.phone,
                     address = uiState.address,
                     description = uiState.description,
+                    isShowingAddressSearch = uiState.isShowingAddressSearch,
                     onStoreNameChanged = { onEvent(UiEvent.StoreNameChanged(it)) },
                     onPhoneChanged = { onEvent(UiEvent.PhoneChanged(it)) },
                     onAddressChanged = { onEvent(UiEvent.AddressChanged(it)) },
-                    onDescriptionChanged = { onEvent(UiEvent.DescriptionChanged(it)) }
+                    onDescriptionChanged = { onEvent(UiEvent.DescriptionChanged(it)) },
+                    requestAddressSearchState = { onEvent(UiEvent.AddressSearchState(it)) }
                 )
                 SectionDivider()
                 BusinessHoursSection(
@@ -408,10 +413,12 @@ private fun SectionDivider() {
  * @param phone 전화번호
  * @param address 주소
  * @param description 업체 소개
+ * @param isShowingAddressSearch 주소 검색 다이얼로그 표시 여부
  * @param onStoreNameChanged 업체명 변경 콜백
  * @param onPhoneChanged 전화번호 변경 콜백
  * @param onAddressChanged 주소 변경 콜백
  * @param onDescriptionChanged 업체 소개 변경 콜백
+ * @param requestAddressSearchState 주소 검색 다이얼로그 표시 상태 변경 요청 콜백
  */
 @Composable
 private fun BasicInfoSection(
@@ -419,10 +426,12 @@ private fun BasicInfoSection(
     phone: String,
     address: String,
     description: String,
+    isShowingAddressSearch: Boolean,
     onStoreNameChanged: (String) -> Unit,
     onPhoneChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
-    onDescriptionChanged: (String) -> Unit
+    onDescriptionChanged: (String) -> Unit,
+    requestAddressSearchState: (Boolean) -> Unit
 ) {
     val phoneFocusRequester = remember { FocusRequester() }
     val descriptionFocusRequester = remember { FocusRequester() }
@@ -470,7 +479,7 @@ private fun BasicInfoSection(
                 imeAction = ImeAction.Next
             ),
             keyboardActions = KeyboardActions(
-                onNext = { descriptionFocusRequester.requestFocus() }
+                onNext = { requestAddressSearchState(true) }
             ),
             modifier = Modifier
                 .focusRequester(phoneFocusRequester)
@@ -509,14 +518,13 @@ private fun BasicInfoSection(
         // 주소
         RequiredLabel("주소")
         Spacer(modifier = Modifier.height(8.dp))
-        var showAddressSearch by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
                 .background(color.gray50, RoundedCornerShape(8.dp))
                 .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
-                .clickable { showAddressSearch = true }
+                .clickable { requestAddressSearchState(true) }
                 .padding(horizontal = 12.dp),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -528,13 +536,13 @@ private fun BasicInfoSection(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        if (showAddressSearch) {
+        if (isShowingAddressSearch) {
             AddressSearchDialog(
                 onAddressSelected = { selectedAddress ->
                     onAddressChanged(selectedAddress)
-                    showAddressSearch = false
+                    requestAddressSearchState(false)
                 },
-                onDismiss = { showAddressSearch = false }
+                onDismiss = { requestAddressSearchState(false) }
             )
         }
 
@@ -1255,10 +1263,12 @@ private fun BasicInfoSectionPreview() {
             phone = "01012345678",
             address = "서울시 강남구 테헤란로 123",
             description = "20년 경력의 신뢰할 수 있는 고물상입니다.",
+            isShowingAddressSearch = false,
             onStoreNameChanged = {},
             onPhoneChanged = {},
             onAddressChanged = {},
-            onDescriptionChanged = {}
+            onDescriptionChanged = {},
+            requestAddressSearchState = {}
         )
     }
 }

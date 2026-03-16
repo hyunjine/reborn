@@ -159,6 +159,11 @@ class RegistStoreViewModel : BaseViewModel() {
                     )
                 }
             }.launchIn(viewModelScope)
+
+        uiEvent.filterIsInstance<UiEvent.AddressSearchState>()
+            .onEach { event ->
+                _uiState.update { it.copy(isShowingAddressSearch = event.isShow) }
+            }.launchIn(viewModelScope)
     }
 
     fun event(event: UiEvent) {

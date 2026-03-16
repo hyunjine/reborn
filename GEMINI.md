@@ -22,60 +22,60 @@
 가장 독특한 컨벤션으로, 모든 화면은 `NavKey`를 구현하는 `@Serializable` 클래스나 객체로 정의됩니다.
 
 - **Screen Definition**: `operator fun invoke`를 사용하여 Composable 함수를 정의합니다.
-    - 첫 번째 `invoke`: Koin ViewModel을 주입받고 이벤트를 처리하는 **Stateless/Stateful Wrapper**.
-    - 두 번째 `invoke`: 실제 UI를 그리는 **Pure Composable**.
+  - 첫 번째 `invoke`: Koin ViewModel을 주입받고 이벤트를 처리하는 **Stateless/Stateful Wrapper**.
+  - 두 번째 `invoke`: 실제 UI를 그리는 **Pure Composable**.
 
 ```kotlin
 @Serializable
 data class ReservationDetailScreen(
-    val serverId: Long
+  val serverId: Long
 ): NavKey {
-    sealed interface UiEvent {
-        data class RejectReservationState(val isShow: Boolean): UiEvent
-        data class AcceptReservationState(val isShow: Boolean): UiEvent
-        data object RequestReservationDetail: UiEvent
-        data class HandleRequest(val id: Long, val status: ReservationStatus): UiEvent
+  sealed interface UiEvent {
+    data class RejectReservationState(val isShow: Boolean): UiEvent
+    data class AcceptReservationState(val isShow: Boolean): UiEvent
+    data object RequestReservationDetail: UiEvent
+    data class HandleRequest(val id: Long, val status: ReservationStatus): UiEvent
+  }
+
+  @Composable
+  operator fun invoke(
+    // Koin ViewModel 주입 (인자가 필요한 경우 parametersOf 사용)
+    viewModel: ReservationDetailViewModel = koinViewModel { parametersOf(this) },
+    onBack: () -> Unit = {}
+  ) {
+    val detail by viewModel.detail.collectAsStateWithLifecycle()
+    val isShowRejectReservationPopup by viewModel.isShowRejectReservationPopup.collectAsStateWithLifecycle()
+    val isShowAcceptReservationPopup by viewModel.isShowAcceptReservationPopup.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+      viewModel.successHandleRequest.collect { onBack() }
     }
 
-    @Composable
-    operator fun invoke(
-        // Koin ViewModel 주입 (인자가 필요한 경우 parametersOf 사용)
-        viewModel: ReservationDetailViewModel = koinViewModel { parametersOf(this) },
-        onBack: () -> Unit = {}
-    ) {
-        val detail by viewModel.detail.collectAsStateWithLifecycle()
-        val isShowRejectReservationPopup by viewModel.isShowRejectReservationPopup.collectAsStateWithLifecycle()
-        val isShowAcceptReservationPopup by viewModel.isShowAcceptReservationPopup.collectAsStateWithLifecycle()
-        
-        LaunchedEffect(Unit) {
-            viewModel.successHandleRequest.collect { onBack() }
-        }
+    invoke(
+      detail = detail,
+      onBack = onBack,
+      isShowRejectReservationPopup = isShowRejectReservationPopup,
+      isShowAcceptReservationPopup = isShowAcceptReservationPopup,
+      retryReservationDetail = { viewModel.event(UiEvent.RequestReservationDetail) },
+      requestRejectReservationState = { viewModel.event(UiEvent.RejectReservationState(it)) },
+      requestAcceptReservationState = { viewModel.event(UiEvent.AcceptReservationState(it)) },
+      handleRequest = { id, status -> viewModel.event(UiEvent.HandleRequest(id, status)) },
+    )
+  }
 
-        invoke(
-            detail = detail,
-            onBack = onBack,
-            isShowRejectReservationPopup = isShowRejectReservationPopup,
-            isShowAcceptReservationPopup = isShowAcceptReservationPopup,
-            retryReservationDetail = { viewModel.event(UiEvent.RequestReservationDetail) },
-            requestRejectReservationState = { viewModel.event(UiEvent.RejectReservationState(it)) },
-            requestAcceptReservationState = { viewModel.event(UiEvent.AcceptReservationState(it)) },
-            handleRequest = { id, status -> viewModel.event(UiEvent.HandleRequest(id, status)) },
-        )
-    }
-
-    @Composable
-    operator fun invoke(
-        detail: ReservationDetailModel,
-        isShowRejectReservationPopup: Boolean,
-        isShowAcceptReservationPopup: Boolean,
-        retryReservationDetail: () -> Unit = { },
-        onBack: () -> Unit = { },
-        requestRejectReservationState: (isShow: Boolean) -> Unit = { },
-        requestAcceptReservationState: (isShow: Boolean) -> Unit = { },
-        handleRequest: (id: Long, status: ReservationStatus) -> Unit = { _, _ -> },
-    ) {
-        // UI 구현...
-    }
+  @Composable
+  operator fun invoke(
+    detail: ReservationDetailModel,
+    isShowRejectReservationPopup: Boolean,
+    isShowAcceptReservationPopup: Boolean,
+    retryReservationDetail: () -> Unit = { },
+    onBack: () -> Unit = { },
+    requestRejectReservationState: (isShow: Boolean) -> Unit = { },
+    requestAcceptReservationState: (isShow: Boolean) -> Unit = { },
+    handleRequest: (id: Long, status: ReservationStatus) -> Unit = { _, _ -> },
+  ) {
+    // UI 구현...
+  }
 }
 ```
 
@@ -89,29 +89,29 @@ data class ReservationDetailScreen(
 ```kotlin
 @KoinViewModel
 class ReservationDetailViewModel(
-    private val arg: ReservationDetailScreen, // Koin에서 인자로 주입됨
-    private val repository: ReservationRepository
+  private val arg: ReservationDetailScreen, // Koin에서 인자로 주입됨
+  private val repository: ReservationRepository
 ): ViewModel() {
 
-    private val _uiEvent = MutableSharedFlow<ReservationDetailScreen.UiEvent>()
+  private val _uiEvent = MutableSharedFlow<ReservationDetailScreen.UiEvent>()
 
-    /**
-     * 예약 요청이 성공적으로 처리되면 발생되는 이벤트입니다.
-     * 외부에는 SharedFlow(ReadOnly)로 노출합니다.
-     */
-    val successHandleRequest: SharedFlow<Unit> = _uiEvent
-        .filterIsInstance<ReservationDetailScreen.UiEvent.HandleRequest>()
-        .map { (id, status) ->
-            repository.addHandledRequest(id = id, status = status)
-        }.shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(5_000))
+  /**
+   * 예약 요청이 성공적으로 처리되면 발생되는 이벤트입니다.
+   * 외부에는 SharedFlow(ReadOnly)로 노출합니다.
+   */
+  val successHandleRequest: SharedFlow<Unit> = _uiEvent
+    .filterIsInstance<ReservationDetailScreen.UiEvent.HandleRequest>()
+    .map { (id, status) ->
+      repository.addHandledRequest(id = id, status = status)
+    }.shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(5_000))
 
-    // ... 기타 상태(isShowingPopup 등)도 동일하게 private Mutable -> public Immutable 패턴 준수
+  // ... 기타 상태(isShowingPopup 등)도 동일하게 private Mutable -> public Immutable 패턴 준수
 
-    fun event(event: ReservationDetailScreen.UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.emit(event)
-        }
+  fun event(event: ReservationDetailScreen.UiEvent) {
+    viewModelScope.launch {
+      _uiEvent.emit(event)
     }
+  }
 }
 ```
 
@@ -121,9 +121,9 @@ class ReservationDetailViewModel(
 
 - **Package Naming**: 기능 단위 패키징 시 `reser_list`, `reser_detail`과 같이 의미를 명확히 합니다.
 - **File Naming**:
-    - `*Screen.kt`: 화면 전체 구현체 (Stateful Wrapper + Stateless UI).
-    - `*ViewModel.kt`: 화면 비즈니스 로직.
-    - `*Model.kt`: UI 데이터 모델.
+  - `*Screen.kt`: 화면 전체 구현체 (Stateful Wrapper + Stateless UI).
+  - `*ViewModel.kt`: 화면 비즈니스 로직.
+  - `*Model.kt`: UI 데이터 모델.
 - **Immutability**: 리스트 전달 시 `kotlinx.collections.immutable.ImmutableList` 사용을 적극 권장합니다.
 
 ---
@@ -154,6 +154,7 @@ class ReservationDetailViewModel(
 
 ## 10. Extra Convention
 - Preview 어노테이션 사용 시 org.jetbrains.compose.ui.tooling.preview.Preview가 아닌 androidx.compose.ui.tooling.preview.Preview를 사용한다.
+- Preview 어노테이션에는 반드시 `showBackground = true`를 설정한다. 예: `@Preview(showBackground = true)`
 
 ## 11. Figma
-- 모든 vector 이미지들은 svg파일 그대로 Drawable에 저장하여 사용한다.
+- 모든 vector 이미지들은 Android Vector Drawable XML로 변환하여 Drawable에 저장하여 사용한다.
