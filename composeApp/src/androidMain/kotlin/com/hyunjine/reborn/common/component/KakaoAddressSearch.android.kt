@@ -57,10 +57,9 @@ private val KAKAO_POSTCODE_HTML = """
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body style="margin:0;padding:0;">
-    <div id="postcode-container" style="width:100%;height:100%;"></div>
     <script>
         new kakao.Postcode({
             oncomplete: function(data) {
@@ -69,10 +68,8 @@ private val KAKAO_POSTCODE_HTML = """
                     address += ' (' + data.buildingName + ')';
                 }
                 AndroidBridge.onAddressSelected(address);
-            },
-            width: '100%',
-            height: '100%'
-        }).embed(document.getElementById('postcode-container'));
+            }
+        }).open();
     </script>
 </body>
 </html>
