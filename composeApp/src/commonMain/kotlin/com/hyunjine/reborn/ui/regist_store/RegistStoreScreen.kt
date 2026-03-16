@@ -562,7 +562,7 @@ private fun BasicInfoSection(
             minHeight = 120,
             singleLine = false,
             modifier = Modifier.focusRequester(descriptionFocusRequester),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default)
         )
     }
 }
