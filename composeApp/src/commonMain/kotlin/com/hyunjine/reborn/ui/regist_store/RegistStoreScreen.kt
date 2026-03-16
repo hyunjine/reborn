@@ -48,13 +48,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
@@ -450,11 +453,15 @@ private fun BasicInfoSection(
         // 전화번호
         RequiredLabel("전화번호")
         Spacer(modifier = Modifier.height(8.dp))
+        var phoneTextFieldValue by remember(phone) {
+            mutableStateOf(TextFieldValue(text = phone, selection = TextRange(phone.length)))
+        }
         BasicTextField(
-            value = phone,
+            value = phoneTextFieldValue,
             onValueChange = { newValue ->
-                val digits = newValue.filter { it.isDigit() }.take(11)
+                val digits = newValue.text.filter { it.isDigit() }.take(11)
                 onPhoneChanged(digits)
+                phoneTextFieldValue = newValue.copy(text = digits)
             },
             singleLine = true,
             textStyle = typography.bodyRegular16.copy(color = color.gray900),
@@ -465,7 +472,15 @@ private fun BasicInfoSection(
             keyboardActions = KeyboardActions(
                 onNext = { addressFocusRequester.requestFocus() }
             ),
-            modifier = Modifier.focusRequester(phoneFocusRequester),
+            modifier = Modifier
+                .focusRequester(phoneFocusRequester)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused) {
+                        phoneTextFieldValue = phoneTextFieldValue.copy(
+                            selection = TextRange(phoneTextFieldValue.text.length)
+                        )
+                    }
+                },
             visualTransformation = PhoneNumberTransformation,
             decorationBox = { innerTextField ->
                 Box(
