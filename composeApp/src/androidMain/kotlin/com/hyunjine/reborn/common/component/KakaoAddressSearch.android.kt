@@ -35,6 +35,8 @@ actual fun KakaoAddressSearchWebView(
                 settings.domStorageEnabled = true
                 settings.javaScriptCanOpenWindowsAutomatically = true
                 settings.setSupportMultipleWindows(true)
+                settings.useWideViewPort = true
+                settings.loadWithOverviewMode = true
 
                 webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView?, url: String?) {
@@ -91,18 +93,20 @@ private val KAKAO_POSTCODE_HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body style="margin:0;padding:0;">
-    <div id="postcode-container" style="width:100%;height:100%;"></div>
+    <div id="postcode-container" style="width:100%;height:100vh;"></div>
     <script>
         console.log('Kakao Postcode script loaded, starting embed...');
         new kakao.Postcode({
             oncomplete: function(data) {
                 console.log('Address selected: ' + data.roadAddress);
                 Android.processAddress(data.roadAddress);
-            }
+            },
+            width: '100%',
+            height: '100%'
         }).embed(document.getElementById('postcode-container'));
         console.log('Kakao Postcode embed called');
     </script>
