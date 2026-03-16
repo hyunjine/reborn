@@ -59,5 +59,6 @@ data class DayScheduleModel(
  */
 data class PriceItemModel(
     val name: String = "",
+    val customName: String = "",
     val price: String = ""
 )
