@@ -71,6 +71,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.component.AddressSearchDialog
 import com.hyunjine.reborn.common.component.ImagePickerLauncher
+import com.hyunjine.reborn.common.component.ItemPickerBottomSheet
 import com.hyunjine.reborn.common.component.TimePickerBottomSheet
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
@@ -86,6 +87,7 @@ import reborn.composeapp.generated.resources.ic_add
 import reborn.composeapp.generated.resources.ic_back
 import reborn.composeapp.generated.resources.ic_camera
 import reborn.composeapp.generated.resources.ic_close
+import reborn.composeapp.generated.resources.ic_search
 
 /**
  * 업체 등록 화면.
@@ -145,6 +147,9 @@ object RegistStoreScreen : NavKey {
 
         /** 품목명 변경 */
         data class PriceItemNameChanged(val index: Int, val name: String) : UiEvent
+
+        /** 직접 입력 품목명 변경 */
+        data class PriceItemCustomNameChanged(val index: Int, val customName: String) : UiEvent
 
         /** 품목 단가 변경 */
         data class PriceItemPriceChanged(val index: Int, val price: String) : UiEvent
@@ -260,6 +265,7 @@ object RegistStoreScreen : NavKey {
                     onAddPriceItem = { onEvent(UiEvent.AddPriceItem) },
                     onRemoveItem = { onEvent(UiEvent.RemovePriceItem(it)) },
                     onNameChanged = { i, n -> onEvent(UiEvent.PriceItemNameChanged(i, n)) },
+                    onCustomNameChanged = { i, n -> onEvent(UiEvent.PriceItemCustomNameChanged(i, n)) },
                     onPriceChanged = { i, p -> onEvent(UiEvent.PriceItemPriceChanged(i, p)) }
                 )
                 InfoNotice()
@@ -518,23 +524,49 @@ private fun BasicInfoSection(
         // 주소
         RequiredLabel("주소")
         Spacer(modifier = Modifier.height(8.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(color.gray50, RoundedCornerShape(8.dp))
-                .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
-                .clickable { requestAddressSearchState(true) }
-                .padding(horizontal = 12.dp),
-            contentAlignment = Alignment.CenterStart
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = address.ifEmpty { "주소를 검색해주세요" },
-                style = typography.bodyRegular16,
-                color = if (address.isEmpty()) color.gray500 else color.gray900,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp)
+                    .background(color.gray50, RoundedCornerShape(8.dp))
+                    .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
+                    .clickable { requestAddressSearchState(true) }
+                    .padding(horizontal = 12.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = address.ifEmpty { "주소를 검색해주세요" },
+                    style = typography.bodyRegular16,
+                    color = if (address.isEmpty()) color.gray500 else color.gray900,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            OutlinedButton(
+                onClick = { requestAddressSearchState(true) },
+                modifier = Modifier.width(78.dp).height(48.dp),
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, color.green500),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_search),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = color.green500
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "검색",
+                    style = typography.bodyMedium14,
+                    color = color.green500
+                )
+            }
         }
         if (isShowingAddressSearch) {
             AddressSearchDialog(
@@ -967,6 +999,7 @@ private fun DayScheduleRow(
  * @param onAddPriceItem 품목 추가 콜백
  * @param onRemoveItem 품목 삭제 콜백
  * @param onNameChanged 품목명 변경 콜백
+ * @param onCustomNameChanged 직접 입력 품목명 변경 콜백
  * @param onPriceChanged 품목 단가 변경 콜백
  */
 @Composable
@@ -975,6 +1008,7 @@ private fun PriceSection(
     onAddPriceItem: () -> Unit,
     onRemoveItem: (Int) -> Unit,
     onNameChanged: (Int, String) -> Unit,
+    onCustomNameChanged: (Int, String) -> Unit,
     onPriceChanged: (Int, String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
@@ -995,6 +1029,7 @@ private fun PriceSection(
             PriceItemCard(
                 item = item,
                 onNameChanged = { onNameChanged(index, it) },
+                onCustomNameChanged = { onCustomNameChanged(index, it) },
                 onPriceChanged = { onPriceChanged(index, it) },
                 onRemove = if (priceItems.size > 1) {
                     { onRemoveItem(index) }
@@ -1035,6 +1070,7 @@ private fun PriceSection(
  * 품목명 입력, kg당 매입가 입력, 삭제 버튼을 포함합니다.
  * @param item 품목 데이터
  * @param onNameChanged 품목명 변경 콜백
+ * @param onCustomNameChanged 직접 입력 품목명 변경 콜백
  * @param onPriceChanged 단가 변경 콜백
  * @param onRemove 삭제 콜백 (null이면 삭제 버튼 숨김)
  */
@@ -1042,6 +1078,7 @@ private fun PriceSection(
 private fun PriceItemCard(
     item: PriceItemModel,
     onNameChanged: (String) -> Unit,
+    onCustomNameChanged: (String) -> Unit,
     onPriceChanged: (String) -> Unit,
     onRemove: (() -> Unit)?
 ) {
@@ -1088,6 +1125,47 @@ private fun PriceItemCard(
                     ItemPickerBottomSheet(
                         onItemSelected = onNameChanged,
                         onDismiss = { showPicker = false }
+                    )
+                }
+            }
+
+            // 직접 입력 품목 (품목이 "직접 입력"일 때만 표시)
+            if (item.name == "직접 입력") {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "직접 입력 품목",
+                        style = typography.bodyMedium14,
+                        color = color.gray800
+                    )
+                    BasicTextField(
+                        value = item.customName,
+                        onValueChange = onCustomNameChanged,
+                        singleLine = true,
+                        textStyle = typography.bodyRegular16.copy(color = color.gray900),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { priceFocusRequester.requestFocus() }
+                        ),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(36.dp)
+                                    .background(Color.White, RoundedCornerShape(10.dp))
+                                    .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
+                                    .padding(horizontal = 12.dp),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                if (item.customName.isEmpty()) {
+                                    Text(
+                                        text = "품목을 입력해주세요",
+                                        style = typography.bodyRegular16,
+                                        color = color.gray500
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        }
                     )
                 }
             }
@@ -1314,11 +1392,12 @@ private fun PriceSectionPreview() {
         PriceSection(
             priceItems = persistentListOf(
                 PriceItemModel(name = "구리", price = "8500"),
-                PriceItemModel(name = "알루미늄", price = "")
+                PriceItemModel(name = "직접 입력", customName = "기판", price = "")
             ),
             onAddPriceItem = {},
             onRemoveItem = {},
             onNameChanged = { _, _ -> },
+            onCustomNameChanged = { _, _ -> },
             onPriceChanged = { _, _ -> }
         )
     }
@@ -1332,8 +1411,9 @@ private fun PriceSectionPreview() {
 private fun PriceItemCardPreview() {
     RebornTheme {
         PriceItemCard(
-            item = PriceItemModel(name = "구리", price = "8500"),
+            item = PriceItemModel(name = "직접 입력", customName = "기판", price = "8500"),
             onNameChanged = {},
+            onCustomNameChanged = {},
             onPriceChanged = {},
             onRemove = {}
         )
