@@ -153,11 +153,8 @@ object RegistStoreScreen : NavKey {
         /** 품목명 변경 */
         data class PriceItemNameChanged(val index: Int, val name: ItemName) : UiEvent
 
-        /** 직접 입력 품목명 변경 */
-        data class PriceItemCustomNameChanged(val index: Int, val customName: String) : UiEvent
-
         /** 품목 단가 변경 */
-        data class PriceItemPriceChanged(val index: Int, val price: Int) : UiEvent
+        data class PriceItemPriceChanged(val index: Int, val price: Int?) : UiEvent
 
         /** 주소 검색 다이얼로그 표시 상태 변경 */
         data class AddressSearchState(val isShow: Boolean) : UiEvent
@@ -1004,7 +1001,7 @@ private fun PriceSection(
     onAddPriceItem: () -> Unit,
     onRemoveItem: (Int) -> Unit,
     onNameChanged: (Int, ItemName) -> Unit,
-    onPriceChanged: (Int, Int) -> Unit
+    onPriceChanged: (Int, Int?) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
@@ -1070,9 +1067,10 @@ private fun PriceSection(
 private fun PriceItemCard(
     item: PriceItemModel,
     onNameChanged: (ItemName) -> Unit = {},
-    onPriceChanged: (Int) -> Unit = {},
+    onPriceChanged: (Int?) -> Unit = {},
     onRemove: (() -> Unit) = {}
 ) {
+    val customNameFocusRequester = remember { FocusRequester() }
     val priceFocusRequester = remember { FocusRequester() }
 
     Box(
@@ -1107,8 +1105,9 @@ private fun PriceItemCard(
                         .padding(horizontal = 12.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
+                    val name = if (item.name is ItemName.Custom) "직접 입력" else item.name.value
                     Text(
-                        text = item.name.value,
+                        text = name,
                         style = typography.bodyRegular16,
                         color = if (item.name == ItemName.None) color.gray500 else color.gray900
                     )
@@ -1126,6 +1125,9 @@ private fun PriceItemCard(
 
             // 직접 입력 품목 (품목이 "직접 입력"일 때만 표시)
             if (item.name is ItemName.Custom) {
+                LaunchedEffect(Unit) {
+                    customNameFocusRequester.requestFocus()
+                }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "직접 입력 품목",
@@ -1136,6 +1138,7 @@ private fun PriceItemCard(
                         value = item.name.value,
                         onValueChange = { onNameChanged(ItemName.Custom(it)) },
                         singleLine = true,
+                        modifier = Modifier.focusRequester(customNameFocusRequester),
                         textStyle = typography.bodyRegular16.copy(color = color.gray900),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(
@@ -1176,7 +1179,7 @@ private fun PriceItemCard(
                     value = item.price?.toString() ?: "",
                     onValueChange = { newValue ->
                         val digits = newValue.filter { it.isDigit() }
-                        onPriceChanged(digits.toIntOrNull() ?: 0)
+                        onPriceChanged(digits.toIntOrNull())
                     },
                     singleLine = true,
                     modifier = Modifier.focusRequester(priceFocusRequester),
