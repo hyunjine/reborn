@@ -1,7 +1,9 @@
 package com.hyunjine.reborn.ui.regist_store
 
+import com.hyunjine.reborn.common.util.now
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.datetime.LocalTime
 
 /**
  * 업체 등록 화면의 UI 상태 모델.
@@ -10,7 +12,6 @@ import kotlinx.collections.immutable.persistentListOf
  * @param address 업체 주소
  * @param description 업체 소개
  * @param photos 등록된 사진 ByteArray 목록
- * @param maxPhotoCount 최대 사진 수
  * @param batchStartTime 일괄 적용 시작 시간
  * @param batchEndTime 일괄 적용 종료 시간
  * @param daySchedules 요일별 영업 시간 목록
@@ -18,12 +19,11 @@ import kotlinx.collections.immutable.persistentListOf
  */
 data class RegistStoreModel(
     val name: String = "",
-    val phone: String = "010",
+    val phone: String = "",
     val address: String = "",
     val description: String = "",
-    val photos: ImmutableList<ByteArray> = persistentListOf(),
-    val maxPhotoCount: Int = 5,
-    val batchStartTime: String = "",
+    val photos: ImmutableList<String> = persistentListOf(),
+    val batchStartTime: LocalTime = LocalTime.now,
     val batchEndTime: String = "",
     val daySchedules: ImmutableList<DayScheduleModel> = persistentListOf(
         DayScheduleModel("월", true),
