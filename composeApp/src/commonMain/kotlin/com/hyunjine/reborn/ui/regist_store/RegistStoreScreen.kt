@@ -87,10 +87,14 @@ import reborn.composeapp.generated.resources.ic_add
 import reborn.composeapp.generated.resources.ic_back
 import reborn.composeapp.generated.resources.ic_camera
 import reborn.composeapp.generated.resources.ic_close
-import reborn.composeapp.generated.resources.ic_search
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import com.hyunjine.reborn.common.util.shortName
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalTime
 
 /**
  * 업체 등록 화면.
@@ -103,8 +107,6 @@ object RegistStoreScreen : NavKey {
      * 업체 등록 화면의 UI 이벤트.
      */
     sealed interface UiEvent {
-        /** 뒤로가기 */
-        data object BackClicked : UiEvent
 
         /** 사진 추가 */
         data class PhotosAdded(val photos: List<ByteArray>) : UiEvent
@@ -125,22 +127,22 @@ object RegistStoreScreen : NavKey {
         data class DescriptionChanged(val description: String) : UiEvent
 
         /** 일괄 시작 시간 변경 */
-        data class BatchStartTimeChanged(val time: String) : UiEvent
+        data class BatchStartTimeChanged(val time: LocalTime) : UiEvent
 
         /** 일괄 종료 시간 변경 */
-        data class BatchEndTimeChanged(val time: String) : UiEvent
+        data class BatchEndTimeChanged(val time: LocalTime) : UiEvent
 
         /** 일괄 시간 적용 */
         data object ApplyBatchTime : UiEvent
 
         /** 요일 활성화 상태 변경 */
-        data class DayEnabledChanged(val index: Int, val enabled: Boolean) : UiEvent
+        data class DayEnabledChanged(val key: DayOfWeek, val enabled: Boolean) : UiEvent
 
         /** 요일별 시작 시간 변경 */
-        data class DayStartTimeChanged(val index: Int, val time: String) : UiEvent
+        data class DayStartTimeChanged(val key: DayOfWeek, val time: LocalTime) : UiEvent
 
         /** 요일별 종료 시간 변경 */
-        data class DayEndTimeChanged(val index: Int, val time: String) : UiEvent
+        data class DayEndTimeChanged(val key: DayOfWeek, val time: LocalTime) : UiEvent
 
         /** 품목 추가 */
         data object AddPriceItem : UiEvent
@@ -149,13 +151,13 @@ object RegistStoreScreen : NavKey {
         data class RemovePriceItem(val index: Int) : UiEvent
 
         /** 품목명 변경 */
-        data class PriceItemNameChanged(val index: Int, val name: String) : UiEvent
+        data class PriceItemNameChanged(val index: Int, val name: ItemName) : UiEvent
 
         /** 직접 입력 품목명 변경 */
         data class PriceItemCustomNameChanged(val index: Int, val customName: String) : UiEvent
 
         /** 품목 단가 변경 */
-        data class PriceItemPriceChanged(val index: Int, val price: String) : UiEvent
+        data class PriceItemPriceChanged(val index: Int, val price: Int) : UiEvent
 
         /** 주소 검색 다이얼로그 표시 상태 변경 */
         data class AddressSearchState(val isShow: Boolean) : UiEvent
@@ -175,7 +177,8 @@ object RegistStoreScreen : NavKey {
         viewModel: RegistStoreViewModel = koinViewModel(),
         onBack: () -> Unit = {}
     ) {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val model by viewModel.model.collectAsStateWithLifecycle()
+        val addressState by viewModel.addressWindowState.collectAsStateWithLifecycle()
         val snackbarHostState = remember { SnackbarHostState() }
 
         LaunchedEffect(Unit) {
@@ -189,28 +192,27 @@ object RegistStoreScreen : NavKey {
         }
 
         invoke(
-            uiState = uiState,
+            model = model,
+            addressState = addressState,
             snackbarHostState = snackbarHostState,
-            onEvent = { event ->
-                when (event) {
-                    is UiEvent.BackClicked -> onBack()
-                    else -> viewModel.event(event)
-                }
-            }
+            onBack = onBack,
+            onEvent = viewModel::event
         )
     }
 
     /**
      * Stateless UI. 순수 Composable로 UI를 그립니다.
-     * @param uiState 현재 UI 상태
+     * @param model 현재 UI 상태
      * @param snackbarHostState 스낵바 호스트 상태
      * @param onEvent UI 이벤트 콜백
      */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     operator fun invoke(
-        uiState: RegistStoreModel,
+        model: RegistStoreModel,
+        addressState: Boolean,
         snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+        onBack: () -> Unit = {},
         onEvent: (UiEvent) -> Unit = {}
     ) {
         Scaffold(
@@ -224,7 +226,7 @@ object RegistStoreScreen : NavKey {
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { onEvent(UiEvent.BackClicked) }) {
+                        IconButton(onClick = onBack) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_back),
                                 contentDescription = "뒤로가기",
@@ -248,18 +250,17 @@ object RegistStoreScreen : NavKey {
                     .verticalScroll(rememberScrollState())
             ) {
                 PhotoSection(
-                    photos = uiState.photos,
-                    maxPhotoCount = uiState.maxPhotoCount,
+                    photos = model.photos,
                     onPhotosAdded = { onEvent(UiEvent.PhotosAdded(it)) },
                     onPhotoRemoved = { onEvent(UiEvent.PhotoRemoved(it)) }
                 )
                 SectionDivider()
                 BasicInfoSection(
-                    storeName = uiState.name,
-                    phone = uiState.phone,
-                    address = uiState.address,
-                    description = uiState.description,
-                    isShowingAddressSearch = uiState.isShowingAddressSearch,
+                    storeName = model.name,
+                    phone = model.phone,
+                    address = model.address,
+                    description = model.description,
+                    isShowingAddressSearch = addressState,
                     onStoreNameChanged = { onEvent(UiEvent.StoreNameChanged(it)) },
                     onPhoneChanged = { onEvent(UiEvent.PhoneChanged(it)) },
                     onAddressChanged = { onEvent(UiEvent.AddressChanged(it)) },
@@ -268,9 +269,9 @@ object RegistStoreScreen : NavKey {
                 )
                 SectionDivider()
                 BusinessHoursSection(
-                    batchStartTime = uiState.batchStartTime,
-                    batchEndTime = uiState.batchEndTime,
-                    daySchedules = uiState.daySchedules,
+                    batchStartTime = model.batchStartTime,
+                    batchEndTime = model.batchEndTime,
+                    daySchedules = model.daySchedules,
                     onBatchStartTimeChanged = { onEvent(UiEvent.BatchStartTimeChanged(it)) },
                     onBatchEndTimeChanged = { onEvent(UiEvent.BatchEndTimeChanged(it)) },
                     onApplyBatchTime = { onEvent(UiEvent.ApplyBatchTime) },
@@ -280,11 +281,10 @@ object RegistStoreScreen : NavKey {
                 )
                 SectionDivider()
                 PriceSection(
-                    priceItems = uiState.priceItems,
+                    priceItems = model.priceItems,
                     onAddPriceItem = { onEvent(UiEvent.AddPriceItem) },
                     onRemoveItem = { onEvent(UiEvent.RemovePriceItem(it)) },
                     onNameChanged = { i, n -> onEvent(UiEvent.PriceItemNameChanged(i, n)) },
-                    onCustomNameChanged = { i, n -> onEvent(UiEvent.PriceItemCustomNameChanged(i, n)) },
                     onPriceChanged = { i, p -> onEvent(UiEvent.PriceItemPriceChanged(i, p)) }
                 )
                 InfoNotice()
@@ -305,10 +305,10 @@ object RegistStoreScreen : NavKey {
 @Composable
 private fun PhotoSection(
     photos: ImmutableList<ByteArray>,
-    maxPhotoCount: Int,
     onPhotosAdded: (List<ByteArray>) -> Unit,
     onPhotoRemoved: (Int) -> Unit
 ) {
+    val maxPhotoCount = 5
     val remaining = maxPhotoCount - photos.size
 
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
@@ -666,21 +666,20 @@ private fun FormTextField(
 
 /**
  * 시간 선택 필드. 클릭 시 TimePickerBottomSheet를 표시합니다.
- * @param value 현재 시간 값 (HH:mm 형식)
+ * @param value 현재 시간 값
  * @param onValueChange 시간 변경 콜백
  * @param modifier Modifier
  * @param backgroundColor 배경색
  */
 @Composable
 private fun TimePickerField(
-    value: String,
-    onValueChange: (String) -> Unit,
+    value: LocalTime,
+    onValueChange: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = color.gray50
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    val (hour, minute) = parseTime(value)
-    
+
     Box(
         modifier = modifier
             .height(39.dp)
@@ -692,9 +691,9 @@ private fun TimePickerField(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = value.ifEmpty { "00:00" },
+            text = formatTime(value.hour, value.minute),
             style = typography.bodyMedium14,
-            color = if (value.isEmpty()) color.gray400 else color.gray900,
+            color = color.gray900,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -702,10 +701,10 @@ private fun TimePickerField(
 
     if (showBottomSheet) {
         TimePickerBottomSheet(
-            initialHour = hour,
-            initialMinute = minute,
+            initialHour = value.hour,
+            initialMinute = value.minute,
             onConfirm = { h, m ->
-                onValueChange(formatTime(h, m))
+                onValueChange(LocalTime(h, m))
                 showBottomSheet = false
             },
             onDismiss = { showBottomSheet = false }
@@ -834,15 +833,15 @@ private object ThousandSeparatorTransformation : VisualTransformation {
  */
 @Composable
 private fun BusinessHoursSection(
-    batchStartTime: String,
-    batchEndTime: String,
-    daySchedules: ImmutableList<DayScheduleModel>,
-    onBatchStartTimeChanged: (String) -> Unit,
-    onBatchEndTimeChanged: (String) -> Unit,
+    batchStartTime: LocalTime,
+    batchEndTime: LocalTime,
+    daySchedules: ImmutableMap<DayOfWeek, DayScheduleModel>,
+    onBatchStartTimeChanged: (LocalTime) -> Unit,
+    onBatchEndTimeChanged: (LocalTime) -> Unit,
     onApplyBatchTime: () -> Unit,
-    onDayEnabledChanged: (Int, Boolean) -> Unit,
-    onDayStartTimeChanged: (Int, String) -> Unit,
-    onDayEndTimeChanged: (Int, String) -> Unit
+    onDayEnabledChanged: (DayOfWeek, Boolean) -> Unit,
+    onDayStartTimeChanged: (DayOfWeek, LocalTime) -> Unit,
+    onDayEndTimeChanged: (DayOfWeek, LocalTime) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
@@ -907,12 +906,14 @@ private fun BusinessHoursSection(
 
         // Day schedules
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            daySchedules.forEachIndexed { index, schedule ->
+            daySchedules.forEach { (key, value) ->
+
                 DayScheduleRow(
-                    schedule = schedule,
-                    onEnabledChanged = { onDayEnabledChanged(index, it) },
-                    onStartTimeChanged = { onDayStartTimeChanged(index, it) },
-                    onEndTimeChanged = { onDayEndTimeChanged(index, it) }
+                    dayOfWeek = key,
+                    schedule = value,
+                    onEnabledChanged = onDayEnabledChanged,
+                    onStartTimeChanged = onDayStartTimeChanged,
+                    onEndTimeChanged = onDayEndTimeChanged
                 )
             }
         }
@@ -929,10 +930,11 @@ private fun BusinessHoursSection(
  */
 @Composable
 private fun DayScheduleRow(
+    dayOfWeek: DayOfWeek,
     schedule: DayScheduleModel,
-    onEnabledChanged: (Boolean) -> Unit,
-    onStartTimeChanged: (String) -> Unit,
-    onEndTimeChanged: (String) -> Unit
+    onEnabledChanged: (DayOfWeek, Boolean) -> Unit,
+    onStartTimeChanged: (DayOfWeek, LocalTime) -> Unit,
+    onEndTimeChanged: (DayOfWeek, LocalTime) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -945,7 +947,7 @@ private fun DayScheduleRow(
         ) {
             Checkbox(
                 checked = schedule.isEnabled,
-                onCheckedChange = onEnabledChanged,
+                onCheckedChange = { onEnabledChanged(dayOfWeek, it) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = color.green500,
                     uncheckedColor = color.gray300
@@ -954,7 +956,7 @@ private fun DayScheduleRow(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = schedule.day,
+                text = dayOfWeek.shortName,
                 style = typography.bodyMedium14,
                 color = color.gray800
             )
@@ -962,13 +964,13 @@ private fun DayScheduleRow(
         if (schedule.isEnabled) {
             TimePickerField(
                 value = schedule.startTime,
-                onValueChange = onStartTimeChanged,
+                onValueChange = { onStartTimeChanged(dayOfWeek, it) },
                 modifier = Modifier.weight(1f)
             )
             Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
             TimePickerField(
                 value = schedule.endTime,
-                onValueChange = onEndTimeChanged,
+                onValueChange = { onEndTimeChanged(dayOfWeek, it) },
                 modifier = Modifier.weight(1f)
             )
         } else {
@@ -994,7 +996,6 @@ private fun DayScheduleRow(
  * @param onAddPriceItem 품목 추가 콜백
  * @param onRemoveItem 품목 삭제 콜백
  * @param onNameChanged 품목명 변경 콜백
- * @param onCustomNameChanged 직접 입력 품목명 변경 콜백
  * @param onPriceChanged 품목 단가 변경 콜백
  */
 @Composable
@@ -1002,9 +1003,8 @@ private fun PriceSection(
     priceItems: ImmutableList<PriceItemModel>,
     onAddPriceItem: () -> Unit,
     onRemoveItem: (Int) -> Unit,
-    onNameChanged: (Int, String) -> Unit,
-    onCustomNameChanged: (Int, String) -> Unit,
-    onPriceChanged: (Int, String) -> Unit
+    onNameChanged: (Int, ItemName) -> Unit,
+    onPriceChanged: (Int, Int) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
@@ -1024,11 +1024,8 @@ private fun PriceSection(
             PriceItemCard(
                 item = item,
                 onNameChanged = { onNameChanged(index, it) },
-                onCustomNameChanged = { onCustomNameChanged(index, it) },
                 onPriceChanged = { onPriceChanged(index, it) },
-                onRemove = if (priceItems.size > 1) {
-                    { onRemoveItem(index) }
-                } else null
+                onRemove = { if (priceItems.size > 1) onRemoveItem(index) }
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -1072,10 +1069,9 @@ private fun PriceSection(
 @Composable
 private fun PriceItemCard(
     item: PriceItemModel,
-    onNameChanged: (String) -> Unit,
-    onCustomNameChanged: (String) -> Unit,
-    onPriceChanged: (String) -> Unit,
-    onRemove: (() -> Unit)?
+    onNameChanged: (ItemName) -> Unit = {},
+    onPriceChanged: (Int) -> Unit = {},
+    onRemove: (() -> Unit) = {}
 ) {
     val priceFocusRequester = remember { FocusRequester() }
 
@@ -1112,21 +1108,24 @@ private fun PriceItemCard(
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = item.name.ifEmpty { "품목을 선택하세요" },
+                        text = item.name.value,
                         style = typography.bodyRegular16,
-                        color = if (item.name.isEmpty()) color.gray500 else color.gray900
+                        color = if (item.name == ItemName.None) color.gray500 else color.gray900
                     )
                 }
                 if (showPicker) {
                     ItemPickerBottomSheet(
-                        onItemSelected = onNameChanged,
+                        onItemSelected = {
+                            val name = if (it == "직접 입력") ItemName.Custom("") else ItemName.Basic(it)
+                            onNameChanged(name)
+                        },
                         onDismiss = { showPicker = false }
                     )
                 }
             }
 
             // 직접 입력 품목 (품목이 "직접 입력"일 때만 표시)
-            if (item.name == "직접 입력") {
+            if (item.name is ItemName.Custom) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = "직접 입력 품목",
@@ -1134,8 +1133,8 @@ private fun PriceItemCard(
                         color = color.gray800
                     )
                     BasicTextField(
-                        value = item.customName,
-                        onValueChange = onCustomNameChanged,
+                        value = item.name.value,
+                        onValueChange = { onNameChanged(ItemName.Custom(it)) },
                         singleLine = true,
                         textStyle = typography.bodyRegular16.copy(color = color.gray900),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -1152,7 +1151,7 @@ private fun PriceItemCard(
                                     .padding(horizontal = 12.dp),
                                 contentAlignment = Alignment.CenterStart
                             ) {
-                                if (item.customName.isEmpty()) {
+                                if (item.name.value.isBlank()) {
                                     Text(
                                         text = "품목을 입력해주세요",
                                         style = typography.bodyRegular16,
@@ -1174,9 +1173,10 @@ private fun PriceItemCard(
                     color = color.gray800
                 )
                 BasicTextField(
-                    value = item.price,
+                    value = item.price?.toString() ?: "",
                     onValueChange = { newValue ->
-                        onPriceChanged(newValue.filter { it.isDigit() })
+                        val digits = newValue.filter { it.isDigit() }
+                        onPriceChanged(digits.toIntOrNull() ?: 0)
                     },
                     singleLine = true,
                     modifier = Modifier.focusRequester(priceFocusRequester),
@@ -1193,7 +1193,7 @@ private fun PriceItemCard(
                                 .padding(horizontal = 12.dp),
                             contentAlignment = Alignment.CenterStart
                         ) {
-                            if (item.price.isEmpty()) {
+                            if (item.price == null) {
                                 Text(
                                     text = "매입 단가를 입력하세요",
                                     style = typography.bodyRegular16,
@@ -1220,20 +1220,18 @@ private fun PriceItemCard(
         }
 
         // X 삭제 버튼
-        if (onRemove != null) {
-            IconButton(
-                onClick = onRemove,
-                modifier = Modifier
-                    .size(28.dp)
-                    .align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_close),
-                    contentDescription = "품목 삭제",
-                    modifier = Modifier.size(16.dp),
-                    tint = color.gray500
-                )
-            }
+        IconButton(
+            onClick = onRemove,
+            modifier = Modifier
+                .size(28.dp)
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_close),
+                contentDescription = "품목 삭제",
+                modifier = Modifier.size(16.dp),
+                tint = color.gray500
+            )
         }
     }
 }
@@ -1306,7 +1304,8 @@ private fun SubmitButton(onClick: () -> Unit) {
 private fun RegistStoreScreenPreview() {
     RebornTheme {
         RegistStoreScreen(
-            uiState = RegistStoreModel()
+            model = RegistStoreModel(),
+            addressState = false
         )
     }
 }
@@ -1320,7 +1319,6 @@ private fun PhotoSectionPreview() {
     RebornTheme {
         PhotoSection(
             photos = persistentListOf(),
-            maxPhotoCount = 5,
             onPhotosAdded = {},
             onPhotoRemoved = {}
         )
@@ -1357,17 +1355,11 @@ private fun BasicInfoSectionPreview() {
 private fun BusinessHoursSectionPreview() {
     RebornTheme {
         BusinessHoursSection(
-            batchStartTime = "09:00",
-            batchEndTime = "18:00",
-            daySchedules = persistentListOf(
-                DayScheduleModel("월", true, "09:00", "18:00"),
-                DayScheduleModel("화", true, "09:00", "18:00"),
-                DayScheduleModel("수", true, "09:00", "18:00"),
-                DayScheduleModel("목", true, "09:00", "18:00"),
-                DayScheduleModel("금", true, "09:00", "18:00"),
-                DayScheduleModel("토", false),
-                DayScheduleModel("일", false)
-            ),
+            batchStartTime = LocalTime(9, 0),
+            batchEndTime = LocalTime(18, 0),
+            daySchedules = DayOfWeek.entries
+                .associateWith { DayScheduleModel() }
+                .toPersistentHashMap(),
             onBatchStartTimeChanged = {},
             onBatchEndTimeChanged = {},
             onApplyBatchTime = {},
@@ -1387,13 +1379,12 @@ private fun PriceSectionPreview() {
     RebornTheme {
         PriceSection(
             priceItems = persistentListOf(
-                PriceItemModel(name = "구리", price = "8500"),
-                PriceItemModel(name = "직접 입력", customName = "기판", price = "")
+                PriceItemModel(name = ItemName.Basic("구리"), price = 8500),
+                PriceItemModel(name = ItemName.Custom("기판"), price = null)
             ),
             onAddPriceItem = {},
             onRemoveItem = {},
             onNameChanged = { _, _ -> },
-            onCustomNameChanged = { _, _ -> },
             onPriceChanged = { _, _ -> }
         )
     }
@@ -1407,9 +1398,8 @@ private fun PriceSectionPreview() {
 private fun PriceItemCardPreview() {
     RebornTheme {
         PriceItemCard(
-            item = PriceItemModel(name = "직접 입력", customName = "기판", price = "8500"),
+            item = PriceItemModel(name = ItemName.Custom("묘사"), price = 8500),
             onNameChanged = {},
-            onCustomNameChanged = {},
             onPriceChanged = {},
             onRemove = {}
         )

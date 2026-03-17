@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.ui.regist_store
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import com.hyunjine.reborn.common.util.now
 import kotlinx.collections.immutable.ImmutableList
@@ -8,6 +9,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
+import kotlin.jvm.JvmInline
 
 /**
  * 업체 등록 화면의 UI 상태 모델.
@@ -21,6 +23,7 @@ import kotlinx.datetime.LocalTime
  * @param daySchedules 요일별 영업 시간 목록
  * @param priceItems 매입 단가 항목 목록
  */
+@Stable
 data class RegistStoreModel(
     val name: String = "",
     val phone: String = "",
@@ -86,6 +89,7 @@ data class DayScheduleModel(
  * @param name 품목명
  * @param price 단가 텍스트
  */
+@Stable
 data class PriceItemModel(
     val name: ItemName = ItemName.None,
     val price: Int? = null
@@ -106,9 +110,14 @@ data class PriceItemModel(
 }
 
 sealed interface ItemName {
-    data object None: ItemName
+    val value: String
+    data object None: ItemName {
+        override val value: String = "품목을 선택하세요."
+    }
 
-    value class Basic(val value: String): ItemName
+    @JvmInline
+    value class Basic(override val value: String): ItemName
 
-    value class Custom(val value: String): ItemName
+    @JvmInline
+    value class Custom(override val value: String): ItemName
 }
