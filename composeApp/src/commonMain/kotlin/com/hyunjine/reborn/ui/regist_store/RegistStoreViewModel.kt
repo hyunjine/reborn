@@ -48,27 +48,28 @@ class RegistStoreViewModel(
                         i != event.index
                     }.toImmutableList()
                 )
+                is UiEvent.StoreNameChanged -> old.copy(name = event.name)
                 is UiEvent.PhoneChanged -> old.copy(phone = event.phone)
                 is UiEvent.AddressChanged -> old.copy(address = event.address)
                 is UiEvent.DescriptionChanged -> old.copy(description = event.description)
-                is UiEvent.BatchStartTimeChanged ->
-                    if (event.time >= old.batchEndTime) {
+                is UiEvent.BatchStartTimeChanged -> {
+                    val is24Hour = event.time == LocalTime(0, 0) && old.batchEndTime == LocalTime(0, 0)
+                    if (!is24Hour && event.time >= old.batchEndTime) {
                         _effect.send(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다."))
                         old
                     } else {
-                        old.copy(
-                            batchStartTime = event.time,
-                        )
+                        old.copy(batchStartTime = event.time)
                     }
-                is UiEvent.BatchEndTimeChanged ->
-                    if (event.time <= old.batchStartTime) {
+                }
+                is UiEvent.BatchEndTimeChanged -> {
+                    val is24Hour = old.batchStartTime == LocalTime(0, 0) && event.time == LocalTime(0, 0)
+                    if (!is24Hour && event.time <= old.batchStartTime) {
                         _effect.send(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다."))
                         old
                     } else {
-                        old.copy(
-                            batchEndTime = event.time,
-                        )
+                        old.copy(batchEndTime = event.time)
                     }
+                }
                 is UiEvent.ApplyBatchTime -> old.copy(
                     daySchedules = old.daySchedules.mapValues { schedule ->
                         schedule.value.copy(

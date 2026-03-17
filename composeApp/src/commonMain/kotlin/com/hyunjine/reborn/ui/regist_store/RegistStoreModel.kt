@@ -26,12 +26,12 @@ import kotlin.jvm.JvmInline
 @Stable
 data class RegistStoreModel(
     val name: String = "",
-    val phone: String = "",
+    val phone: String = "010",
     val address: String = "",
     val description: String = "",
     val photos: ImmutableList<ByteArray> = persistentListOf(),
     val batchStartTime: LocalTime = LocalTime(0, 0),
-    val batchEndTime: LocalTime = LocalTime(23, 59),
+    val batchEndTime: LocalTime = LocalTime(0, 0),
     val daySchedules: PersistentMap<DayOfWeek, DayScheduleModel> = DayOfWeek.entries
         .associateWith { DayScheduleModel() }
         .toPersistentHashMap(),
@@ -42,8 +42,9 @@ data class RegistStoreModel(
         if (address.isBlank()) return "주소를 입력해주세요."
         if (phone.isBlank()) return "전화번호를 입력해주세요."
 
-        // 2. 영업 시간 검증
-        if (batchStartTime >= batchEndTime) {
+        // 2. 영업 시간 검증 (둘 다 00:00이면 24시간 운영)
+        val is24HourBatch = batchStartTime == LocalTime(0, 0) && batchEndTime == LocalTime(0, 0)
+        if (!is24HourBatch && batchStartTime >= batchEndTime) {
             return "영업 종료 시각은 시작 시각보다 늦어야 합니다."
         }
 
@@ -54,7 +55,12 @@ data class RegistStoreModel(
 
         // 4. 요일별 스케줄 검증
         // DayScheduleModel.isValid()가 Boolean을 반환한다고 가정 시
-        if (daySchedules.values.any { it.isEnabled && (it.startTime >= it.endTime) }) {
+        val hasInvalidSchedule = daySchedules.values.any { schedule ->
+            if (!schedule.isEnabled) return@any false
+            val is24Hour = schedule.startTime == LocalTime(0, 0) && schedule.endTime == LocalTime(0, 0)
+            !is24Hour && schedule.startTime >= schedule.endTime
+        }
+        if (hasInvalidSchedule) {
             return "요일별 상세 일정을 확인해주세요."
         }
 
@@ -81,7 +87,7 @@ data class RegistStoreModel(
 data class DayScheduleModel(
     val isEnabled: Boolean = true,
     val startTime: LocalTime = LocalTime(0, 0),
-    val endTime: LocalTime = LocalTime(23, 59)
+    val endTime: LocalTime = LocalTime(0, 0)
 )
 
 /**
