@@ -2,8 +2,12 @@ package com.hyunjine.reborn.ui.regist_store
 
 import androidx.lifecycle.viewModelScope
 import com.hyunjine.reborn.common.util.BaseViewModel
+import com.hyunjine.reborn.data.store.StoreRepository
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen.UiEvent
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -11,229 +15,120 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalTime
 import org.koin.core.annotation.KoinViewModel
+import kotlin.collections.map
+import kotlin.collections.plus
 
 @KoinViewModel
-class RegistStoreViewModel : BaseViewModel() {
-
+class RegistStoreViewModel(
+    private val repository: StoreRepository
+) : BaseViewModel<UiEvent>() {
     sealed interface Effect {
         data class ShowSnackbar(val message: String) : Effect
     }
 
-    private val _uiState = MutableStateFlow(RegistStoreModel())
-    val uiState: StateFlow<RegistStoreModel> = _uiState.asStateFlow()
+    private val _effect: Channel<Effect> = Channel()
+    val effect: Flow<Effect> = _effect.receiveAsFlow()
 
-    private val _effect = MutableSharedFlow<Effect>()
-    val effect: SharedFlow<Effect> = _effect.asSharedFlow()
-
-    private val uiEvent = MutableSharedFlow<UiEvent>()
-
-    init {
-        uiEvent.filterIsInstance<UiEvent.PhotosAdded>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    val newPhotos = (state.photos + event.photos)
-                        .take(state.maxPhotoCount)
-                        .toImmutableList()
-                    state.copy(photos = newPhotos)
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.PhotoRemoved>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    state.copy(
-                        photos = state.photos.filterIndexed { i, _ ->
-                            i != event.index
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.StoreNameChanged>()
-            .onEach { event -> _uiState.update { it.copy(name = event.name) } }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.PhoneChanged>()
-            .onEach { event -> _uiState.update { it.copy(phone = event.phone) } }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.AddressChanged>()
-            .onEach { event -> _uiState.update { it.copy(address = event.address) } }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.DescriptionChanged>()
-            .onEach { event -> _uiState.update { it.copy(description = event.description) } }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.BatchStartTimeChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    if (isValidTimeRange(event.time, state.batchEndTime)) {
-                        state.copy(batchStartTime = event.time)
+    val model: StateFlow<RegistStoreModel> = uiEvent
+        .runningFold(RegistStoreModel()) { old, event ->
+            when (event) {
+                is UiEvent.PhotosAdded -> old.copy(photos = event.photos.toImmutableList())
+                is UiEvent.PhotoRemoved -> old.copy(
+                    photos = old.photos.filterIndexed { i, _ ->
+                        i != event.index
+                    }.toImmutableList()
+                )
+                is UiEvent.PhoneChanged -> old.copy(phone = event.phone)
+                is UiEvent.AddressChanged -> old.copy(address = event.address)
+                is UiEvent.DescriptionChanged -> old.copy(description = event.description)
+                is UiEvent.BatchStartTimeChanged ->
+                    if (event.time >= old.batchEndTime) {
+                        _effect.send(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다."))
+                        old
                     } else {
-                        viewModelScope.launch { _effect.emit(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다.")) }
-                        state
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.BatchEndTimeChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    if (isValidTimeRange(state.batchStartTime, event.time)) {
-                        state.copy(batchEndTime = event.time)
-                    } else {
-                        viewModelScope.launch { _effect.emit(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다.")) }
-                        state
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.ApplyBatchTime>()
-            .onEach {
-                _uiState.update { state ->
-                    state.copy(
-                        daySchedules = state.daySchedules.map { schedule ->
-                            if (schedule.isEnabled) {
-                                schedule.copy(
-                                    startTime = state.batchStartTime,
-                                    endTime = state.batchEndTime
-                                )
-                            } else schedule
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.DayEnabledChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    state.copy(
-                        daySchedules = state.daySchedules.mapIndexed { i, s ->
-                            if (i == event.index) s.copy(isEnabled = event.enabled) else s
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.DayStartTimeChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    val schedule = state.daySchedules[event.index]
-                    if (isValidTimeRange(event.time, schedule.endTime)) {
-                        state.copy(
-                            daySchedules = state.daySchedules.mapIndexed { i, s ->
-                                if (i == event.index) s.copy(startTime = event.time) else s
-                            }.toImmutableList()
+                        old.copy(
+                            batchStartTime = event.time,
                         )
-                    } else {
-                        viewModelScope.launch { _effect.emit(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다.")) }
-                        state
                     }
-                }
-            }
-            .launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.DayEndTimeChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    val schedule = state.daySchedules[event.index]
-                    if (isValidTimeRange(schedule.startTime, event.time)) {
-                        state.copy(
-                            daySchedules = state.daySchedules.mapIndexed { i, s ->
-                                if (i == event.index) s.copy(endTime = event.time) else s
-                            }.toImmutableList()
+                is UiEvent.BatchEndTimeChanged ->
+                    if (event.time <= old.batchStartTime) {
+                        _effect.send(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다."))
+                        old
+                    } else {
+                        old.copy(
+                            batchEndTime = event.time,
                         )
-                    } else {
-                        viewModelScope.launch { _effect.emit(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다.")) }
-                        state
                     }
-                }
+                is UiEvent.ApplyBatchTime -> old.copy(
+                    daySchedules = old.daySchedules.mapValues { schedule ->
+                        schedule.value.copy(
+                            startTime = old.batchStartTime,
+                            endTime = old.batchEndTime
+                        )
+                    }.toPersistentHashMap()
+                )
+                is UiEvent.DayEnabledChanged -> old.copy(
+                    daySchedules = old.daySchedules.mapValues { schedule ->
+                        if (schedule.key == event.key) schedule.value.copy(isEnabled = event.enabled) else schedule.value
+                    }.toPersistentHashMap()
+                )
+                is UiEvent.DayStartTimeChanged -> old.copy(
+                    daySchedules = old.daySchedules.mapValues { schedule ->
+                        if (schedule.key == event.key) schedule.value.copy(startTime = event.time) else schedule.value
+                    }.toPersistentHashMap()
+                )
+                is UiEvent.DayEndTimeChanged -> old.copy(
+                    daySchedules = old.daySchedules.mapValues { schedule ->
+                        if (schedule.key == event.key) schedule.value.copy(endTime = event.time) else schedule.value
+                    }.toPersistentHashMap()
+                )
+                is UiEvent.AddPriceItem -> old.copy(
+                    priceItems = (old.priceItems + PriceItemModel()).toImmutableList()
+                )
+                is UiEvent.RemovePriceItem -> old.copy(
+                    priceItems = old.priceItems.filterIndexed { i, _ ->
+                        i != event.index
+                    }.toImmutableList()
+                )
+                is UiEvent.PriceItemNameChanged -> old.copy(
+                    priceItems = old.priceItems.mapIndexed { i, p ->
+                        if (i == event.index) p.copy(name = event.name) else p
+                    }.toImmutableList()
+                )
+                is UiEvent.PriceItemPriceChanged -> old.copy(
+                    priceItems = old.priceItems.mapIndexed { i, p ->
+                        if (i == event.index) p.copy(price = event.price) else p
+                    }.toImmutableList()
+                )
+                else -> old
             }
-            .launchIn(viewModelScope)
+        }.stateIn(RegistStoreModel())
 
-        uiEvent.filterIsInstance<UiEvent.AddPriceItem>()
-            .onEach {
-                _uiState.update { state ->
-                    state.copy(
-                        priceItems = (state.priceItems + PriceItemModel()).toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
+    private val submitEvent = uiEvent
+        .filterIsInstance<UiEvent.SubmitClicked>()
+        .onEach {
+            val message = model.value.isValid()
+            if (message == null) {
+//                repository.addStore(model.value)
+                _effect.send(Effect.ShowSnackbar("등록 완료!"))
+            } else {
+                _effect.send(Effect.ShowSnackbar(message))
+            }
+        }.launchIn(viewModelScope)
 
-        uiEvent.filterIsInstance<UiEvent.RemovePriceItem>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    state.copy(
-                        priceItems = state.priceItems.filterIndexed { i, _ ->
-                            i != event.index
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
+    val addressWindowState: StateFlow<Boolean> = uiEvent
+        .filterIsInstance<UiEvent.AddressSearchState>()
+        .map { event -> event.isShow }
+        .stateIn(false)
 
-        uiEvent.filterIsInstance<UiEvent.PriceItemNameChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    state.copy(
-                        priceItems = state.priceItems.mapIndexed { i, p ->
-                            if (i == event.index) p.copy(name = event.name) else p
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.PriceItemCustomNameChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    state.copy(
-                        priceItems = state.priceItems.mapIndexed { i, p ->
-                            if (i == event.index) p.copy(customName = event.customName) else p
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.PriceItemPriceChanged>()
-            .onEach { event ->
-                _uiState.update { state ->
-                    state.copy(
-                        priceItems = state.priceItems.mapIndexed { i, p ->
-                            if (i == event.index) p.copy(price = event.price) else p
-                        }.toImmutableList()
-                    )
-                }
-            }.launchIn(viewModelScope)
-
-        uiEvent.filterIsInstance<UiEvent.AddressSearchState>()
-            .onEach { event ->
-                _uiState.update { it.copy(isShowingAddressSearch = event.isShow) }
-            }.launchIn(viewModelScope)
-    }
-
-    private fun isValidTimeRange(start: String, end: String): Boolean {
-        if (start.isEmpty() || end.isEmpty()) return true
-        val startMinutes = timeToMinutes(start)
-        val endMinutes = timeToMinutes(end)
-        return startMinutes < endMinutes
-    }
-
-    private fun timeToMinutes(time: String): Int {
-        val parts = time.split(":")
-        if (parts.size != 2) return 0
-        return parts[0].toInt() * 60 + parts[1].toInt()
-    }
-
-    fun event(event: UiEvent) {
-        viewModelScope.launch {
-            uiEvent.emit(event)
-        }
-    }
 }
