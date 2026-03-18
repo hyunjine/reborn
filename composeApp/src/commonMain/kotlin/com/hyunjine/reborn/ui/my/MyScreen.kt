@@ -46,31 +46,31 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
-import reborn.composeapp.generated.resources.ic_bell
-import reborn.composeapp.generated.resources.ic_chevron_right
-import reborn.composeapp.generated.resources.ic_location
-import reborn.composeapp.generated.resources.ic_question
-import reborn.composeapp.generated.resources.ic_setting
-import reborn.composeapp.generated.resources.ic_store
+import reborn.composeapp.generated.resources.icon_24_bell
+import reborn.composeapp.generated.resources.icon_24_arrow_right
+import reborn.composeapp.generated.resources.icon_24_location
+import reborn.composeapp.generated.resources.icon_24_help
+import reborn.composeapp.generated.resources.icon_24_setting
+import reborn.composeapp.generated.resources.icon_24_store
 
 /**
- * 내 정보 화면.
- * 업체 등록 여부에 따라 두 가지 상태의 UI를 표시합니다.
- * - 미등록: 업체 등록 유도 배너
- * - 등록 완료: 내 업체 카드
+ * ???�보 ?�면.
+ * ?�체 ?�록 ?��????�라 ??가지 ?�태??UI�??�시?�니??
+ * - 미등�? ?�체 ?�록 ?�도 배너
+ * - ?�록 ?�료: ???�체 카드
  */
 @Serializable
 object MyScreen : NavKey {
 
     /**
-     * 내 정보 화면의 Stateful Wrapper입니다.
-     * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
-     * @param onRegisterStore 업체 등록 화면으로 이동하는 콜백입니다.
-     * @param onStoreDetail 내 업체 상세 화면으로 이동하는 콜백입니다.
-     * @param onSetting 설정 화면으로 이동하는 콜백입니다.
-     * @param onNotice 공지사항 화면으로 이동하는 콜백입니다.
-     * @param onTerms 서비스 이용약관 화면으로 이동하는 콜백입니다.
-     * @param onCustomerService 고객센터 화면으로 이동하는 콜백입니다.
+     * ???�보 ?�면??Stateful Wrapper?�니??
+     * @param viewModel Koin???�해 주입?�는 ViewModel?�니??
+     * @param onRegisterStore ?�체 ?�록 ?�면?�로 ?�동?�는 콜백?�니??
+     * @param onStoreDetail ???�체 ?�세 ?�면?�로 ?�동?�는 콜백?�니??
+     * @param onSetting ?�정 ?�면?�로 ?�동?�는 콜백?�니??
+     * @param onNotice 공�??�항 ?�면?�로 ?�동?�는 콜백?�니??
+     * @param onTerms ?�비???�용?��? ?�면?�로 ?�동?�는 콜백?�니??
+     * @param onCustomerService 고객?�터 ?�면?�로 ?�동?�는 콜백?�니??
      */
     @Composable
     operator fun invoke(
@@ -95,14 +95,14 @@ object MyScreen : NavKey {
     }
 
     /**
-     * 내 정보 화면의 Stateless UI 구현체입니다.
-     * @param state 현재 화면의 UI 상태입니다.
-     * @param onSettingClick 설정 아이콘 클릭 시 호출되는 콜백입니다.
-     * @param onRegisterStoreClick 업체 등록하기 버튼 클릭 시 호출되는 콜백입니다.
-     * @param onStoreCardClick 내 업체 카드 클릭 시 호출되는 콜백입니다.
-     * @param onNoticeClick 공지사항 메뉴 클릭 시 호출되는 콜백입니다.
-     * @param onTermsClick 서비스 이용약관 메뉴 클릭 시 호출되는 콜백입니다.
-     * @param onCustomerServiceClick 고객센터 메뉴 클릭 시 호출되는 콜백입니다.
+     * ???�보 ?�면??Stateless UI 구현체입?�다.
+     * @param state ?�재 ?�면??UI ?�태?�니??
+     * @param onSettingClick ?�정 ?�이�??�릭 ???�출?�는 콜백?�니??
+     * @param onRegisterStoreClick ?�체 ?�록?�기 버튼 ?�릭 ???�출?�는 콜백?�니??
+     * @param onStoreCardClick ???�체 카드 ?�릭 ???�출?�는 콜백?�니??
+     * @param onNoticeClick 공�??�항 메뉴 ?�릭 ???�출?�는 콜백?�니??
+     * @param onTermsClick ?�비???�용?��? 메뉴 ?�릭 ???�출?�는 콜백?�니??
+     * @param onCustomerServiceClick 고객?�터 메뉴 ?�릭 ???�출?�는 콜백?�니??
      */
     @Composable
     operator fun invoke(
@@ -146,18 +146,18 @@ object MyScreen : NavKey {
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 MenuItem(
-                    icon = { Icon(painterResource(Res.drawable.ic_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
-                    title = "공지사항",
+                    icon = { Icon(painterResource(Res.drawable.icon_24_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
+                    title = "공�??�항",
                     onClick = onNoticeClick
                 )
                 MenuItem(
-                    icon = { Icon(painterResource(Res.drawable.ic_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
-                    title = "서비스 이용약관",
+                    icon = { Icon(painterResource(Res.drawable.icon_24_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
+                    title = "?�비???�용?��?",
                     onClick = onTermsClick
                 )
                 MenuItem(
-                    icon = { Icon(painterResource(Res.drawable.ic_question), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
-                    title = "고객센터",
+                    icon = { Icon(painterResource(Res.drawable.icon_24_help), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
+                    title = "고객?�터",
                     onClick = onCustomerServiceClick
                 )
             }
@@ -166,9 +166,9 @@ object MyScreen : NavKey {
 }
 
 /**
- * 내 정보 화면의 상단 바입니다.
- * 좌측에 "내 정보" 타이틀, 우측에 설정 아이콘을 표시합니다.
- * @param onSettingClick 설정 아이콘 클릭 시 호출되는 콜백입니다.
+ * ???�보 ?�면???�단 바입?�다.
+ * 좌측??"???�보" ?�?��?, ?�측???�정 ?�이콘을 ?�시?�니??
+ * @param onSettingClick ?�정 ?�이�??�릭 ???�출?�는 콜백?�니??
  */
 @Composable
 private fun MyTopBar(
@@ -184,14 +184,14 @@ private fun MyTopBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "내 정보",
+            text = "???�보",
             style = typography.headingBold24.copy(fontSize = 22.sp),
             color = color.gray900
         )
         IconButton(onClick = onSettingClick) {
             Icon(
-                painter = painterResource(Res.drawable.ic_setting),
-                contentDescription = "설정",
+                painter = painterResource(Res.drawable.icon_24_setting),
+                contentDescription = "?�정",
                 modifier = Modifier.size(24.dp),
                 tint = color.gray900
             )
@@ -200,10 +200,10 @@ private fun MyTopBar(
 }
 
 /**
- * 사용자 프로필 카드입니다.
- * 이름과 이메일을 표시합니다.
- * @param userName 사용자 이름.
- * @param email 사용자 이메일.
+ * ?�용???�로??카드?�니??
+ * ?�름�??�메?�을 ?�시?�니??
+ * @param userName ?�용???�름.
+ * @param email ?�용???�메??
  */
 @Composable
 private fun ProfileCard(
@@ -231,8 +231,8 @@ private fun ProfileCard(
 }
 
 /**
- * 업체 미등록 시 표시되는 업체 등록 유도 배너입니다.
- * @param onRegisterClick 업체 등록하기 버튼 클릭 시 호출되는 콜백입니다.
+ * ?�체 미등�????�시?�는 ?�체 ?�록 ?�도 배너?�니??
+ * @param onRegisterClick ?�체 ?�록?�기 버튼 ?�릭 ???�출?�는 콜백?�니??
  */
 @Composable
 private fun RegisterStoreBanner(
@@ -259,7 +259,7 @@ private fun RegisterStoreBanner(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_store),
+                    painter = painterResource(Res.drawable.icon_24_store),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                     tint = color.green500
@@ -270,12 +270,12 @@ private fun RegisterStoreBanner(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "고물상을 운영하시나요?",
+                    text = "고물?�을 ?�영?�시?�요?",
                     style = typography.headingBold18,
                     color = color.gray900
                 )
                 Text(
-                    text = "지금 리본 파트너로 등록하고\n더 많은 고객을 만나보세요",
+                    text = "지�?리본 ?�트?�로 ?�록?�고\n??많�? 고객??만나보세??,
                     style = typography.bodyRegular14,
                     color = color.gray800
                 )
@@ -293,7 +293,7 @@ private fun RegisterStoreBanner(
             )
         ) {
             Text(
-                text = "업체 등록하기",
+                text = "?�체 ?�록?�기",
                 style = typography.bodySemibold14,
                 color = Color.White
             )
@@ -302,10 +302,10 @@ private fun RegisterStoreBanner(
 }
 
 /**
- * 업체 등록 완료 시 표시되는 내 업체 카드입니다.
- * 업체 이미지, 이름, 주소를 표시합니다.
- * @param storeInfo 업체 정보 모델.
- * @param onClick 카드 클릭 시 호출되는 콜백입니다.
+ * ?�체 ?�록 ?�료 ???�시?�는 ???�체 카드?�니??
+ * ?�체 ?��?지, ?�름, 주소�??�시?�니??
+ * @param storeInfo ?�체 ?�보 모델.
+ * @param onClick 카드 ?�릭 ???�출?�는 콜백?�니??
  */
 @Composable
 private fun StoreCard(
@@ -321,7 +321,7 @@ private fun StoreCard(
     ) {
         AsyncImage(
             model = storeInfo.imageUrl,
-            contentDescription = "${storeInfo.name} 대표 이미지",
+            contentDescription = "${storeInfo.name} ?�???��?지",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -350,7 +350,7 @@ private fun StoreCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_location),
+                        painter = painterResource(Res.drawable.icon_24_location),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
                         tint = color.gray700
@@ -366,7 +366,7 @@ private fun StoreCard(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                painter = painterResource(Res.drawable.ic_chevron_right),
+                painter = painterResource(Res.drawable.icon_24_arrow_right),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = color.gray600
@@ -376,11 +376,11 @@ private fun StoreCard(
 }
 
 /**
- * 메뉴 아이템입니다.
- * 좌측에 아이콘, 중앙에 제목, 우측에 화살표를 표시합니다.
- * @param icon 아이콘 Composable.
- * @param title 메뉴 제목.
- * @param onClick 메뉴 클릭 시 호출되는 콜백입니다.
+ * 메뉴 ?�이?�입?�다.
+ * 좌측???�이�? 중앙???�목, ?�측???�살?��? ?�시?�니??
+ * @param icon ?�이�?Composable.
+ * @param title 메뉴 ?�목.
+ * @param onClick 메뉴 ?�릭 ???�출?�는 콜백?�니??
  */
 @Composable
 private fun MenuItem(
@@ -406,7 +406,7 @@ private fun MenuItem(
             overflow = TextOverflow.Ellipsis
         )
         Icon(
-            painter = painterResource(Res.drawable.ic_chevron_right),
+            painter = painterResource(Res.drawable.icon_24_arrow_right),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
             tint = color.gray600
@@ -415,7 +415,7 @@ private fun MenuItem(
 }
 
 /**
- * 내 정보 화면 프리뷰 (업체 미등록 상태).
+ * ???�보 ?�면 ?�리�?(?�체 미등�??�태).
  */
 @Preview(showBackground = true)
 @Composable
@@ -433,7 +433,7 @@ private fun MyScreenNoStorePreview() {
 }
 
 /**
- * 내 정보 화면 프리뷰 (업체 등록 완료 상태).
+ * ???�보 ?�면 ?�리�?(?�체 ?�록 ?�료 ?�태).
  */
 @Preview(showBackground = true)
 @Composable
@@ -445,8 +445,8 @@ private fun MyScreenWithStorePreview() {
                 email = "kimcs@example.com",
                 hasStore = true,
                 storeInfo = MyStoreModel(
-                    name = "서울고물상",
-                    address = "서울특별시 강남구 역삼동 123-45",
+                    name = "?�울고물??,
+                    address = "?�울?�별??강남�???��??123-45",
                     imageUrl = ""
                 )
             )

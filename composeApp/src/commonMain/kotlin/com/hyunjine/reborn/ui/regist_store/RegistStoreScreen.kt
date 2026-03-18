@@ -83,10 +83,10 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
-import reborn.composeapp.generated.resources.ic_add
-import reborn.composeapp.generated.resources.ic_back
-import reborn.composeapp.generated.resources.ic_camera
-import reborn.composeapp.generated.resources.ic_close
+import reborn.composeapp.generated.resources.icon_24_add
+import reborn.composeapp.generated.resources.icon_24_arrow_left
+import reborn.composeapp.generated.resources.icon_24_camera
+import reborn.composeapp.generated.resources.icon_24_close
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
@@ -98,76 +98,76 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
 
 /**
- * 업체 등록 화면.
- * 사진, 기본 정보, 영업 시간, 매입 단가를 입력하여 업체를 등록합니다.
+ * ?�체 ?�록 ?�면.
+ * ?�진, 기본 ?�보, ?�업 ?�간, 매입 ?��?�??�력?�여 ?�체�??�록?�니??
  */
 @Serializable
 object RegistStoreScreen : NavKey {
 
     /**
-     * 업체 등록 화면의 UI 이벤트.
+     * ?�체 ?�록 ?�면??UI ?�벤??
      */
     sealed interface UiEvent {
 
-        /** 사진 추가 */
+        /** ?�진 추�? */
         data class PhotosAdded(val photos: List<ByteArray>) : UiEvent
 
-        /** 사진 삭제 */
+        /** ?�진 ??�� */
         data class PhotoRemoved(val index: Int) : UiEvent
 
-        /** 업체명 변경 */
+        /** ?�체�?변�?*/
         data class StoreNameChanged(val name: String) : UiEvent
 
-        /** 전화번호 변경 */
+        /** ?�화번호 변�?*/
         data class PhoneChanged(val phone: String) : UiEvent
 
-        /** 주소 변경 */
+        /** 주소 변�?*/
         data class AddressChanged(val address: String) : UiEvent
 
-        /** 업체 소개 변경 */
+        /** ?�체 ?�개 변�?*/
         data class DescriptionChanged(val description: String) : UiEvent
 
-        /** 일괄 시작 시간 변경 */
+        /** ?�괄 ?�작 ?�간 변�?*/
         data class BatchStartTimeChanged(val time: LocalTime) : UiEvent
 
-        /** 일괄 종료 시간 변경 */
+        /** ?�괄 종료 ?�간 변�?*/
         data class BatchEndTimeChanged(val time: LocalTime) : UiEvent
 
-        /** 일괄 시간 적용 */
+        /** ?�괄 ?�간 ?�용 */
         data object ApplyBatchTime : UiEvent
 
-        /** 요일 활성화 상태 변경 */
+        /** ?�일 ?�성???�태 변�?*/
         data class DayEnabledChanged(val key: DayOfWeek, val enabled: Boolean) : UiEvent
 
-        /** 요일별 시작 시간 변경 */
+        /** ?�일�??�작 ?�간 변�?*/
         data class DayStartTimeChanged(val key: DayOfWeek, val time: LocalTime) : UiEvent
 
-        /** 요일별 종료 시간 변경 */
+        /** ?�일�?종료 ?�간 변�?*/
         data class DayEndTimeChanged(val key: DayOfWeek, val time: LocalTime) : UiEvent
 
-        /** 품목 추가 */
+        /** ?�목 추�? */
         data object AddPriceItem : UiEvent
 
-        /** 품목 삭제 */
+        /** ?�목 ??�� */
         data class RemovePriceItem(val index: Int) : UiEvent
 
-        /** 품목명 변경 */
+        /** ?�목�?변�?*/
         data class PriceItemNameChanged(val index: Int, val name: ItemName) : UiEvent
 
-        /** 품목 단가 변경 */
+        /** ?�목 ?��? 변�?*/
         data class PriceItemPriceChanged(val index: Int, val price: Int?) : UiEvent
 
-        /** 주소 검색 다이얼로그 표시 상태 변경 */
+        /** 주소 검???�이?�로�??�시 ?�태 변�?*/
         data class AddressSearchState(val isShow: Boolean) : UiEvent
 
-        /** 등록하기 클릭 */
+        /** ?�록?�기 ?�릭 */
         data object SubmitClicked : UiEvent
     }
 
     /**
-     * Stateful Wrapper. Koin ViewModel을 주입받고 이벤트를 처리합니다.
-     * @param viewModel Koin에서 주입받는 ViewModel
-     * @param onBack 뒤로가기 콜백
+     * Stateful Wrapper. Koin ViewModel??주입받고 ?�벤?��? 처리?�니??
+     * @param viewModel Koin?�서 주입받는 ViewModel
+     * @param onBack ?�로가�?콜백
      */
 
     @Composable
@@ -200,10 +200,10 @@ object RegistStoreScreen : NavKey {
     }
 
     /**
-     * Stateless UI. 순수 Composable로 UI를 그립니다.
-     * @param model 현재 UI 상태
-     * @param snackbarHostState 스낵바 호스트 상태
-     * @param onEvent UI 이벤트 콜백
+     * Stateless UI. ?�수 Composable�?UI�?그립?�다.
+     * @param model ?�재 UI ?�태
+     * @param snackbarHostState ?�낵�??�스???�태
+     * @param onEvent UI ?�벤??콜백
      */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -219,7 +219,7 @@ object RegistStoreScreen : NavKey {
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = "업체 등록",
+                            text = "?�체 ?�록",
                             style = typography.headingMedium18,
                             color = color.gray900
                         )
@@ -227,8 +227,8 @@ object RegistStoreScreen : NavKey {
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_back),
-                                contentDescription = "뒤로가기",
+                                painter = painterResource(Res.drawable.icon_24_arrow_left),
+                                contentDescription = "?�로가�?,
                                 modifier = Modifier.size(24.dp),
                                 tint = color.gray900
                             )
@@ -294,12 +294,12 @@ object RegistStoreScreen : NavKey {
 }
 
 /**
- * 사진 등록 섹션.
- * 갤러리에서 이미지를 선택하고 선택된 이미지를 썸네일로 표시합니다.
- * @param photos 현재 등록된 사진 ByteArray 목록
- * @param maxPhotoCount 최대 등록 가능 사진 수
- * @param onPhotosAdded 사진 추가 콜백
- * @param onPhotoRemoved 사진 삭제 콜백
+ * ?�진 ?�록 ?�션.
+ * 갤러리에???��?지�??�택?�고 ?�택???��?지�??�네?�로 ?�시?�니??
+ * @param photos ?�재 ?�록???�진 ByteArray 목록
+ * @param maxPhotoCount 최�? ?�록 가???�진 ??
+ * @param onPhotosAdded ?�진 추�? 콜백
+ * @param onPhotoRemoved ?�진 ??�� 콜백
  */
 @Composable
 private fun PhotoSection(
@@ -312,13 +312,13 @@ private fun PhotoSection(
 
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
-            text = "사진 등록",
+            text = "?�진 ?�록",
             style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "최대 ${maxPhotoCount}장까지 등록 가능합니다",
+            text = "최�? ${maxPhotoCount}?�까지 ?�록 가?�합?�다",
             style = typography.bodyRegular14,
             color = color.gray600
         )
@@ -333,7 +333,7 @@ private fun PhotoSection(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 선택된 사진 썸네일
+                // ?�택???�진 ?�네??
                 itemsIndexed(photos) { index, photoBytes ->
                     PhotoThumbnail(
                         photoBytes = photoBytes,
@@ -341,7 +341,7 @@ private fun PhotoSection(
                     )
                 }
 
-                // 추가 버튼 (사진이 최대 수 미만일 때만 표시)
+                // 추�? 버튼 (?�진??최�? ??미만???�만 ?�시)
                 if (photos.size < maxPhotoCount) {
                     item {
                         OutlinedButton(
@@ -358,8 +358,8 @@ private fun PhotoSection(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Icon(
-                                    painter = painterResource(Res.drawable.ic_camera),
-                                    contentDescription = "사진 추가",
+                                    painter = painterResource(Res.drawable.icon_24_camera),
+                                    contentDescription = "?�진 추�?",
                                     modifier = Modifier.size(24.dp),
                                     tint = color.gray400
                                 )
@@ -379,9 +379,9 @@ private fun PhotoSection(
 }
 
 /**
- * 사진 썸네일. 선택된 이미지를 표시하고 삭제 버튼을 제공합니다.
- * @param photoBytes 이미지 ByteArray
- * @param onRemove 삭제 콜백
+ * ?�진 ?�네?? ?�택???��?지�??�시?�고 ??�� 버튼???�공?�니??
+ * @param photoBytes ?��?지 ByteArray
+ * @param onRemove ??�� 콜백
  */
 @Composable
 private fun PhotoThumbnail(
@@ -393,7 +393,7 @@ private fun PhotoThumbnail(
             bitmap = remember(photoBytes) {
                 photoBytes.decodeToImageBitmap()
             },
-            contentDescription = "등록된 사진",
+            contentDescription = "?�록???�진",
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(14.dp)),
@@ -409,8 +409,8 @@ private fun PhotoThumbnail(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(Res.drawable.ic_close),
-                contentDescription = "사진 삭제",
+                painter = painterResource(Res.drawable.icon_24_close),
+                contentDescription = "?�진 ??��",
                 modifier = Modifier.size(10.dp),
                 tint = Color.White
             )
@@ -419,7 +419,7 @@ private fun PhotoThumbnail(
 }
 
 /**
- * 섹션 구분선.
+ * ?�션 구분??
  */
 @Composable
 private fun SectionDivider() {
@@ -432,17 +432,17 @@ private fun SectionDivider() {
 }
 
 /**
- * 기본 정보 섹션.
- * @param storeName 업체명
- * @param phone 전화번호
+ * 기본 ?�보 ?�션.
+ * @param storeName ?�체�?
+ * @param phone ?�화번호
  * @param address 주소
- * @param description 업체 소개
- * @param isShowingAddressSearch 주소 검색 다이얼로그 표시 여부
- * @param onStoreNameChanged 업체명 변경 콜백
- * @param onPhoneChanged 전화번호 변경 콜백
- * @param onAddressChanged 주소 변경 콜백
- * @param onDescriptionChanged 업체 소개 변경 콜백
- * @param requestAddressSearchState 주소 검색 다이얼로그 표시 상태 변경 요청 콜백
+ * @param description ?�체 ?�개
+ * @param isShowingAddressSearch 주소 검???�이?�로�??�시 ?��?
+ * @param onStoreNameChanged ?�체�?변�?콜백
+ * @param onPhoneChanged ?�화번호 변�?콜백
+ * @param onAddressChanged 주소 변�?콜백
+ * @param onDescriptionChanged ?�체 ?�개 변�?콜백
+ * @param requestAddressSearchState 주소 검???�이?�로�??�시 ?�태 변�??�청 콜백
  */
 @Composable
 private fun BasicInfoSection(
@@ -462,19 +462,19 @@ private fun BasicInfoSection(
 
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
-            text = "기본 정보",
+            text = "기본 ?�보",
             style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 업체명
-        RequiredLabel("업체명")
+        // ?�체�?
+        RequiredLabel("?�체�?)
         Spacer(modifier = Modifier.height(8.dp))
         FormTextField(
             value = storeName,
             onValueChange = onStoreNameChanged,
-            placeholder = "업체명을 입력해주세요",
+            placeholder = "?�체명을 ?�력?�주?�요",
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(
                 onNext = { phoneFocusRequester.requestFocus() }
@@ -483,8 +483,8 @@ private fun BasicInfoSection(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 전화번호
-        RequiredLabel("전화번호")
+        // ?�화번호
+        RequiredLabel("?�화번호")
         Spacer(modifier = Modifier.height(8.dp))
         var phoneTextFieldValue by remember(phone) {
             mutableStateOf(TextFieldValue(text = phone, selection = TextRange(phone.length)))
@@ -527,7 +527,7 @@ private fun BasicInfoSection(
                 ) {
                     if (phone.isEmpty()) {
                         Text(
-                            text = "전화번호를 입력해주세요",
+                            text = "?�화번호�??�력?�주?�요",
                             style = typography.bodyRegular16,
                             color = color.gray500
                         )
@@ -554,7 +554,7 @@ private fun BasicInfoSection(
             contentAlignment = Alignment.CenterStart
         ) {
             Text(
-                text = address.ifEmpty { "주소를 검색해주세요" },
+                text = address.ifEmpty { "주소�?검?�해주세?? },
                 style = typography.bodyRegular16,
                 color = if (address.isEmpty()) color.gray500 else color.gray900,
                 maxLines = 1,
@@ -573,9 +573,9 @@ private fun BasicInfoSection(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 업체 소개
+        // ?�체 ?�개
         Text(
-            text = "업체 소개",
+            text = "?�체 ?�개",
             style = typography.bodyMedium14,
             color = color.gray800
         )
@@ -583,7 +583,7 @@ private fun BasicInfoSection(
         FormTextField(
             value = description,
             onValueChange = onDescriptionChanged,
-            placeholder = "업체를 소개해주세요\n예) 20년 경력의 신뢰할 수 있는 고물상입니다.",
+            placeholder = "?�체�??�개?�주?�요\n?? 20??경력???�뢰?????�는 고물?�입?�다.",
             minHeight = 120,
             singleLine = false,
             modifier = Modifier.focusRequester(descriptionFocusRequester),
@@ -593,8 +593,8 @@ private fun BasicInfoSection(
 }
 
 /**
- * 필수 입력 라벨 (이름 + 빨간 별표).
- * @param text 라벨 텍스트
+ * ?�수 ?�력 ?�벨 (?�름 + 빨간 별표).
+ * @param text ?�벨 ?�스??
  */
 @Composable
 private fun RequiredLabel(text: String) {
@@ -611,15 +611,15 @@ private fun RequiredLabel(text: String) {
 }
 
 /**
- * 공통 입력 필드.
- * @param value 현재 값
- * @param onValueChange 값 변경 콜백
- * @param placeholder 플레이스홀더 텍스트
- * @param minHeight 최소 높이 (dp)
- * @param singleLine 한 줄 입력 여부
+ * 공통 ?�력 ?�드.
+ * @param value ?�재 �?
+ * @param onValueChange �?변�?콜백
+ * @param placeholder ?�레?�스?�???�스??
+ * @param minHeight 최소 ?�이 (dp)
+ * @param singleLine ??�??�력 ?��?
  * @param modifier Modifier
- * @param keyboardOptions 키보드 옵션
- * @param keyboardActions 키보드 액션
+ * @param keyboardOptions ?�보???�션
+ * @param keyboardActions ?�보???�션
  */
 @Composable
 private fun FormTextField(
@@ -664,11 +664,11 @@ private fun FormTextField(
 }
 
 /**
- * 시간 선택 필드. 클릭 시 TimePickerBottomSheet를 표시합니다.
- * @param value 현재 시간 값
- * @param onValueChange 시간 변경 콜백
+ * ?�간 ?�택 ?�드. ?�릭 ??TimePickerBottomSheet�??�시?�니??
+ * @param value ?�재 ?�간 �?
+ * @param onValueChange ?�간 변�?콜백
  * @param modifier Modifier
- * @param backgroundColor 배경색
+ * @param backgroundColor 배경??
  */
 @Composable
 private fun TimePickerField(
@@ -712,8 +712,8 @@ private fun TimePickerField(
 }
 
 /**
- * 시간 문자열을 시/분으로 파싱합니다.
- * @param time HH:mm 형식의 시간 문자열
+ * ?�간 문자?�을 ??분으�??�싱?�니??
+ * @param time HH:mm ?�식???�간 문자??
  * @return (hour, minute) Pair
  */
 private fun parseTime(time: String): Pair<Int, Int> {
@@ -727,17 +727,17 @@ private fun parseTime(time: String): Pair<Int, Int> {
 }
 
 /**
- * 시/분을 HH:mm 형식 문자열로 포맷합니다.
- * @param hour 시간 (0~23)
- * @param minute 분 (0~59)
- * @return HH:mm 형식 문자열
+ * ??분을 HH:mm ?�식 문자?�로 ?�맷?�니??
+ * @param hour ?�간 (0~23)
+ * @param minute �?(0~59)
+ * @return HH:mm ?�식 문자??
  */
 private fun formatTime(hour: Int, minute: Int): String =
     "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
 
 /**
- * 전화번호 포맷 VisualTransformation.
- * 숫자를 010-1234-5678 형식으로 표시합니다.
+ * ?�화번호 ?�맷 VisualTransformation.
+ * ?�자�?010-1234-5678 ?�식?�로 ?�시?�니??
  */
 private object PhoneNumberTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
@@ -774,8 +774,8 @@ private object PhoneNumberTransformation : VisualTransformation {
 }
 
 /**
- * 숫자를 3자리마다 콤마로 구분하는 VisualTransformation.
- * 원본 텍스트는 순수 숫자이며, 표시 시 콤마가 삽입됩니다.
+ * ?�자�?3?�리마다 콤마�?구분?�는 VisualTransformation.
+ * ?�본 ?�스?�는 ?�수 ?�자?�며, ?�시 ??콤마가 ?�입?�니??
  */
 private object ThousandSeparatorTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
@@ -789,7 +789,7 @@ private object ThousandSeparatorTransformation : VisualTransformation {
             }
         }.reversed()
 
-        // originalOffset[i] = i번째 원본 문자의 변환 후 위치
+        // originalOffset[i] = i번째 ?�본 문자??변?????�치
         val originalToTransformedArray = IntArray(original.length + 1)
         var origIdx = 0
         formatted.forEachIndexed { transformedIdx, c ->
@@ -819,16 +819,16 @@ private object ThousandSeparatorTransformation : VisualTransformation {
 }
 
 /**
- * 영업 시간 섹션.
- * @param batchStartTime 일괄 시작 시간
- * @param batchEndTime 일괄 종료 시간
- * @param daySchedules 요일별 스케줄 목록
- * @param onBatchStartTimeChanged 일괄 시작 시간 변경 콜백
- * @param onBatchEndTimeChanged 일괄 종료 시간 변경 콜백
- * @param onApplyBatchTime 일괄 적용 버튼 클릭 콜백
- * @param onDayEnabledChanged 요일 활성화 변경 콜백
- * @param onDayStartTimeChanged 요일 시작 시간 변경 콜백
- * @param onDayEndTimeChanged 요일 종료 시간 변경 콜백
+ * ?�업 ?�간 ?�션.
+ * @param batchStartTime ?�괄 ?�작 ?�간
+ * @param batchEndTime ?�괄 종료 ?�간
+ * @param daySchedules ?�일�??��?�?목록
+ * @param onBatchStartTimeChanged ?�괄 ?�작 ?�간 변�?콜백
+ * @param onBatchEndTimeChanged ?�괄 종료 ?�간 변�?콜백
+ * @param onApplyBatchTime ?�괄 ?�용 버튼 ?�릭 콜백
+ * @param onDayEnabledChanged ?�일 ?�성??변�?콜백
+ * @param onDayStartTimeChanged ?�일 ?�작 ?�간 변�?콜백
+ * @param onDayEndTimeChanged ?�일 종료 ?�간 변�?콜백
  */
 @Composable
 private fun BusinessHoursSection(
@@ -844,7 +844,7 @@ private fun BusinessHoursSection(
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
-            text = "영업 시간",
+            text = "?�업 ?�간",
             style = typography.headingMedium20,
             color = color.gray900
         )
@@ -865,7 +865,7 @@ private fun BusinessHoursSection(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "일괄 입력",
+                text = "?�괄 ?�력",
                 style = typography.bodyMedium14,
                 color = color.gray900
             )
@@ -894,7 +894,7 @@ private fun BusinessHoursSection(
                 colors = ButtonDefaults.buttonColors(containerColor = color.green500)
             ) {
                 Text(
-                    text = "모두 적용",
+                    text = "모두 ?�용",
                     style = typography.bodyMedium14,
                     color = Color.White
                 )
@@ -921,11 +921,11 @@ private fun BusinessHoursSection(
 }
 
 /**
- * 요일별 영업 시간 행.
- * @param schedule 요일 스케줄 데이터
- * @param onEnabledChanged 활성화 상태 변경 콜백
- * @param onStartTimeChanged 시작 시간 변경 콜백
- * @param onEndTimeChanged 종료 시간 변경 콜백
+ * ?�일�??�업 ?�간 ??
+ * @param schedule ?�일 ?��?�??�이??
+ * @param onEnabledChanged ?�성???�태 변�?콜백
+ * @param onStartTimeChanged ?�작 ?�간 변�?콜백
+ * @param onEndTimeChanged 종료 ?�간 변�?콜백
  */
 @Composable
 private fun DayScheduleRow(
@@ -978,7 +978,7 @@ private fun DayScheduleRow(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "휴무",
+                    text = "?�무",
                     style = typography.bodyMedium14,
                     color = color.gray400,
                     maxLines = 1,
@@ -990,12 +990,12 @@ private fun DayScheduleRow(
 }
 
 /**
- * 매입 단가 섹션.
- * @param priceItems 매입 품목 목록
- * @param onAddPriceItem 품목 추가 콜백
- * @param onRemoveItem 품목 삭제 콜백
- * @param onNameChanged 품목명 변경 콜백
- * @param onPriceChanged 품목 단가 변경 콜백
+ * 매입 ?��? ?�션.
+ * @param priceItems 매입 ?�목 목록
+ * @param onAddPriceItem ?�목 추�? 콜백
+ * @param onRemoveItem ?�목 ??�� 콜백
+ * @param onNameChanged ?�목�?변�?콜백
+ * @param onPriceChanged ?�목 ?��? 변�?콜백
  */
 @Composable
 private fun PriceSection(
@@ -1007,13 +1007,13 @@ private fun PriceSection(
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         Text(
-            text = "매입 단가",
+            text = "매입 ?��?",
             style = typography.headingMedium20,
             color = color.gray900
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "취급하시는 품목과 kg당 매입 단가를 입력해주세요",
+            text = "취급?�시???�목�?kg??매입 ?��?�??�력?�주?�요",
             style = typography.bodyRegular14,
             color = color.gray600
         )
@@ -1029,7 +1029,7 @@ private fun PriceSection(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // 품목 추가하기 버튼
+        // ?�목 추�??�기 버튼
         OutlinedButton(
             onClick = onAddPriceItem,
             modifier = Modifier.fillMaxWidth().height(48.dp),
@@ -1041,14 +1041,14 @@ private fun PriceSection(
             colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
         ) {
             Icon(
-                painter = painterResource(Res.drawable.ic_add),
+                painter = painterResource(Res.drawable.icon_24_add),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = color.gray700
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "품목 추가하기",
+                text = "?�목 추�??�기",
                 style = typography.bodyMedium14,
                 color = color.gray700
             )
@@ -1057,13 +1057,13 @@ private fun PriceSection(
 }
 
 /**
- * 매입 단가 품목 카드.
- * 품목명 입력, kg당 매입가 입력, 삭제 버튼을 포함합니다.
- * @param item 품목 데이터
- * @param onNameChanged 품목명 변경 콜백
- * @param onCustomNameChanged 직접 입력 품목명 변경 콜백
- * @param onPriceChanged 단가 변경 콜백
- * @param onRemove 삭제 콜백 (null이면 삭제 버튼 숨김)
+ * 매입 ?��? ?�목 카드.
+ * ?�목�??�력, kg??매입가 ?�력, ??�� 버튼???�함?�니??
+ * @param item ?�목 ?�이??
+ * @param onNameChanged ?�목�?변�?콜백
+ * @param onCustomNameChanged 직접 ?�력 ?�목�?변�?콜백
+ * @param onPriceChanged ?��? 변�?콜백
+ * @param onRemove ??�� 콜백 (null?�면 ??�� 버튼 ?��?)
  */
 @Composable
 private fun PriceItemCard(
@@ -1088,10 +1088,10 @@ private fun PriceItemCard(
                 .padding(end = 28.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 품목
+            // ?�목
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "품목",
+                    text = "?�목",
                     style = typography.bodyMedium14,
                     color = color.gray800
                 )
@@ -1107,7 +1107,7 @@ private fun PriceItemCard(
                         .padding(horizontal = 12.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
-                    val name = if (item.name is ItemName.Custom) "직접 입력" else item.name.value
+                    val name = if (item.name is ItemName.Custom) "직접 ?�력" else item.name.value
                     Text(
                         text = name,
                         style = typography.bodyRegular16,
@@ -1117,7 +1117,7 @@ private fun PriceItemCard(
                 if (showPicker) {
                     ItemPickerBottomSheet(
                         onItemSelected = {
-                            val name = if (it == "직접 입력") ItemName.Custom("") else ItemName.Basic(it)
+                            val name = if (it == "직접 ?�력") ItemName.Custom("") else ItemName.Basic(it)
                             onNameChanged(name)
                         },
                         onDismiss = { showPicker = false }
@@ -1125,14 +1125,14 @@ private fun PriceItemCard(
                 }
             }
 
-            // 직접 입력 품목 (품목이 "직접 입력"일 때만 표시)
+            // 직접 ?�력 ?�목 (?�목??"직접 ?�력"???�만 ?�시)
             if (item.name is ItemName.Custom) {
                 LaunchedEffect(Unit) {
                     customNameFocusRequester.requestFocus()
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "직접 입력 품목",
+                        text = "직접 ?�력 ?�목",
                         style = typography.bodyMedium14,
                         color = color.gray800
                     )
@@ -1158,7 +1158,7 @@ private fun PriceItemCard(
                             ) {
                                 if (item.name.value.isBlank()) {
                                     Text(
-                                        text = "품목을 입력해주세요",
+                                        text = "?�목???�력?�주?�요",
                                         style = typography.bodyRegular16,
                                         color = color.gray500
                                     )
@@ -1170,10 +1170,10 @@ private fun PriceItemCard(
                 }
             }
 
-            // kg당 매입가
+            // kg??매입가
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "kg당 매입가",
+                    text = "kg??매입가",
                     style = typography.bodyMedium14,
                     color = color.gray800
                 )
@@ -1200,7 +1200,7 @@ private fun PriceItemCard(
                         ) {
                             if (item.price == null) {
                                 Text(
-                                    text = "매입 단가를 입력하세요",
+                                    text = "매입 ?��?�??�력?�세??,
                                     style = typography.bodyRegular16,
                                     color = color.gray500
                                 )
@@ -1213,7 +1213,7 @@ private fun PriceItemCard(
                                     innerTextField()
                                 }
                                 Text(
-                                    text = "원 / kg",
+                                    text = "??/ kg",
                                     style = typography.bodyRegular14,
                                     color = color.gray600
                                 )
@@ -1224,7 +1224,7 @@ private fun PriceItemCard(
             }
         }
 
-        // X 삭제 버튼
+        // X ??�� 버튼
         IconButton(
             onClick = onRemove,
             modifier = Modifier
@@ -1232,8 +1232,8 @@ private fun PriceItemCard(
                 .align(Alignment.TopEnd)
         ) {
             Icon(
-                painter = painterResource(Res.drawable.ic_close),
-                contentDescription = "품목 삭제",
+                painter = painterResource(Res.drawable.icon_24_close),
+                contentDescription = "?�목 ??��",
                 modifier = Modifier.size(16.dp),
                 tint = color.gray500
             )
@@ -1242,7 +1242,7 @@ private fun PriceItemCard(
 }
 
 /**
- * 하단 안내 메시지 카드.
+ * ?�단 ?�내 메시지 카드.
  */
 @Composable
 private fun InfoNotice() {
@@ -1268,7 +1268,7 @@ private fun InfoNotice() {
         }
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = "등록하신 정보는 고객들에게 공개되며,\n투명한 거래를 위해 정확한 정보를 입력해주세요.",
+            text = "?�록?�신 ?�보??고객?�에�?공개?�며,\n?�명??거래�??�해 ?�확???�보�??�력?�주?�요.",
             style = typography.bodyRegular14.copy(lineHeight = 22.75.sp),
             color = color.gray800
         )
@@ -1276,8 +1276,8 @@ private fun InfoNotice() {
 }
 
 /**
- * 하단 등록하기 버튼.
- * @param onClick 버튼 클릭 콜백
+ * ?�단 ?�록?�기 버튼.
+ * @param onClick 버튼 ?�릭 콜백
  */
 @Composable
 private fun SubmitButton(onClick: () -> Unit) {
@@ -1293,7 +1293,7 @@ private fun SubmitButton(onClick: () -> Unit) {
             colors = ButtonDefaults.buttonColors(containerColor = color.green500)
         ) {
             Text(
-                text = "등록하기",
+                text = "?�록?�기",
                 style = typography.bodyMedium14,
                 color = Color.White
             )
@@ -1302,7 +1302,7 @@ private fun SubmitButton(onClick: () -> Unit) {
 }
 
 /**
- * 전체 업체 등록 화면 미리보기.
+ * ?�체 ?�체 ?�록 ?�면 미리보기.
  */
 @Preview(showBackground = true)
 @Composable
@@ -1316,7 +1316,7 @@ private fun RegistStoreScreenPreview() {
 }
 
 /**
- * 사진 등록 섹션 미리보기.
+ * ?�진 ?�록 ?�션 미리보기.
  */
 @Preview(showBackground = true)
 @Composable
@@ -1331,17 +1331,17 @@ private fun PhotoSectionPreview() {
 }
 
 /**
- * 기본 정보 섹션 미리보기.
+ * 기본 ?�보 ?�션 미리보기.
  */
 @Preview(showBackground = true)
 @Composable
 private fun BasicInfoSectionPreview() {
     RebornTheme {
         BasicInfoSection(
-            storeName = "재활용 고물상",
+            storeName = "?�활??고물??,
             phone = "01012345678",
-            address = "서울시 강남구 테헤란로 123",
-            description = "20년 경력의 신뢰할 수 있는 고물상입니다.",
+            address = "?�울??강남�??�헤?��?123",
+            description = "20??경력???�뢰?????�는 고물?�입?�다.",
             isShowingAddressSearch = false,
             onStoreNameChanged = {},
             onPhoneChanged = {},
@@ -1353,7 +1353,7 @@ private fun BasicInfoSectionPreview() {
 }
 
 /**
- * 영업 시간 섹션 미리보기.
+ * ?�업 ?�간 ?�션 미리보기.
  */
 @Preview(showBackground = true)
 @Composable
@@ -1376,7 +1376,7 @@ private fun BusinessHoursSectionPreview() {
 }
 
 /**
- * 매입 단가 섹션 미리보기 (품목 있음).
+ * 매입 ?��? ?�션 미리보기 (?�목 ?�음).
  */
 @Preview(showBackground = true)
 @Composable
@@ -1396,7 +1396,7 @@ private fun PriceSectionPreview() {
 }
 
 /**
- * 매입 단가 품목 카드 미리보기.
+ * 매입 ?��? ?�목 카드 미리보기.
  */
 @Preview(showBackground = true)
 @Composable
@@ -1412,7 +1412,7 @@ private fun PriceItemCardPreview() {
 }
 
 /**
- * 하단 안내 메시지 미리보기.
+ * ?�단 ?�내 메시지 미리보기.
  */
 @Preview(showBackground = true)
 @Composable
@@ -1423,7 +1423,7 @@ private fun InfoNoticePreview() {
 }
 
 /**
- * 등록하기 버튼 미리보기.
+ * ?�록?�기 버튼 미리보기.
  */
 @Preview(showBackground = true)
 @Composable

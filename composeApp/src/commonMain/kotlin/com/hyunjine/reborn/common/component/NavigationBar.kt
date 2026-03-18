@@ -27,9 +27,9 @@ import com.hyunjine.reborn.common.theme.typography
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
-import reborn.composeapp.generated.resources.ic_nav_home
-import reborn.composeapp.generated.resources.ic_nav_my
-import reborn.composeapp.generated.resources.ic_nav_price
+import reborn.composeapp.generated.resources.icon_24_home
+import reborn.composeapp.generated.resources.icon_24_market_price
+import reborn.composeapp.generated.resources.icon_24_profile
 
 /**
  * 네비게이션 아이템에 대한 정보를 담는 열거형 클래스입니다.
@@ -41,9 +41,9 @@ enum class NavigationItem(
     val icon: DrawableResource,
     val label: String
 ) {
-    Home(Res.drawable.ic_nav_home, "홈"),
-    MarketPrice(Res.drawable.ic_nav_price, "시세"),
-    MyInfo(Res.drawable.ic_nav_my, "내 정보")
+    Home(Res.drawable.icon_24_home, "홈"),
+    MarketPrice(Res.drawable.icon_24_market_price, "시세"),
+    MyInfo(Res.drawable.icon_24_profile, "내 정보")
 }
 
 /**

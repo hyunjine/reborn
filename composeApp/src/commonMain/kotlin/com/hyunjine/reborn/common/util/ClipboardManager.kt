@@ -5,5 +5,5 @@ interface ClipboardManager {
     fun copyToClipboard(text: String)
 }
 
-// 필요에 따라 expect 함수로 선언
+// ?�요???�라 expect ?�수�??�언
 expect fun ClipboardManager(): ClipboardManager

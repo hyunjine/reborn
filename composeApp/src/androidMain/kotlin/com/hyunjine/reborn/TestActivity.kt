@@ -11,6 +11,7 @@ import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.di.RebornAppKoin
+import com.hyunjine.reborn.ui.my.MyScreen
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
 import com.hyunjine.reborn.ui.store_detail.StoreDetailScreen
 import org.koin.compose.KoinApplication
@@ -36,7 +37,7 @@ class TestActivity : ComponentActivity() {
             }
             KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
                 RebornTheme {
-                    RegistStoreScreen.invoke()
+                    MyScreen.invoke()
                 }
             }
         }

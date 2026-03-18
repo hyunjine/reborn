@@ -24,7 +24,16 @@
       "Bash(find /c/AndroidProjects/MyProjects/Reborn -name \"*.kt\" -type f | xargs grep -l \"Module\\\\|module\\\\|Koin\\\\|koin\\\\|viewModel\\\\|single\\\\|factory\" 2>/dev/null | grep -v build | grep -v \".gradle\" | head -30)",
       "Bash(find /c/AndroidProjects/MyProjects/Reborn/composeApp/src -name \"*.kt\" -type f | xargs grep -l \"class LocationService\\\\|fun LocationService\\\\|interface LocationService\" 2>/dev/null)",
       "Bash(find /c/AndroidProjects/MyProjects/Reborn/composeApp/src/commonMain/kotlin/com/hyunjine/reborn -name \"*.kt\" -type f | xargs grep -l \"@Module\\\\|@Single\\\\|@Factory\" 2>/dev/null)",
-      "Bash(find /c/AndroidProjects/MyProjects/Reborn -type f -name \"*.kt\" | xargs grep -l \"^@Module\\\\|^class.*Module\\\\|object.*Module\" 2>/dev/null | grep -v build)"
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -type f -name \"*.kt\" | xargs grep -l \"^@Module\\\\|^class.*Module\\\\|object.*Module\" 2>/dev/null | grep -v build)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -type f \\\\\\(-name *.xml -o -name *.png -o -name *.svg \\\\\\) -path */drawable* -o -path */res/*)",
+      "Bash(grep -oE '.{0,200}icon_24_arrow_left.{0,50}' \"C:\\\\Users\\\\thevl\\\\.claude\\\\projects\\\\C--AndroidProjects-MyProjects-Reborn\\\\f2d69598-6ead-4d2f-8fc8-137e64652fc3\\\\tool-results\\\\mcp-figma-get_metadata-1773831055087.txt\")",
+      "Bash(grep:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/AndroidProjects/MyProjects/Reborn/**)",
+      "Bash(done)"
     ]
   }
 }
