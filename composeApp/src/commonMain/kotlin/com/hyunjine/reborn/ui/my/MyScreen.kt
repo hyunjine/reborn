@@ -63,77 +63,56 @@ import reborn.composeapp.generated.resources.ic_store
 object MyScreen : NavKey {
 
     /**
-     * 내 정보 화면에서 발생하는 UI 이벤트들입니다.
-     */
-    sealed interface UiEvent {
-        /**
-         * 설정 아이콘 클릭 시 발생하는 이벤트입니다.
-         */
-        data object SettingClicked : UiEvent
-
-        /**
-         * 업체 등록하기 버튼 클릭 시 발생하는 이벤트입니다.
-         */
-        data object RegisterStoreClicked : UiEvent
-
-        /**
-         * 내 업체 카드 클릭 시 발생하는 이벤트입니다.
-         */
-        data object StoreCardClicked : UiEvent
-
-        /**
-         * 공지사항 메뉴 클릭 시 발생하는 이벤트입니다.
-         */
-        data object NoticeClicked : UiEvent
-
-        /**
-         * 서비스 이용약관 메뉴 클릭 시 발생하는 이벤트입니다.
-         */
-        data object TermsClicked : UiEvent
-
-        /**
-         * 고객센터 메뉴 클릭 시 발생하는 이벤트입니다.
-         */
-        data object CustomerServiceClicked : UiEvent
-    }
-
-    /**
      * 내 정보 화면의 Stateful Wrapper입니다.
      * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
      * @param onRegisterStore 업체 등록 화면으로 이동하는 콜백입니다.
      * @param onStoreDetail 내 업체 상세 화면으로 이동하는 콜백입니다.
      * @param onSetting 설정 화면으로 이동하는 콜백입니다.
+     * @param onNotice 공지사항 화면으로 이동하는 콜백입니다.
+     * @param onTerms 서비스 이용약관 화면으로 이동하는 콜백입니다.
+     * @param onCustomerService 고객센터 화면으로 이동하는 콜백입니다.
      */
     @Composable
     operator fun invoke(
         viewModel: MyViewModel = koinViewModel(),
         onRegisterStore: () -> Unit = {},
         onStoreDetail: () -> Unit = {},
-        onSetting: () -> Unit = {}
+        onSetting: () -> Unit = {},
+        onNotice: () -> Unit = {},
+        onTerms: () -> Unit = {},
+        onCustomerService: () -> Unit = {}
     ) {
         val state by viewModel.state.collectAsStateWithLifecycle()
         invoke(
             state = state,
-            onEvent = { event ->
-                when (event) {
-                    is UiEvent.SettingClicked -> onSetting()
-                    is UiEvent.RegisterStoreClicked -> onRegisterStore()
-                    is UiEvent.StoreCardClicked -> onStoreDetail()
-                    else -> viewModel.event(event)
-                }
-            }
+            onSettingClick = onSetting,
+            onRegisterStoreClick = onRegisterStore,
+            onStoreCardClick = onStoreDetail,
+            onNoticeClick = onNotice,
+            onTermsClick = onTerms,
+            onCustomerServiceClick = onCustomerService
         )
     }
 
     /**
      * 내 정보 화면의 Stateless UI 구현체입니다.
      * @param state 현재 화면의 UI 상태입니다.
-     * @param onEvent UI 이벤트 처리를 위한 콜백입니다.
+     * @param onSettingClick 설정 아이콘 클릭 시 호출되는 콜백입니다.
+     * @param onRegisterStoreClick 업체 등록하기 버튼 클릭 시 호출되는 콜백입니다.
+     * @param onStoreCardClick 내 업체 카드 클릭 시 호출되는 콜백입니다.
+     * @param onNoticeClick 공지사항 메뉴 클릭 시 호출되는 콜백입니다.
+     * @param onTermsClick 서비스 이용약관 메뉴 클릭 시 호출되는 콜백입니다.
+     * @param onCustomerServiceClick 고객센터 메뉴 클릭 시 호출되는 콜백입니다.
      */
     @Composable
     operator fun invoke(
         state: MyModel,
-        onEvent: (UiEvent) -> Unit = {}
+        onSettingClick: () -> Unit = {},
+        onRegisterStoreClick: () -> Unit = {},
+        onStoreCardClick: () -> Unit = {},
+        onNoticeClick: () -> Unit = {},
+        onTermsClick: () -> Unit = {},
+        onCustomerServiceClick: () -> Unit = {}
     ) {
         Column(
             modifier = Modifier
@@ -141,7 +120,7 @@ object MyScreen : NavKey {
                 .background(Color.White)
         ) {
             MyTopBar(
-                onSettingClick = { onEvent(UiEvent.SettingClicked) }
+                onSettingClick = onSettingClick
             )
             Column(
                 modifier = Modifier
@@ -158,28 +137,28 @@ object MyScreen : NavKey {
                 if (state.hasStore && state.storeInfo != null) {
                     StoreCard(
                         storeInfo = state.storeInfo,
-                        onClick = { onEvent(UiEvent.StoreCardClicked) }
+                        onClick = onStoreCardClick
                     )
                 } else {
                     RegisterStoreBanner(
-                        onRegisterClick = { onEvent(UiEvent.RegisterStoreClicked) }
+                        onRegisterClick = onRegisterStoreClick
                     )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 MenuItem(
                     icon = { Icon(painterResource(Res.drawable.ic_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
                     title = "공지사항",
-                    onClick = { onEvent(UiEvent.NoticeClicked) }
+                    onClick = onNoticeClick
                 )
                 MenuItem(
                     icon = { Icon(painterResource(Res.drawable.ic_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
                     title = "서비스 이용약관",
-                    onClick = { onEvent(UiEvent.TermsClicked) }
+                    onClick = onTermsClick
                 )
                 MenuItem(
                     icon = { Icon(painterResource(Res.drawable.ic_question), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
                     title = "고객센터",
-                    onClick = { onEvent(UiEvent.CustomerServiceClicked) }
+                    onClick = onCustomerServiceClick
                 )
             }
         }
