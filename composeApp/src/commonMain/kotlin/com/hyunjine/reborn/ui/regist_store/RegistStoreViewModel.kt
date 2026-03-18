@@ -57,7 +57,7 @@ class RegistStoreViewModel(
                 is UiEvent.BatchStartTimeChanged -> {
                     val is24Hour = event.time == LocalTime(0, 0) && old.batchEndTime == LocalTime(0, 0)
                     if (!is24Hour && event.time >= old.batchEndTime) {
-                        effects.send(Effect.ShowSnackbar("?�작 ?�간?� 종료 ?�간보다 빨라???�니??"))
+                        effects.send(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다."))
                         old
                     } else {
                         old.copy(batchStartTime = event.time)
@@ -66,7 +66,7 @@ class RegistStoreViewModel(
                 is UiEvent.BatchEndTimeChanged -> {
                     val is24Hour = old.batchStartTime == LocalTime(0, 0) && event.time == LocalTime(0, 0)
                     if (!is24Hour && event.time <= old.batchStartTime) {
-                        effects.send(Effect.ShowSnackbar("종료 ?�간?� ?�작 ?�간보다 ??��???�니??"))
+                        effects.send(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다."))
                         old
                     } else {
                         old.copy(batchEndTime = event.time)
@@ -123,7 +123,7 @@ class RegistStoreViewModel(
             val message = model.value.isValid()
             if (message == null) {
 //                repository.addStore(model.value)
-                effects.send(Effect.ShowSnackbar("?�록 ?�료!"))
+                effects.send(Effect.ShowSnackbar("등록 완료!"))
             } else {
                 effects.send(Effect.ShowSnackbar(message))
             }

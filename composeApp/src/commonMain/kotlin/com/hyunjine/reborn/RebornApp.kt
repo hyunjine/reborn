@@ -105,7 +105,7 @@ fun RebornApp() {
                     entry<MyScreen> {
                         MyScreen(
                             onRegisterStore = { backStack.add(RegistStoreScreen) },
-                            onStoreDetail = { /* TODO: ?�체 ?�세�??�동 */ },
+                            onStoreDetail = { /* TODO: 업체 상세로 이동 */ },
                             onSetting = { backStack.add(SettingScreen) }
                         )
                     }

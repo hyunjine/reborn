@@ -5,9 +5,9 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 
 /**
- * ByteArray�?ImageBitmap?�로 ?�코?�합?�다.
- * Android?�서??BitmapFactory�??�용?�니??
- * @return ?�코?�된 ImageBitmap
+ * ByteArray를 ImageBitmap으로 디코딩합니다.
+ * Android에서는 BitmapFactory를 사용합니다.
+ * @return 디코딩된 ImageBitmap
  */
 actual fun ByteArray.decodeToImageBitmap(): ImageBitmap {
     return BitmapFactory.decodeByteArray(this, 0, size).asImageBitmap()

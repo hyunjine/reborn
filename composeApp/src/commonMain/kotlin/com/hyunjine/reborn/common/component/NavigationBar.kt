@@ -28,8 +28,8 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_home
-import reborn.composeapp.generated.resources.icon_24_market_price
 import reborn.composeapp.generated.resources.icon_24_profile
+import reborn.composeapp.generated.resources.icon_24_market_price
 
 /**
  * 네비게이션 아이템에 대한 정보를 담는 열거형 클래스입니다.
