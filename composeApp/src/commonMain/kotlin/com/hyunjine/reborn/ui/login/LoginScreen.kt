@@ -354,3 +354,16 @@ private fun LoginScreenPreview() {
         )
     }
 }
+
+/**
+ * 작은 화면 디바이스에서의 로그인 화면 프리뷰입니다.
+ */
+@Preview(showBackground = true, widthDp = 320, heightDp = 480)
+@Composable
+private fun LoginScreenSmallDevicePreview() {
+    RebornTheme {
+        LoginScreen(
+            onEvent = {}
+        )
+    }
+}
