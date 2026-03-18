@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -82,7 +82,7 @@ object LoginScreen : NavKey {
      */
     @Composable
     operator fun invoke(
-        onLoginSuccess: () -> Unit = {}
+
     ) {
         invoke(
             onEvent = { event ->
@@ -104,32 +104,27 @@ object LoginScreen : NavKey {
     operator fun invoke(
         onEvent: (UiEvent) -> Unit = {}
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color.white)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LogoSection(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 165.dp)
-            )
+            Spacer(modifier = Modifier.weight(3f))
+            LogoSection()
+            Spacer(modifier = Modifier.weight(2.5f))
             LoginButtonSection(
                 onKakaoLogin = { onEvent(UiEvent.KakaoLoginClicked) },
                 onNaverLogin = { onEvent(UiEvent.NaverLoginClicked) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 466.dp)
+                modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.weight(2.5f))
             TermsText(
                 onTermsClick = { onEvent(UiEvent.TermsOfServiceClicked) },
-                onPrivacyClick = { onEvent(UiEvent.PrivacyPolicyClicked) },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 33.dp)
-                    .padding(horizontal = 16.dp)
+                onPrivacyClick = { onEvent(UiEvent.PrivacyPolicyClicked) }
             )
+            Spacer(modifier = Modifier.weight(0.6f))
         }
     }
 }
@@ -313,7 +308,7 @@ private fun TermsText(
     Text(
         text = annotatedString,
         style = TextStyle(
-            fontSize = 10.sp,
+            fontSize = 12.sp,
             lineHeight = 19.5.sp
         ),
         textAlign = TextAlign.Center,
