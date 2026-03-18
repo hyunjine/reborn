@@ -6,14 +6,14 @@
     <path
         android:pathData="M10,18.75C14.8325,18.75 18.75,14.8325 18.75,10C18.75,5.16751 14.8325,1.25 10,1.25C5.16751,1.25 1.25,5.16751 1.25,10C1.25,14.8325 5.16751,18.75 10,18.75Z"
         android:strokeWidth="1.5"
-        android:strokeColor="#4A5565"
+        android:strokeColor="#FFFFFF"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:fillColor="#00000000" />
     <path
         android:pathData="M3.81,3.81L16.19,16.19"
         android:strokeWidth="1.5"
-        android:strokeColor="#4A5565"
+        android:strokeColor="#FFFFFF"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:fillColor="#00000000" />
