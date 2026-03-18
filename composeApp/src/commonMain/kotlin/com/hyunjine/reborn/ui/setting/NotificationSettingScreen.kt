@@ -58,7 +58,7 @@ object NotificationSettingScreen : NavKey {
      */
     @Composable
     operator fun invoke(
-        viewModel: NotificationSettingViewModel = koinViewModel(),
+        viewModel: SettingViewModel = koinViewModel(),
         onBack: () -> Unit = {}
     ) {
         val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsStateWithLifecycle()
