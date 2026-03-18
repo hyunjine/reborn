@@ -38,6 +38,7 @@ data class RegistStoreModel(
     val priceItems: ImmutableList<PriceItemModel> = persistentListOf(PriceItemModel()),
 ) {
     fun isValid(): String? {
+        if (photos.isEmpty()) return "가게 사진을 최소 1장 이상 등록해주세요."
         if (name.isBlank()) return "업체명을 입력해주세요."
         if (address.isBlank()) return "주소를 입력해주세요."
         if (phone.isBlank()) return "전화번호를 입력해주세요."
@@ -48,13 +49,6 @@ data class RegistStoreModel(
             return "영업 종료 시각은 시작 시각보다 늦어야 합니다."
         }
 
-        // 3. 사진 검증
-        if (photos.isEmpty()) {
-            return "가게 사진을 최소 1장 이상 등록해주세요."
-        }
-
-        // 4. 요일별 스케줄 검증
-        // DayScheduleModel.isValid()가 Boolean을 반환한다고 가정 시
         val hasInvalidSchedule = daySchedules.values.any { schedule ->
             if (!schedule.isEnabled) return@any false
             val is24Hour = schedule.startTime == LocalTime(0, 0) && schedule.endTime == LocalTime(0, 0)

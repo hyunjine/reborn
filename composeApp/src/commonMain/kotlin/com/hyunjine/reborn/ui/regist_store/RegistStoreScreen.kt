@@ -93,6 +93,7 @@ import androidx.compose.runtime.LaunchedEffect
 import com.hyunjine.reborn.common.util.shortName
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
 
@@ -178,8 +179,9 @@ object RegistStoreScreen : NavKey {
         val addressState by viewModel.addressWindowState.collectAsStateWithLifecycle()
         val snackbarHostState = remember { SnackbarHostState() }
 
+
         LaunchedEffect(Unit) {
-            viewModel.effect.collect { effect ->
+            viewModel.effects.consumeEach { effect ->
                 when (effect) {
                     is RegistStoreViewModel.Effect.ShowSnackbar -> {
                         snackbarHostState.showSnackbar(effect.message)

@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.ui.regist_store
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.hyunjine.reborn.common.util.BaseViewModel
 import com.hyunjine.reborn.data.store.StoreRepository
@@ -7,6 +8,7 @@ import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen.UiEvent
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,8 +38,8 @@ class RegistStoreViewModel(
         data class ShowSnackbar(val message: String) : Effect
     }
 
-    private val _effect: Channel<Effect> = Channel()
-    val effect: Flow<Effect> = _effect.receiveAsFlow()
+    val effects: ReceiveChannel<Effect>
+        field: Channel<Effect> = Channel()
 
     val model: StateFlow<RegistStoreModel> = uiEvent
         .runningFold(RegistStoreModel()) { old, event ->
@@ -55,7 +57,7 @@ class RegistStoreViewModel(
                 is UiEvent.BatchStartTimeChanged -> {
                     val is24Hour = event.time == LocalTime(0, 0) && old.batchEndTime == LocalTime(0, 0)
                     if (!is24Hour && event.time >= old.batchEndTime) {
-                        _effect.send(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다."))
+                        effects.send(Effect.ShowSnackbar("시작 시간은 종료 시간보다 빨라야 합니다."))
                         old
                     } else {
                         old.copy(batchStartTime = event.time)
@@ -64,7 +66,7 @@ class RegistStoreViewModel(
                 is UiEvent.BatchEndTimeChanged -> {
                     val is24Hour = old.batchStartTime == LocalTime(0, 0) && event.time == LocalTime(0, 0)
                     if (!is24Hour && event.time <= old.batchStartTime) {
-                        _effect.send(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다."))
+                        effects.send(Effect.ShowSnackbar("종료 시간은 시작 시간보다 늦어야 합니다."))
                         old
                     } else {
                         old.copy(batchEndTime = event.time)
@@ -121,9 +123,9 @@ class RegistStoreViewModel(
             val message = model.value.isValid()
             if (message == null) {
 //                repository.addStore(model.value)
-                _effect.send(Effect.ShowSnackbar("등록 완료!"))
+                effects.send(Effect.ShowSnackbar("등록 완료!"))
             } else {
-                _effect.send(Effect.ShowSnackbar(message))
+                effects.send(Effect.ShowSnackbar(message))
             }
         }.launchIn(viewModelScope)
 

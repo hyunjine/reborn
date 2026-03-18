@@ -15,6 +15,9 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
+    compilerOptions {
+        freeCompilerArgs.add("-Xexplicit-backing-fields")
+    }
     
     listOf(
         iosArm64(),
