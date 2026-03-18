@@ -20,6 +20,8 @@ import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.home.HomeScreen
 import com.hyunjine.reborn.ui.my.MyScreen
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
+import com.hyunjine.reborn.ui.setting.NotificationSettingScreen
+import com.hyunjine.reborn.ui.setting.SettingScreen
 import com.hyunjine.reborn.ui.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -102,7 +104,20 @@ fun RebornApp() {
                     }
                     entry<MyScreen> {
                         MyScreen(
-                            onRegisterStore = { backStack.add(RegistStoreScreen) }
+                            onRegisterStore = { backStack.add(RegistStoreScreen) },
+                            onStoreDetail = { /* TODO: 업체 상세로 이동 */ },
+                            onSetting = { backStack.add(SettingScreen) }
+                        )
+                    }
+                    entry<SettingScreen> {
+                        SettingScreen(
+                            onBack = { backStack.removeLastOrNull() },
+                            onNotificationSetting = { backStack.add(NotificationSettingScreen) }
+                        )
+                    }
+                    entry<NotificationSettingScreen> {
+                        NotificationSettingScreen(
+                            onBack = { backStack.removeLastOrNull() }
                         )
                     }
                 }
@@ -118,6 +133,8 @@ private val navConfig = SavedStateConfiguration {
             subclass(StoreDetailScreen::class, StoreDetailScreen.serializer())
             subclass(RegistStoreScreen::class, RegistStoreScreen.serializer())
             subclass(MyScreen::class, MyScreen.serializer())
+            subclass(SettingScreen::class, SettingScreen.serializer())
+            subclass(NotificationSettingScreen::class, NotificationSettingScreen.serializer())
         }
     }
 }

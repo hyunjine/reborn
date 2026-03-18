@@ -102,18 +102,21 @@ object MyScreen : NavKey {
      * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
      * @param onRegisterStore 업체 등록 화면으로 이동하는 콜백입니다.
      * @param onStoreDetail 내 업체 상세 화면으로 이동하는 콜백입니다.
+     * @param onSetting 설정 화면으로 이동하는 콜백입니다.
      */
     @Composable
     operator fun invoke(
         viewModel: MyViewModel = koinViewModel(),
         onRegisterStore: () -> Unit = {},
-        onStoreDetail: () -> Unit = {}
+        onStoreDetail: () -> Unit = {},
+        onSetting: () -> Unit = {}
     ) {
         val state by viewModel.state.collectAsStateWithLifecycle()
         invoke(
             state = state,
             onEvent = { event ->
                 when (event) {
+                    is UiEvent.SettingClicked -> onSetting()
                     is UiEvent.RegisterStoreClicked -> onRegisterStore()
                     is UiEvent.StoreCardClicked -> onStoreDetail()
                     else -> viewModel.event(event)

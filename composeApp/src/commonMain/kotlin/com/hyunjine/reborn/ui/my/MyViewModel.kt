@@ -7,11 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
 /**
  * 내 정보 화면의 비즈니스 로직을 담당하는 ViewModel.
  * 사용자 정보와 업체 등록 상태를 관리합니다.
  */
+@KoinViewModel
 class MyViewModel : ViewModel() {
 
     private val _uiEvent = MutableSharedFlow<MyScreen.UiEvent>()
