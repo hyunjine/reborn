@@ -102,12 +102,7 @@ fun RebornApp() {
                     }
                     entry<MyScreen> {
                         MyScreen(
-                            onRegisterStore = { backStack.add(RegistStoreScreen) },
-                            onNavClick = { route ->
-                                when (route) {
-                                    "home" -> backStack.removeLastOrNull()
-                                }
-                            }
+                            onRegisterStore = { backStack.add(RegistStoreScreen) }
                         )
                     }
                 }

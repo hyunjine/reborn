@@ -1,6 +1,7 @@
 package com.hyunjine.reborn.ui.my
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,9 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,95 +30,92 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
+import coil3.compose.AsyncImage
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
-import com.hyunjine.reborn.ui.home.HomeBottomNavigation
+import com.hyunjine.reborn.common.theme.typography
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.ic_bell
-import reborn.composeapp.generated.resources.ic_chart
-import reborn.composeapp.generated.resources.ic_check
 import reborn.composeapp.generated.resources.ic_chevron_right
-import reborn.composeapp.generated.resources.ic_document
-import reborn.composeapp.generated.resources.ic_dollar
-import reborn.composeapp.generated.resources.ic_edit
-import reborn.composeapp.generated.resources.ic_location_pin
-import reborn.composeapp.generated.resources.ic_logout
+import reborn.composeapp.generated.resources.ic_location
 import reborn.composeapp.generated.resources.ic_question
+import reborn.composeapp.generated.resources.ic_setting
 import reborn.composeapp.generated.resources.ic_store
-import reborn.composeapp.generated.resources.ic_user_profile
 
 /**
  * 내 정보 화면.
  * 업체 등록 여부에 따라 두 가지 상태의 UI를 표시합니다.
+ * - 미등록: 업체 등록 유도 배너
+ * - 등록 완료: 내 업체 카드
  */
 @Serializable
 object MyScreen : NavKey {
 
     /**
-     * 내 정보 화면의 UI 이벤트.
+     * 내 정보 화면에서 발생하는 UI 이벤트들입니다.
      */
     sealed interface UiEvent {
-        /** 업체 등록하기 버튼 클릭 */
+        /**
+         * 설정 아이콘 클릭 시 발생하는 이벤트입니다.
+         */
+        data object SettingClicked : UiEvent
+
+        /**
+         * 업체 등록하기 버튼 클릭 시 발생하는 이벤트입니다.
+         */
         data object RegisterStoreClicked : UiEvent
 
-        /** 영업 상태 토글 */
-        data class ToggleStoreOpen(val isOpen: Boolean) : UiEvent
+        /**
+         * 내 업체 카드 클릭 시 발생하는 이벤트입니다.
+         */
+        data object StoreCardClicked : UiEvent
 
-        /** 정보 수정 클릭 */
-        data object EditInfoClicked : UiEvent
-
-        /** 단가 관리 클릭 */
-        data object PriceManageClicked : UiEvent
-
-        /** 통계 클릭 */
-        data object StatsClicked : UiEvent
-
-        /** 공지사항 클릭 */
+        /**
+         * 공지사항 메뉴 클릭 시 발생하는 이벤트입니다.
+         */
         data object NoticeClicked : UiEvent
 
-        /** 고객센터 클릭 */
-        data object SupportClicked : UiEvent
-
-        /** 서비스 이용약관 클릭 */
+        /**
+         * 서비스 이용약관 메뉴 클릭 시 발생하는 이벤트입니다.
+         */
         data object TermsClicked : UiEvent
 
-        /** 로그아웃 클릭 */
-        data object LogoutClicked : UiEvent
-
-        /** 하단 네비게이션 클릭 */
-        data class NavClicked(val route: String) : UiEvent
+        /**
+         * 고객센터 메뉴 클릭 시 발생하는 이벤트입니다.
+         */
+        data object CustomerServiceClicked : UiEvent
     }
 
     /**
-     * Stateful Wrapper. Koin ViewModel을 주입받고 이벤트를 처리합니다.
-     * @param viewModel Koin에서 주입받는 ViewModel
-     * @param onRegisterStore 업체 등록 화면 이동 콜백
-     * @param onNavClick 네비게이션 아이템 클릭 콜백
+     * 내 정보 화면의 Stateful Wrapper입니다.
+     * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
+     * @param onRegisterStore 업체 등록 화면으로 이동하는 콜백입니다.
+     * @param onStoreDetail 내 업체 상세 화면으로 이동하는 콜백입니다.
      */
     @Composable
     operator fun invoke(
         viewModel: MyViewModel = koinViewModel(),
         onRegisterStore: () -> Unit = {},
-        onNavClick: (String) -> Unit = {}
+        onStoreDetail: () -> Unit = {}
     ) {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
+        val state by viewModel.state.collectAsStateWithLifecycle()
         invoke(
-            uiState = uiState,
+            state = state,
             onEvent = { event ->
                 when (event) {
                     is UiEvent.RegisterStoreClicked -> onRegisterStore()
-                    is UiEvent.NavClicked -> onNavClick(event.route)
+                    is UiEvent.StoreCardClicked -> onStoreDetail()
                     else -> viewModel.event(event)
                 }
             }
@@ -127,136 +123,157 @@ object MyScreen : NavKey {
     }
 
     /**
-     * Stateless UI. 순수 Composable로 UI를 그립니다.
-     * @param uiState 현재 UI 상태
-     * @param onEvent UI 이벤트 콜백
+     * 내 정보 화면의 Stateless UI 구현체입니다.
+     * @param state 현재 화면의 UI 상태입니다.
+     * @param onEvent UI 이벤트 처리를 위한 콜백입니다.
      */
     @Composable
     operator fun invoke(
-        uiState: MyModel,
+        state: MyModel,
         onEvent: (UiEvent) -> Unit = {}
     ) {
-        Scaffold(
-            bottomBar = {
-                HomeBottomNavigation(
-                    selectedRoute = "my",
-                    onNavClick = { onEvent(UiEvent.NavClicked(it)) }
-                )
-            }
-        ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
+            MyTopBar(
+                onSettingClick = { onEvent(UiEvent.SettingClicked) }
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
                     .verticalScroll(rememberScrollState())
-                    .padding(padding)
+                    .padding(horizontal = 16.dp)
             ) {
-                HeaderSection()
-                ProfileSection(userName = uiState.userName, email = uiState.email)
-
-                if (uiState.hasStore && uiState.storeInfo != null) {
-                    MyStoreSection(
-                        storeInfo = uiState.storeInfo,
-                        onToggleOpen = { onEvent(UiEvent.ToggleStoreOpen(it)) }
+                Spacer(modifier = Modifier.height(20.dp))
+                ProfileCard(
+                    userName = state.userName,
+                    email = state.email
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                if (state.hasStore && state.storeInfo != null) {
+                    StoreCard(
+                        storeInfo = state.storeInfo,
+                        onClick = { onEvent(UiEvent.StoreCardClicked) }
                     )
-                    StoreManagementSection(onEvent = onEvent)
                 } else {
-                    RegisterStoreCta(onClick = { onEvent(UiEvent.RegisterStoreClicked) })
+                    RegisterStoreBanner(
+                        onRegisterClick = { onEvent(UiEvent.RegisterStoreClicked) }
+                    )
                 }
-
-                MenuSection(onEvent = onEvent)
+                Spacer(modifier = Modifier.height(24.dp))
+                MenuItem(
+                    icon = { Icon(painterResource(Res.drawable.ic_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
+                    title = "공지사항",
+                    onClick = { onEvent(UiEvent.NoticeClicked) }
+                )
+                MenuItem(
+                    icon = { Icon(painterResource(Res.drawable.ic_bell), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
+                    title = "서비스 이용약관",
+                    onClick = { onEvent(UiEvent.TermsClicked) }
+                )
+                MenuItem(
+                    icon = { Icon(painterResource(Res.drawable.ic_question), contentDescription = null, modifier = Modifier.size(20.dp), tint = color.gray900) },
+                    title = "고객센터",
+                    onClick = { onEvent(UiEvent.CustomerServiceClicked) }
+                )
             }
         }
     }
 }
 
 /**
- * 헤더 섹션. "내 정보" 타이틀을 표시합니다.
+ * 내 정보 화면의 상단 바입니다.
+ * 좌측에 "내 정보" 타이틀, 우측에 설정 아이콘을 표시합니다.
+ * @param onSettingClick 설정 아이콘 클릭 시 호출되는 콜백입니다.
  */
 @Composable
-private fun HeaderSection() {
-    Box(
+private fun MyTopBar(
+    onSettingClick: () -> Unit
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 14.dp)
+            .height(56.dp)
+            .padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = "내 정보",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            style = typography.headingBold24.copy(fontSize = 22.sp),
             color = color.gray900
+        )
+        IconButton(onClick = onSettingClick) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_setting),
+                contentDescription = "설정",
+                modifier = Modifier.size(24.dp),
+                tint = color.gray900
+            )
+        }
+    }
+}
+
+/**
+ * 사용자 프로필 카드입니다.
+ * 이름과 이메일을 표시합니다.
+ * @param userName 사용자 이름.
+ * @param email 사용자 이메일.
+ */
+@Composable
+private fun ProfileCard(
+    userName: String,
+    email: String
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Text(
+            text = userName,
+            style = typography.headingMedium20.copy(fontWeight = FontWeight.Bold),
+            color = color.gray900
+        )
+        Text(
+            text = email,
+            style = typography.bodyRegular14,
+            color = color.gray700
         )
     }
 }
 
 /**
- * 프로필 섹션. 아바타, 이름, 이메일을 표시합니다.
- * @param userName 사용자 이름
- * @param email 사용자 이메일
+ * 업체 미등록 시 표시되는 업체 등록 유도 배너입니다.
+ * @param onRegisterClick 업체 등록하기 버튼 클릭 시 호출되는 콜백입니다.
  */
 @Composable
-private fun ProfileSection(userName: String, email: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 24.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Avatar
-        Box(
-            modifier = Modifier
-                .size(80.dp)
-                .background(color.green200, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_user_profile),
-                contentDescription = "프로필",
-                modifier = Modifier.size(40.dp),
-                tint = Color.White
-            )
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column {
-            Text(
-                text = userName,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = color.gray900
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = email,
-                fontSize = 14.sp,
-                color = color.gray600
-            )
-        }
-    }
-}
-
-/**
- * 업체 등록 유도 CTA 카드. 업체가 없을 때 표시합니다.
- * @param onClick 업체 등록하기 버튼 클릭 콜백
- */
-@Composable
-private fun RegisterStoreCta(onClick: () -> Unit) {
+private fun RegisterStoreBanner(
+    onRegisterClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 18.dp, bottom = 18.dp)
-            .background(color.gray50, RoundedCornerShape(16.dp))
-            .padding(20.dp)
+            .border(1.dp, color.green300, RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(20.dp))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Row(verticalAlignment = Alignment.Top) {
-            // Store icon
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(color.green200, RoundedCornerShape(12.dp)),
+                    .background(
+                        color = color.green500.copy(alpha = 0.1f),
+                        shape = CircleShape
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -266,42 +283,36 @@ private fun RegisterStoreCta(onClick: () -> Unit) {
                     tint = color.green500
                 )
             }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
                     text = "고물상을 운영하시나요?",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = typography.headingBold18,
                     color = color.gray900
                 )
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "지금 리본 파트너로 등록하고\n더 많은 고객을 만나보세요!",
-                    fontSize = 14.sp,
-                    color = color.gray600,
-                    lineHeight = 22.sp
+                    text = "지금 리본 파트너로 등록하고\n더 많은 고객을 만나보세요",
+                    style = typography.bodyRegular14,
+                    color = color.gray800
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
         Button(
-            onClick = onClick,
+            onClick = onRegisterClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(46.dp),
-            shape = RoundedCornerShape(12.dp),
+                .height(52.dp),
+            shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = color.green500
+                containerColor = color.green500,
+                contentColor = Color.White
             )
         ) {
             Text(
                 text = "업체 등록하기",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = typography.bodySemibold14,
                 color = Color.White
             )
         }
@@ -309,335 +320,152 @@ private fun RegisterStoreCta(onClick: () -> Unit) {
 }
 
 /**
- * 내 업체 섹션. 업체가 있을 때 업체 카드를 표시합니다.
- * @param storeInfo 업체 정보
- * @param onToggleOpen 영업 상태 토글 콜백
+ * 업체 등록 완료 시 표시되는 내 업체 카드입니다.
+ * 업체 이미지, 이름, 주소를 표시합니다.
+ * @param storeInfo 업체 정보 모델.
+ * @param onClick 카드 클릭 시 호출되는 콜백입니다.
  */
 @Composable
-private fun MyStoreSection(
+private fun StoreCard(
     storeInfo: MyStoreModel,
-    onToggleOpen: (Boolean) -> Unit
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(color.gray50)
+            .clickable(onClick = onClick)
     ) {
-        // Section title
-        Text(
-            text = "내 업체",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = color.gray900,
-            modifier = Modifier.padding(vertical = 20.dp)
-        )
-
-        // Store card
-        Column(
+        AsyncImage(
+            model = storeInfo.imageUrl,
+            contentDescription = "${storeInfo.name} 대표 이미지",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
+                .height(101.dp)
+                .background(color.gray200)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Store image placeholder
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(195.dp)
-                    .background(color.gray100)
-            ) {
-                // Verified badge
-                if (storeInfo.isVerified) {
-                    Row(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .background(Color.White, RoundedCornerShape(16.dp))
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_check),
-                            contentDescription = null,
-                            modifier = Modifier.size(14.dp),
-                            tint = color.green500
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "인증 업체",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = color.gray900
-                        )
-                    }
-                }
-            }
-
-            // Store info
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color.gray50)
-                    .padding(16.dp)
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
                     text = storeInfo.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = color.gray900
+                    style = typography.headingBold18,
+                    color = color.gray900,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Address
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_location_pin),
+                        painter = painterResource(Res.drawable.ic_location),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = color.gray400
+                        tint = color.gray700
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = storeInfo.address,
-                        fontSize = 14.sp,
-                        color = color.gray600
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Business status toggle
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "영업 상태",
-                        fontSize = 14.sp,
-                        color = color.gray700
-                    )
-                    Switch(
-                        checked = storeInfo.isOpen,
-                        onCheckedChange = onToggleOpen,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = Color.White,
-                            checkedTrackColor = color.green500,
-                            uncheckedThumbColor = Color.White,
-                            uncheckedTrackColor = color.gray300
-                        )
-                    )
-                }
-
-                // Status text
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = if (storeInfo.isOpen) "영업 중" else "영업 종료",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = if (storeInfo.isOpen) color.green500 else color.gray400
+                        style = typography.bodyRegular14,
+                        color = color.gray700,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                painter = painterResource(Res.drawable.ic_chevron_right),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = color.gray600
+            )
         }
     }
 }
 
 /**
- * 업체 관리 메뉴 섹션. 정보 수정, 단가 관리, 통계 메뉴를 표시합니다.
- * @param onEvent UI 이벤트 콜백
- */
-@Composable
-private fun StoreManagementSection(onEvent: (MyScreen.UiEvent) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 24.dp)
-    ) {
-        Text(
-            text = "업체 관리",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = color.gray600,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-        )
-        MenuItem(
-            icon = painterResource(Res.drawable.ic_edit),
-            label = "정보 수정",
-            onClick = { onEvent(MyScreen.UiEvent.EditInfoClicked) }
-        )
-        MenuItem(
-            icon = painterResource(Res.drawable.ic_dollar),
-            label = "단가 관리",
-            onClick = { onEvent(MyScreen.UiEvent.PriceManageClicked) }
-        )
-        MenuItemWithBadge(
-            icon = painterResource(Res.drawable.ic_chart),
-            label = "통계",
-            badge = "추후",
-            onClick = { onEvent(MyScreen.UiEvent.StatsClicked) }
-        )
-    }
-}
-
-/**
- * 일반 메뉴 섹션. 공지사항, 고객센터, 서비스 이용약관, 로그아웃을 표시합니다.
- * @param onEvent UI 이벤트 콜백
- */
-@Composable
-private fun MenuSection(onEvent: (MyScreen.UiEvent) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 24.dp)
-    ) {
-        MenuItem(
-            icon = painterResource(Res.drawable.ic_bell),
-            label = "공지사항",
-            onClick = { onEvent(MyScreen.UiEvent.NoticeClicked) }
-        )
-        MenuItem(
-            icon = painterResource(Res.drawable.ic_question),
-            label = "고객센터",
-            onClick = { onEvent(MyScreen.UiEvent.SupportClicked) }
-        )
-        MenuItem(
-            icon = painterResource(Res.drawable.ic_document),
-            label = "서비스 이용약관",
-            onClick = { onEvent(MyScreen.UiEvent.TermsClicked) }
-        )
-        MenuItem(
-            icon = painterResource(Res.drawable.ic_logout),
-            label = "로그아웃",
-            onClick = { onEvent(MyScreen.UiEvent.LogoutClicked) }
-        )
-    }
-}
-
-/**
- * 메뉴 아이템. 아이콘, 라벨, 화살표를 표시합니다.
- * @param icon 메뉴 아이콘
- * @param label 메뉴 라벨
- * @param onClick 클릭 콜백
+ * 메뉴 아이템입니다.
+ * 좌측에 아이콘, 중앙에 제목, 우측에 화살표를 표시합니다.
+ * @param icon 아이콘 Composable.
+ * @param title 메뉴 제목.
+ * @param onClick 메뉴 클릭 시 호출되는 콜백입니다.
  */
 @Composable
 private fun MenuItem(
-    icon: Painter,
-    label: String,
+    icon: @Composable () -> Unit,
+    title: String,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(
-            painter = icon,
-            contentDescription = null,
-            modifier = Modifier.size(20.dp),
-            tint = color.gray700
-        )
-        Spacer(modifier = Modifier.width(12.dp))
+        icon()
         Text(
-            text = label,
-            fontSize = 16.sp,
+            text = title,
+            style = typography.bodyMedium16,
             color = color.gray900,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Icon(
             painter = painterResource(Res.drawable.ic_chevron_right),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
-            tint = color.gray400
+            tint = color.gray600
         )
     }
 }
 
 /**
- * 배지가 있는 메뉴 아이템.
- * @param icon 메뉴 아이콘
- * @param label 메뉴 라벨
- * @param badge 배지 텍스트
- * @param onClick 클릭 콜백
+ * 내 정보 화면 프리뷰 (업체 미등록 상태).
  */
+@Preview(showBackground = true)
 @Composable
-private fun MenuItemWithBadge(
-    icon: Painter,
-    label: String,
-    badge: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = icon,
-            contentDescription = null,
-            modifier = Modifier.size(20.dp),
-            tint = color.gray700
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = label,
-            fontSize = 16.sp,
-            color = color.gray900
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = badge,
-            fontSize = 11.sp,
-            color = color.gray400,
-            modifier = Modifier
-                .background(color.gray100, RoundedCornerShape(4.dp))
-                .padding(horizontal = 8.dp, vertical = 2.dp)
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            painter = painterResource(Res.drawable.ic_chevron_right),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp),
-            tint = color.gray400
-        )
-    }
-}
-
-@Preview
-@Composable
-fun MyScreenNoStorePreview() {
+private fun MyScreenNoStorePreview() {
     RebornTheme {
         MyScreen(
-            uiState = MyModel(
+            state = MyModel(
                 userName = "김철수",
                 email = "kimcs@example.com",
-                hasStore = false
+                hasStore = false,
+                storeInfo = null
             )
         )
     }
 }
 
-@Preview
+/**
+ * 내 정보 화면 프리뷰 (업체 등록 완료 상태).
+ */
+@Preview(showBackground = true)
 @Composable
-fun MyScreenWithStorePreview() {
+private fun MyScreenWithStorePreview() {
     RebornTheme {
         MyScreen(
-            uiState = MyModel(
+            state = MyModel(
                 userName = "김철수",
                 email = "kimcs@example.com",
                 hasStore = true,
                 storeInfo = MyStoreModel(
                     name = "서울고물상",
                     address = "서울특별시 강남구 역삼동 123-45",
-                    isVerified = true,
-                    isOpen = true
+                    imageUrl = ""
                 )
             )
         )
