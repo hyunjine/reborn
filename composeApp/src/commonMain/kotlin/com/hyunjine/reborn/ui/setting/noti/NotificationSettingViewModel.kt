@@ -1,24 +1,27 @@
-package com.hyunjine.reborn.ui.setting
+package com.hyunjine.reborn.ui.setting.noti
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hyunjine.reborn.ui.setting.noti.NotificationSettingScreen
+import com.hyunjine.reborn.common.util.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
 
-/**
- * 알림 설정 화면의 비즈니스 로직을 담당하는 ViewModel.
- * 알림 활성화 상태를 관리합니다.
- */
 @KoinViewModel
-class SettingViewModel : ViewModel() {
+class NotificationSettingViewModel(
+
+): BaseViewModel<NotificationSettingScreen.UiEvent>() {
+    val isNotificationEnabled: StateFlow<Boolean> = uiEvent
+        .filterIsInstance<NotificationSettingScreen.UiEvent.NotificationToggled>()
+        .map {
+            it.enabled
+        }.stateIn(true)
 
 }

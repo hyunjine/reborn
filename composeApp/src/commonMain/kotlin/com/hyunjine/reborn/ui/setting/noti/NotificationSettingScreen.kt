@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.ui.setting
+package com.hyunjine.reborn.ui.setting.noti
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -58,7 +58,7 @@ object NotificationSettingScreen : NavKey {
      */
     @Composable
     operator fun invoke(
-        viewModel: SettingViewModel = koinViewModel(),
+        viewModel: NotificationSettingViewModel = koinViewModel(),
         onBack: () -> Unit = {}
     ) {
         val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsStateWithLifecycle()

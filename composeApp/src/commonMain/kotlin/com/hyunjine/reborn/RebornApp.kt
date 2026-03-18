@@ -3,11 +3,7 @@ package com.hyunjine.reborn
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -15,26 +11,22 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.home.HomeScreen
+import com.hyunjine.reborn.ui.main.MainScreen
 import com.hyunjine.reborn.ui.my.MyScreen
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
-import com.hyunjine.reborn.ui.setting.NotificationSettingScreen
 import com.hyunjine.reborn.ui.setting.SettingScreen
+import com.hyunjine.reborn.ui.setting.noti.NotificationSettingScreen
 import com.hyunjine.reborn.ui.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
-import org.koin.core.annotation.ComponentScan
-import org.koin.core.annotation.Configuration
-import org.koin.core.annotation.KoinApplication
-import org.koin.core.annotation.Module
-import coil3.compose.setSingletonImageLoaderFactory
-import coil3.ImageLoader
-import coil3.network.ktor3.KtorNetworkFetcherFactory
 import org.koin.plugin.module.dsl.koinConfiguration
-
 
 @Composable
 @Preview
@@ -48,7 +40,7 @@ fun RebornApp() {
     }
     KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
         RebornTheme {
-            val backStack = rememberNavBackStack(configuration = navConfig, HomeScreen)
+            val backStack = rememberNavBackStack(configuration = navConfig, MainScreen)
             NavDisplay(
                 backStack = backStack,
                 transitionSpec = {
@@ -83,17 +75,16 @@ fun RebornApp() {
                     // Add the default decorators for managing scenes and saving state
                     rememberSaveableStateHolderNavEntryDecorator(),
                     // Then add the view model store decorator
-//                        rememberViewModelStoreNavEntryDecorator()
+                    // rememberViewModelStoreNavEntryDecorator()
                 ),
                 entryProvider = entryProvider {
-                    entry<HomeScreen> {
-                        HomeScreen(
-                            onCenterClick = { id -> backStack.add(StoreDetailScreen(id)) },
-                            onNavClick = { route ->
-                                when (route) {
-                                    "my" -> backStack.add(MyScreen)
-                                }
-                            }
+                    entry<MainScreen> {
+                        MainScreen(
+                            onSearch = { TODO() },
+                            onNotification = { TODO() },
+                            onStoreDetail = { backStack.add(StoreDetailScreen(it)) },
+                            onSetting = { backStack.add(SettingScreen) },
+                            onRegisterStore = { TODO() },
                         )
                     }
                     entry<StoreDetailScreen> { screen ->
@@ -102,17 +93,10 @@ fun RebornApp() {
                     entry<RegistStoreScreen> {
                         RegistStoreScreen(onBack = { backStack.removeLastOrNull() })
                     }
-                    entry<MyScreen> {
-                        MyScreen(
-                            onRegisterStore = { backStack.add(RegistStoreScreen) },
-                            onStoreDetail = { /* TODO: 업체 상세로 이동 */ },
-                            onSetting = { backStack.add(SettingScreen) }
-                        )
-                    }
                     entry<SettingScreen> {
                         SettingScreen(
                             onBack = { backStack.removeLastOrNull() },
-                            onNotificationSetting = { backStack.add(NotificationSettingScreen) }
+                            onNotificationSetting = { backStack.add(SettingScreen) }
                         )
                     }
                     entry<NotificationSettingScreen> {
@@ -129,10 +113,9 @@ fun RebornApp() {
 private val navConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(HomeScreen::class, HomeScreen.serializer())
+            subclass(MainScreen::class, MainScreen.serializer())
             subclass(StoreDetailScreen::class, StoreDetailScreen.serializer())
             subclass(RegistStoreScreen::class, RegistStoreScreen.serializer())
-            subclass(MyScreen::class, MyScreen.serializer())
             subclass(SettingScreen::class, SettingScreen.serializer())
             subclass(NotificationSettingScreen::class, NotificationSettingScreen.serializer())
         }

@@ -16,14 +16,20 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
+import com.hyunjine.reborn.ui.home.HomeScreen
+import com.hyunjine.reborn.ui.my.MyScreen
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
@@ -37,13 +43,10 @@ import reborn.composeapp.generated.resources.icon_24_market_price
  * @property icon 아이템을 나타내는 아이콘 리소스
  * @property label 아이템의 하단에 표시될 텍스트
  */
-enum class NavigationItem(
-    val icon: DrawableResource,
+@Stable
+interface NavigationItem: NavKey {
+    val icon: DrawableResource
     val label: String
-) {
-    Home(Res.drawable.icon_24_home, "홈"),
-    MarketPrice(Res.drawable.icon_24_market_price, "시세"),
-    MyInfo(Res.drawable.icon_24_profile, "내 정보")
 }
 
 /**
@@ -56,6 +59,7 @@ enum class NavigationItem(
  */
 @Composable
 fun NavigationBar(
+    items: ImmutableList<NavigationItem>,
     selectedItem: NavigationItem,
     onItemSelected: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier
@@ -76,7 +80,7 @@ fun NavigationBar(
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            NavigationItem.entries.forEach { item ->
+            items.forEach { item ->
                 NavigationTab(
                     item = item,
                     isSelected = selectedItem == item,
@@ -104,17 +108,12 @@ private fun NavigationTab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     val contentColor = if (isSelected) color.gray900 else color.gray400
 
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onClick
-            ),
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -141,7 +140,8 @@ private fun NavigationTab(
 private fun NavigationBarPreview() {
     RebornTheme {
         NavigationBar(
-            selectedItem = NavigationItem.Home,
+            items = listOf(HomeScreen, MyScreen).toImmutableList(),
+            selectedItem = HomeScreen,
             onItemSelected = {}
         )
     }

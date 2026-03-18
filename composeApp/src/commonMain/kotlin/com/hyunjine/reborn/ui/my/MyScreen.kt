@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,18 +40,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import coil3.compose.AsyncImage
+import com.hyunjine.reborn.common.component.NavigationItem
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
-import reborn.composeapp.generated.resources.icon_24_bell
 import reborn.composeapp.generated.resources.icon_24_arrow_right
-import reborn.composeapp.generated.resources.icon_24_location
+import reborn.composeapp.generated.resources.icon_24_bell
 import reborn.composeapp.generated.resources.icon_24_help
-import reborn.composeapp.generated.resources.ic_setting
+import reborn.composeapp.generated.resources.icon_24_home
+import reborn.composeapp.generated.resources.icon_24_location
+import reborn.composeapp.generated.resources.icon_24_profile
+import reborn.composeapp.generated.resources.icon_24_setting
 import reborn.composeapp.generated.resources.icon_24_store
 
 /**
@@ -60,7 +65,7 @@ import reborn.composeapp.generated.resources.icon_24_store
  * - 등록 완료: 내 업체 카드
  */
 @Serializable
-object MyScreen : NavKey {
+object MyScreen : NavigationItem {
 
     /**
      * 내 정보 화면의 Stateful Wrapper입니다.
@@ -163,6 +168,10 @@ object MyScreen : NavKey {
             }
         }
     }
+
+    override val icon: DrawableResource = Res.drawable.icon_24_profile
+    override val label: String = "내 정보"
+
 }
 
 /**
@@ -190,7 +199,7 @@ private fun MyTopBar(
         )
         IconButton(onClick = onSettingClick) {
             Icon(
-                painter = painterResource(Res.drawable.ic_setting),
+                painter = painterResource(Res.drawable.icon_24_setting),
                 contentDescription = "설정",
                 modifier = Modifier.size(24.dp),
                 tint = color.gray900

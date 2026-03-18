@@ -30,10 +30,10 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_arrow_left
-import reborn.composeapp.generated.resources.icon_24_bell
 import reborn.composeapp.generated.resources.icon_24_arrow_right
+import reborn.composeapp.generated.resources.icon_24_bell
 import reborn.composeapp.generated.resources.icon_24_logout
-import reborn.composeapp.generated.resources.ic_stop
+import reborn.composeapp.generated.resources.icon_24_stop
 
 /**
  * 설정 화면.
@@ -153,7 +153,7 @@ object SettingScreen : NavKey {
                 SettingMenuItem(
                     icon = {
                         Icon(
-                            painter = painterResource(Res.drawable.ic_stop),
+                            painter = painterResource(Res.drawable.icon_24_stop),
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
                             tint = color.gray700

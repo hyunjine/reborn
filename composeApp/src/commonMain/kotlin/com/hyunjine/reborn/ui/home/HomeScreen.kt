@@ -34,6 +34,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,9 +44,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
 import coil3.compose.AsyncImage
 import com.hyunjine.reborn.Location
+import com.hyunjine.reborn.common.component.NavigationItem
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
@@ -53,6 +54,7 @@ import com.hyunjine.reborn.common.util.readable
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
@@ -70,7 +72,7 @@ import reborn.composeapp.generated.resources.icon_24_search
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Serializable
-object HomeScreen : NavKey {
+object HomeScreen : NavigationItem {
 
     /**
      * 홈 화면에서 발생하는 UI 이벤트들입니다.
@@ -97,35 +99,28 @@ object HomeScreen : NavKey {
          * 알림 아이콘이 클릭되었을 때 발생하는 이벤트입니다.
          */
         data object NotificationClicked : UiEvent
-
-        /**
-         * 하단 네비게이션 아이템이 클릭되었을 때 발생하는 이벤트입니다.
-         * @param route 이동할 경로(route)입니다.
-         */
-        data class NavClicked(val route: String) : UiEvent
     }
 
     /**
      * 홈 화면의 Stateful Wrapper입니다.
      * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
-     * @param onCenterClick 고물상 클릭 시 호출되는 콜백입니다.
-     * @param onNavClick 네비게이션 아이템 클릭 시 호출되는 콜백입니다.
+     * @param onItemClick 고물상 클릭 시 호출되는 콜백입니다.
      */
     @Composable
     operator fun invoke(
+        modifier: Modifier = Modifier,
         viewModel: HomeViewModel = koinViewModel(),
-        onCenterClick: (Long) -> Unit = {},
-        onNavClick: (String) -> Unit = {}
+        onItemClick: (Long) -> Unit = {},
     ) {
         val state by viewModel.state.collectAsStateWithLifecycle()
         val location by viewModel.location.collectAsStateWithLifecycle()
         invoke(
+            modifier = modifier,
             location = location,
             state = state,
             onEvent = { event ->
                 when (event) {
-                    is UiEvent.StoreClicked -> onCenterClick(event.id)
-                    is UiEvent.NavClicked -> onNavClick(event.route)
+                    is UiEvent.StoreClicked -> onItemClick(event.id)
                     else -> viewModel.event(event)
                 }
             }
@@ -142,11 +137,10 @@ object HomeScreen : NavKey {
     operator fun invoke(
         location: Location?,
         state: StoreState,
+        modifier: Modifier = Modifier.fillMaxSize(),
         onEvent: (UiEvent) -> Unit = {}
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Column(modifier = modifier) {
             HomeTopBar(
                 location = location.toString(),
                 onSearchClick = { onEvent(UiEvent.SearchClicked) },
@@ -185,6 +179,9 @@ object HomeScreen : NavKey {
             }
         }
     }
+
+    override val icon: DrawableResource = Res.drawable.icon_24_home
+    override val label: String = "홈"
 }
 
 /**
