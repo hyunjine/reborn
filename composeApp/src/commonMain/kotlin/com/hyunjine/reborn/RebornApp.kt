@@ -17,6 +17,7 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.home.HomeScreen
+import com.hyunjine.reborn.ui.login.LoginScreen
 import com.hyunjine.reborn.ui.main.MainScreen
 import com.hyunjine.reborn.ui.my.MyScreen
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
@@ -78,6 +79,9 @@ fun RebornApp() {
                     // rememberViewModelStoreNavEntryDecorator()
                 ),
                 entryProvider = entryProvider {
+                    entry<LoginScreen> {
+                        LoginScreen()
+                    }
                     entry<MainScreen> {
                         MainScreen(
                             onSearch = { TODO() },
@@ -113,6 +117,7 @@ fun RebornApp() {
 private val navConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
+            subclass(LoginScreen::class, LoginScreen.serializer())
             subclass(MainScreen::class, MainScreen.serializer())
             subclass(StoreDetailScreen::class, StoreDetailScreen.serializer())
             subclass(RegistStoreScreen::class, RegistStoreScreen.serializer())

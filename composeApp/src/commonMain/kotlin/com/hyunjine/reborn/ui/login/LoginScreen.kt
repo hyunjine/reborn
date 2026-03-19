@@ -150,7 +150,7 @@ private fun LogoSection(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "리본",
+                text = "리본(Re-born)",
                 style = typography.headingBold24,
                 color = Color.Black,
                 textAlign = TextAlign.Center
