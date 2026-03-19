@@ -61,11 +61,12 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin" }
 
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }

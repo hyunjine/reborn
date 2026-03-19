@@ -56,6 +56,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.navigation)
             implementation(libs.koin.annotations)
+            implementation(project.dependencies.platform(libs.ktor.bom))
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
