@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +34,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -271,17 +276,33 @@ private fun StoreInfoSection(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Address with copy icon
+        // Address with inline location icon and copy icon
+        val locationIconId = "locationIcon"
+        val annotatedAddress = buildAnnotatedString {
+            appendInlineContent(locationIconId, "[위치]")
+            append(" ")
+            append(address)
+        }
+        val inlineContent = mapOf(
+            locationIconId to InlineTextContent(
+                placeholder = Placeholder(
+                    width = 24.sp,
+                    height = 24.sp,
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                )
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.icon_24_location_pin),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    tint = color.gray400
+                )
+            }
+        )
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(Res.drawable.icon_24_location_pin),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = color.gray400
-            )
-            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = address,
+                text = annotatedAddress,
+                inlineContent = inlineContent,
                 style = typography.bodyRegular16,
                 color = color.gray900,
                 modifier = Modifier.weight(1f)
