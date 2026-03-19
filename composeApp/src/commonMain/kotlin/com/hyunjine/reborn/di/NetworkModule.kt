@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.di
 
+import com.hyunjine.reborn.util.immutableListSerializerModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -14,6 +15,7 @@ class NetworkModule {
     fun provideJson(): Json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
+        serializersModule = immutableListSerializerModule
     }
 
     @Single
