@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.refTo
 import platform.Foundation.NSData
+import platform.Foundation.NSError
 import platform.PhotosUI.PHPickerConfiguration
 import platform.PhotosUI.PHPickerConfigurationSelectionOrdered
 import platform.PhotosUI.PHPickerFilter
@@ -42,15 +43,14 @@ actual fun ImagePickerLauncher(
                 val byteArrays = mutableListOf<ByteArray>()
                 var remaining = results.size
                 results.forEach { result ->
-                    result.itemProvider.loadObject(
-                        forTypeIdentifier = "public.image"
-                    ) { reading, _ ->
-                        val image = reading as? UIImage
-                        if (image != null) {
-                            val data = UIImageJPEGRepresentation(image, 0.8)
-                            if (data != null) {
-                                val bytes = data.toByteArray()
-                                synchronized(byteArrays) { byteArrays.add(bytes) }
+                    result.itemProvider.loadDataRepresentationForTypeIdentifier(
+                        typeIdentifier = "public.image"
+                    ) { data: NSData?, _: NSError? ->
+                        if (data != null) {
+                            val image = UIImage(data = data)
+                            val jpegData = UIImageJPEGRepresentation(image, 0.8)
+                            if (jpegData != null) {
+                                byteArrays.add(jpegData.toByteArray())
                             }
                         }
                         remaining--
