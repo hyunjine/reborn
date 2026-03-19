@@ -1,9 +1,7 @@
 package com.hyunjine.reborn.ui.store_detail
 
-import com.hyunjine.reborn.common.util.now
 import com.hyunjine.reborn.common.util.pad
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -20,14 +18,14 @@ import kotlinx.datetime.LocalTime
  */
 data class StoreDetailModel(
     val id: Long,
-    val imageUrls: ImmutableList<String> = persistentListOf(),
-    val name: String = "",
-    val address: String = "",
-    val description: String = "",
-    val businessHours: ImmutableList<OperationTimeModel> = persistentListOf(),
-    val prices: ImmutableList<StorePriceModel> = persistentListOf(),
-    val lastUpdated: LocalDateTime = LocalDateTime.now(),
-    val phoneNumber: String = ""
+    val imageUrls: ImmutableList<String>,
+    val name: String,
+    val address: String,
+    val description: String,
+    val businessHours: ImmutableList<OperationTimeModel>,
+    val prices: ImmutableList<StorePriceModel>,
+    val lastUpdated: LocalDateTime,
+    val phoneNumber: String
 )
 
 /**
