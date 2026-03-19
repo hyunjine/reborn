@@ -1,9 +1,20 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.serialization)
 }
 
+android {
+    namespace = "com.hyunjine.reborn.shared"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 26
+    }
+}
+
 kotlin {
+    androidTarget()
     jvm()
 
     listOf(
@@ -19,6 +30,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlin.serialization)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.napier)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
