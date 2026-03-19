@@ -43,7 +43,6 @@ fun RebornApp() {
         RebornTheme {
             val backStack = rememberNavBackStack(configuration = navConfig, MainScreen)
 
-            // entryProvider: 각 NavKey에 대응하는 Composable 화면을 정의
             val entryProvider = entryProvider {
                 screens(
                     onNavigate = { backStack.add(it) },
@@ -51,9 +50,7 @@ fun RebornApp() {
                 )
             }
 
-            // rememberDecoratedNavEntries: backStack + entryProvider + decorators를 결합하여
-            // 상태 보존이 적용된 NavEntry 리스트를 생성
-            val entries = rememberDecoratedNavEntries(
+            NavDisplay(
                 backStack = backStack,
                 entryDecorators = listOf(
                     // Composable 상태(rememberSaveable 등)를 화면별로 보존하는 데코레이터
@@ -62,11 +59,6 @@ fun RebornApp() {
                     // rememberViewModelStoreNavEntryDecorator()
                 ),
                 entryProvider = entryProvider,
-            )
-
-            // NavDisplay: entries 기반으로 현재 화면을 렌더링
-            NavDisplay(
-                entries = entries,
                 onBack = { backStack.removeLastOrNull() },
             )
         }
@@ -148,6 +140,7 @@ private fun EntryProviderScope<NavKey>.screens(
     entry<NotificationSettingScreen>(metadata = slideTransitionMetadata) {
         NotificationSettingScreen(onBack = onBack)
     }
+
 }
 
 private val navConfig = SavedStateConfiguration {

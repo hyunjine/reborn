@@ -25,11 +25,6 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @Serializable
 object MainScreen: NavKey {
-    val NavigationItemSaver = Saver<NavKey, String>(
-        save = { Json.encodeToString(it) }, // JSON 문자열로 변환
-        restore = { Json.decodeFromString(it) } // 다시 객체로 복구
-    )
-
     @Composable
     operator fun invoke(
         onSearch: () -> Unit = {},
