@@ -33,7 +33,11 @@
       "Bash(for f:*)",
       "Bash(do echo:*)",
       "Read(//c/AndroidProjects/MyProjects/Reborn/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn/.gradle/caches/modules-2/files-2.1 -name *navigation3*)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -name *.jar -type f)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -path */build/* -name *.kt -type f)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }
