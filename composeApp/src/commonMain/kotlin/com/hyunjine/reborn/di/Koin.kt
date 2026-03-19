@@ -6,7 +6,7 @@ import org.koin.core.annotation.KoinApplication
 import org.koin.core.annotation.Module
 
 
-@Module(includes = [ViewModelModule::class])
+@Module(includes = [ViewModelModule::class, NetworkModule::class])
 @Configuration
 class AppModule
 
