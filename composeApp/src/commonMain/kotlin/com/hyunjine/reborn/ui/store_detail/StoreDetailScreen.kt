@@ -301,11 +301,12 @@ private fun StoreInfoSection(
                 )
             }
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.Top) {
             Icon(
                 painter = painterResource(Res.drawable.icon_24_location_pin),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier
+                    .size(24.dp),
                 tint = color.gray400
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -505,7 +506,7 @@ fun StoreDetailScreenPreview() {
         StoreDetailScreen(storeId = 1).invoke(
             model = StoreDetailModel(
                 name = "서울고물상",
-                address = "서울특별시 강남구 역삼동 123-45",
+                address = "서울특별시 강남구 역삼동 123-45".repeat(3),
                 description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
                 businessHours = DayOfWeek.entries.map {
                     OperationTimeModel(

@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.common.util
+package com.hyunjine.reborn.util
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList

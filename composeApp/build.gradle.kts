@@ -58,7 +58,6 @@ kotlin {
             implementation(libs.koin.annotations)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
-            implementation(libs.napier)
             implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {

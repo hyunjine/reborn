@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.entity
+package com.hyunjine.reborn.model
 
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.common.util
+package com.hyunjine.reborn.util
 
 import io.github.aakira.napier.Napier
 

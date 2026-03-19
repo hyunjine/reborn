@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.common.util
+package com.hyunjine.reborn.util
 
 // commonMain
 expect fun Number.readable(): String

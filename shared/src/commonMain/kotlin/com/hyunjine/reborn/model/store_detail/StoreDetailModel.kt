@@ -1,10 +1,11 @@
-package com.hyunjine.reborn.ui.store_detail
+package com.hyunjine.reborn.model.store_detail
 
 import com.hyunjine.reborn.common.util.pad
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.serialization.Serializable
 
 /**
  * 업체 상세 화면의 UI 상태 모델.
@@ -16,6 +17,7 @@ import kotlinx.datetime.LocalTime
  * @param lastUpdated 시세 최종 업데이트 시간 텍스트
  * @param phoneNumber 업체 전화번호
  */
+@Serializable
 data class StoreDetailModel(
     val id: Long,
     val imageUrls: ImmutableList<String>,
@@ -33,18 +35,22 @@ data class StoreDetailModel(
  * @param dayOfWeek 요일명
  * @param operation 영업 시간 텍스트
  */
+@Serializable
 data class OperationTimeModel(
     val dayOfWeek: DayOfWeek,
     val operation: Operation
 )
 
+@Serializable
 sealed interface Operation {
+    @Serializable
     data object Closed: Operation {
         override fun toString(): String {
             return "휴무"
         }
     }
 
+    @Serializable
     data class Open(
         val start: LocalTime,
         val end: LocalTime,
@@ -63,6 +69,7 @@ sealed interface Operation {
  * @param name 품목명
  * @param price 단가 텍스트
  */
+@Serializable
 data class StorePriceModel(
     val name: String,
     val price: String
