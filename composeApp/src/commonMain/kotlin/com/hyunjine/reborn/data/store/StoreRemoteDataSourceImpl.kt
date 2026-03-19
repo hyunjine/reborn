@@ -3,6 +3,7 @@ package com.hyunjine.reborn.data.store
 import com.hyunjine.reborn.Location
 import com.hyunjine.reborn.model.MatterEntity
 import com.hyunjine.reborn.model.StoreEntity
+import com.hyunjine.reborn.model.store_detail.StoreDetailModel
 import org.koin.core.annotation.Single
 
 @Single
@@ -21,8 +22,8 @@ class StoreRemoteDataSourceImpl : StoreRemoteDataSource {
         }
     }
 
-    override suspend fun getStoreDetail(id: Long): StoreDetailEntity {
-        StoreDetailEntity
+    override suspend fun getStoreDetail(id: Long): StoreDetailModel {
+        return TODO()
     }
 
     //StoreDetailModel(

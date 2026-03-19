@@ -3,7 +3,6 @@ package com.hyunjine.reborn.ui.store_detail
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,13 +33,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,10 +50,15 @@ import coil3.compose.AsyncImage
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
-import com.hyunjine.reborn.common.util.fullName
 import com.hyunjine.reborn.common.util.ClipboardManager
 import com.hyunjine.reborn.common.util.clickable
-import com.hyunjine.reborn.common.util.pad
+import com.hyunjine.reborn.model.store_detail.Operation
+import com.hyunjine.reborn.model.store_detail.OperationTimeModel
+import com.hyunjine.reborn.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.model.store_detail.StorePriceModel
+import com.hyunjine.reborn.util.ImmutableList
+import com.hyunjine.reborn.util.fullName
+import com.hyunjine.reborn.util.pad
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -528,7 +532,8 @@ fun StoreDetailScreenPreview() {
                 ),
                 lastUpdated = LocalDateTime(2026, 3, 12, 14, 30),
                 phoneNumber = "010-1234-5678",
-                id = 1
+                id = 1L,
+                imageUrls = ImmutableList(4) { "https://picsum.photos/seed/200/200" }
             )
         )
     }

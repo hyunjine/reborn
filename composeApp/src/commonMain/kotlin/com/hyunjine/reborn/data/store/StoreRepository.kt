@@ -1,10 +1,10 @@
 package com.hyunjine.reborn.data.store
 
 import com.hyunjine.reborn.Location
+import com.hyunjine.reborn.model.store_detail.StoreDetailModel
 import com.hyunjine.reborn.ui.home.Distance
 import com.hyunjine.reborn.ui.home.MatterModel
 import com.hyunjine.reborn.ui.home.StoreModel
-import com.hyunjine.reborn.ui.store_detail.StoreDetailModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.core.annotation.Single

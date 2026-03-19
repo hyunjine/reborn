@@ -50,7 +50,7 @@ import com.hyunjine.reborn.common.component.NavigationItem
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
-import com.hyunjine.reborn.common.util.readable
+import com.hyunjine.reborn.util.readable
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable

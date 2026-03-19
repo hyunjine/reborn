@@ -90,7 +90,7 @@ import reborn.composeapp.generated.resources.icon_24_close
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
-import com.hyunjine.reborn.common.util.shortName
+import com.hyunjine.reborn.util.shortName
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.channels.consumeEach

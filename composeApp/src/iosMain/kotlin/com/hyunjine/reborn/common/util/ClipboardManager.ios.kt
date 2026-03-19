@@ -1,10 +1,10 @@
 package com.hyunjine.reborn.common.util
 
+import platform.UIKit.UIPasteboard
+
 actual fun ClipboardManager(): ClipboardManager {
     return IosClipboardManager()
 }
-
-import platform.UIKit.UIPasteboard
 
 class IosClipboardManager : ClipboardManager {
     override fun copyToClipboard(text: String) {

@@ -2,7 +2,7 @@ package com.hyunjine.reborn.ui.regist_store
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import com.hyunjine.reborn.common.util.now
+import com.hyunjine.reborn.util.now
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf

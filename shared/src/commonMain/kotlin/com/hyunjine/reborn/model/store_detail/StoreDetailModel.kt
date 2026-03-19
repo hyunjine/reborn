@@ -1,6 +1,6 @@
 package com.hyunjine.reborn.model.store_detail
 
-import com.hyunjine.reborn.common.util.pad
+import com.hyunjine.reborn.util.pad
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime

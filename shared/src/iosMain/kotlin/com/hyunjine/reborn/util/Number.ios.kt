@@ -7,6 +7,9 @@ import platform.Foundation.NSNumberFormatterDecimalStyle
 actual fun Number.readable(): String {
     val formatter = NSNumberFormatter().apply {
         numberStyle = NSNumberFormatterDecimalStyle
+        minimumFractionDigits = 0u
+        maximumFractionDigits = 2u
     }
-    return formatter.stringFromNumber(NSNumber(double = this.toDouble())) ?: this.toString()
+    val nsNumber = NSNumber(this.toDouble())
+    return formatter.stringFromNumber(nsNumber) ?: this.toString()
 }
