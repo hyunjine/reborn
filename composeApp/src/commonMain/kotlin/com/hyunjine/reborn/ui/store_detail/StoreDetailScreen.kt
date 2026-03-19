@@ -276,15 +276,15 @@ private fun StoreInfoSection(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Address with inline location icon and copy icon
-        val locationIconId = "locationIcon"
+        // Address with location icon and inline copy icon
+        val copyIconId = "copyIcon"
         val annotatedAddress = buildAnnotatedString {
-            appendInlineContent(locationIconId, "[위치]")
-            append(" ")
             append(address)
+            append(" ")
+            appendInlineContent(copyIconId, "[복사]")
         }
         val inlineContent = mapOf(
-            locationIconId to InlineTextContent(
+            copyIconId to InlineTextContent(
                 placeholder = Placeholder(
                     width = 24.sp,
                     height = 24.sp,
@@ -292,28 +292,28 @@ private fun StoreInfoSection(
                 )
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.icon_24_location_pin),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(Res.drawable.icon_24_copy),
+                    contentDescription = "주소 복사",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { onCopyClick(address) },
                     tint = color.gray400
                 )
             }
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(Res.drawable.icon_24_location_pin),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = color.gray400
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = annotatedAddress,
                 inlineContent = inlineContent,
                 style = typography.bodyRegular16,
-                color = color.gray900,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                painter = painterResource(Res.drawable.icon_24_copy),
-                contentDescription = "주소 복사",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onCopyClick(address) },
-                tint = color.gray400
+                color = color.gray900
             )
         }
     }
