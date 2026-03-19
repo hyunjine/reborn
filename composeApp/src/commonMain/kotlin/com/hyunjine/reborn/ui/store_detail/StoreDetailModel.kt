@@ -55,7 +55,7 @@ sealed interface Operation {
             val startStr = "${start.hour.pad()}:${start.minute.pad()}"
             val endStr = "${end.hour.pad()}:${end.minute.pad()}"
 
-            return "$startStr ~ $endStr"
+            return "$startStr - $endStr"
         }
     }
 }

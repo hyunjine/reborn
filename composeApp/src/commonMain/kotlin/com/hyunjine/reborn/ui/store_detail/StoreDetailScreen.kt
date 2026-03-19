@@ -4,7 +4,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,8 +22,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,16 +30,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -269,18 +263,15 @@ private fun StoreInfoSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 20.dp)
     ) {
-        // Store name with verified badge
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = name,
-                style = typography.headingBold24,
-                color = color.gray900
-            )
-        }
+        Text(
+            text = name,
+            style = typography.headingBold24,
+            color = color.gray900
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Address with inline copy icon
+        // Address with copy icon
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(Res.drawable.icon_24_location_pin),
@@ -289,36 +280,19 @@ private fun StoreInfoSection(
                 tint = color.gray400
             )
             Spacer(modifier = Modifier.width(8.dp))
-
-            val copyIconId = "copy_icon"
-            val annotatedAddress = buildAnnotatedString {
-                append("$address ")
-                appendInlineContent(copyIconId)
-            }
-            val inlineContent = mapOf(
-                copyIconId to InlineTextContent(
-                    Placeholder(
-                        width = 16.sp,
-                        height = 16.sp,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.icon_24_copy),
-                        contentDescription = "주소 복사",
-                        modifier = Modifier.size(16.dp),
-                        tint = color.gray400
-                    )
-                }
-            )
             Text(
-                text = annotatedAddress,
-                inlineContent = inlineContent,
+                text = address,
                 style = typography.bodyRegular16,
-                color = color.gray800,
+                color = color.gray900,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                painter = painterResource(Res.drawable.icon_24_copy),
+                contentDescription = "주소 복사",
                 modifier = Modifier
-                    .weight(1f)
-                    .clickable { onCopyClick(address) }
+                    .size(24.dp)
+                    .clickable { onCopyClick(address) },
+                tint = color.gray400
             )
         }
     }
@@ -378,7 +352,7 @@ private fun StoreDescriptionSection(
                     Text(
                         text = hour.dayOfWeek.fullName,
                         style = typography.bodyRegular16,
-                        color = color.gray700
+                        color = color.gray800
                     )
                     Text(
                         text = hour.operation.toString(),
@@ -411,12 +385,12 @@ private fun StorePriceSection(
         }
         Text(
             text = "실시간 매입 시세",
-            style = typography.headingSemibold18,
+            style = typography.titleSemibold16,
             color = color.gray900
         )
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "최근 업데이트: $lastUpdated",
+            text = "최종 업데이트: $lastUpdated",
             style = typography.captionRegular14,
             color = color.gray600
         )
@@ -429,7 +403,7 @@ private fun StorePriceSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color.gray50, RoundedCornerShape(10.dp))
-                        .padding(horizontal = 16.dp, vertical = 18.dp),
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -463,21 +437,21 @@ private fun CallButton(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(horizontal = 16.dp, vertical = 17.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 40.dp)
     ) {
         Button(
             onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(52.dp),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = color.green500
             )
         ) {
             Text(
-                text = "전화 문의하기",
-                style = typography.titleSemibold16,
+                text = "문의하기",
+                style = typography.bodySemibold14.copy(fontWeight = FontWeight.Bold),
                 color = Color.White
             )
         }
