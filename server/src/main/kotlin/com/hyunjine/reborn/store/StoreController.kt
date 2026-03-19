@@ -1,9 +1,9 @@
 package com.hyunjine.reborn.store
 
-import com.hyunjine.reborn.model.store_detail.Operation
-import com.hyunjine.reborn.model.store_detail.OperationTimeModel
-import com.hyunjine.reborn.model.store_detail.StoreDetailModel
-import com.hyunjine.reborn.model.store_detail.StorePriceModel
+import com.hyunjine.reborn.data.store.model.store_detail.Operation
+import com.hyunjine.reborn.data.store.model.store_detail.OperationTimeModel
+import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.store_detail.StorePriceModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek

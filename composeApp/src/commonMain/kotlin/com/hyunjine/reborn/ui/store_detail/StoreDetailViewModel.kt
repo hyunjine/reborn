@@ -2,9 +2,9 @@ package com.hyunjine.reborn.ui.store_detail
 
 import com.hyunjine.reborn.common.util.BaseViewModel
 import com.hyunjine.reborn.data.store.StoreRepository
-import com.hyunjine.reborn.model.store_detail.Operation
-import com.hyunjine.reborn.model.store_detail.OperationTimeModel
-import com.hyunjine.reborn.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.store_detail.Operation
+import com.hyunjine.reborn.data.store.model.store_detail.OperationTimeModel
+import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
 import com.hyunjine.reborn.util.now
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

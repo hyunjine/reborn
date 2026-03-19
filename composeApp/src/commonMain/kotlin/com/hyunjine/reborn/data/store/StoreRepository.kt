@@ -1,13 +1,14 @@
 package com.hyunjine.reborn.data.store
 
 import com.hyunjine.reborn.Location
-import com.hyunjine.reborn.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
 import com.hyunjine.reborn.ui.home.Distance
 import com.hyunjine.reborn.ui.home.MatterModel
 import com.hyunjine.reborn.ui.home.StoreModel
+import com.hyunjine.reborn.util.ImmutableList
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import org.koin.core.annotation.Single
+import kotlin.random.Random
 
 @Single
 class StoreRepository(
@@ -18,19 +19,19 @@ class StoreRepository(
     }
 
     suspend fun getStores(location: Location): ImmutableList<StoreModel> {
-        return storeRemoteDataSource.getStores(location).map { entity ->
+        return ImmutableList(20) {
             StoreModel(
-                id = entity.id,
-                name = entity.name,
-                imageUrl = entity.imageUrl,
-                distance = Distance.meters(entity.distance),
-                prices = entity.prices.map {
+                id = it.toLong(),
+                name = "name $it",
+                imageUrl = "https://picsum.photos/seed/200/200",
+                distance = Distance.meters(Random.nextInt(100, 100000)),
+                prices = ImmutableList(3) {
                     MatterModel(
-                        name = it.name, price = it.price
+                        name = "name $it", price = Random.nextInt(100, 100000)
                     )
-                }.toImmutableList()
+                }
             )
-        }.toImmutableList()
+        }
     }
 
     suspend fun getStoreDetail(id: Long): StoreDetailModel {

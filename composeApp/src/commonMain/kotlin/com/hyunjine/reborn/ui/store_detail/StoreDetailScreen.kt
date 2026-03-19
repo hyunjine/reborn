@@ -52,10 +52,10 @@ import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.ClipboardManager
 import com.hyunjine.reborn.common.util.clickable
-import com.hyunjine.reborn.model.store_detail.Operation
-import com.hyunjine.reborn.model.store_detail.OperationTimeModel
-import com.hyunjine.reborn.model.store_detail.StoreDetailModel
-import com.hyunjine.reborn.model.store_detail.StorePriceModel
+import com.hyunjine.reborn.data.store.model.store_detail.Operation
+import com.hyunjine.reborn.data.store.model.store_detail.OperationTimeModel
+import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.store_detail.StorePriceModel
 import com.hyunjine.reborn.util.ImmutableList
 import com.hyunjine.reborn.util.fullName
 import com.hyunjine.reborn.util.pad

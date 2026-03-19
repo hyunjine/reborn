@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.model.store_detail
+package com.hyunjine.reborn.data.store.model.store_detail
 
 import com.hyunjine.reborn.util.pad
 import kotlinx.collections.immutable.ImmutableList

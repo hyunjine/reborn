@@ -1,27 +1,10 @@
 package com.hyunjine.reborn.data.store
 
-import com.hyunjine.reborn.Location
-import com.hyunjine.reborn.model.MatterEntity
-import com.hyunjine.reborn.model.StoreEntity
-import com.hyunjine.reborn.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
 import org.koin.core.annotation.Single
 
 @Single
 class StoreRemoteDataSourceImpl : StoreRemoteDataSource {
-    override suspend fun getStores(location: Location): List<StoreEntity> {
-        return List(20) {
-            StoreEntity(
-                id = it.toLong(),
-                name = "name $it",
-                imageUrl = "https://picsum.photos/seed/200/200",
-                distance = 2324,
-                prices = List(3) {
-                    MatterEntity(name = "name $it", price = 10000)
-                }
-            )
-        }
-    }
-
     override suspend fun getStoreDetail(id: Long): StoreDetailModel {
         return TODO()
     }
