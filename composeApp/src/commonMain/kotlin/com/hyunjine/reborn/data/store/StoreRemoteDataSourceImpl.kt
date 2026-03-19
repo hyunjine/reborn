@@ -2,9 +2,8 @@ package com.hyunjine.reborn.data.store
 
 import com.hyunjine.reborn.Location
 import com.hyunjine.reborn.common.util.ImmutableList
-import com.hyunjine.reborn.common.util.now
-import com.hyunjine.reborn.data.store.entity.MatterEntity
-import com.hyunjine.reborn.data.store.entity.StoreEntity
+import com.hyunjine.reborn.entity.MatterEntity
+import com.hyunjine.reborn.entity.StoreEntity
 import com.hyunjine.reborn.ui.store_detail.Operation
 import com.hyunjine.reborn.ui.store_detail.OperationTimeModel
 import com.hyunjine.reborn.ui.store_detail.StoreDetailModel

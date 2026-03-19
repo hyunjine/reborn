@@ -1,7 +1,6 @@
 package com.hyunjine.reborn.data.store
 
 import com.hyunjine.reborn.Location
-import com.hyunjine.reborn.data.store.entity.StoreEntity
 import com.hyunjine.reborn.ui.home.Distance
 import com.hyunjine.reborn.ui.home.MatterModel
 import com.hyunjine.reborn.ui.home.StoreModel

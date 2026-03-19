@@ -37,7 +37,10 @@
       "Bash(find /c/AndroidProjects/MyProjects/Reborn/.gradle/caches/modules-2/files-2.1 -name *navigation3*)",
       "Bash(find /c/AndroidProjects/MyProjects/Reborn -name *.jar -type f)",
       "Bash(find /c/AndroidProjects/MyProjects/Reborn -path */build/* -name *.kt -type f)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(./gradlew :server:build)",
+      "Bash(./gradlew :shared:build :server:compileKotlin :composeApp:compileDebugKotlinAndroid)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid)"
     ]
   }
 }

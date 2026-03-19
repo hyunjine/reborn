@@ -1,8 +1,5 @@
-package com.hyunjine.reborn.data.store.entity
+package com.hyunjine.reborn.entity
 
-import com.hyunjine.reborn.ui.home.Distance
-import com.hyunjine.reborn.ui.home.MatterModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.serialization.Serializable
 
 @Serializable
