@@ -11,6 +11,6 @@ class StoreRemoteDataSourceImpl(
     private val httpClient: HttpClient
 ) : StoreRemoteDataSource {
     override suspend fun getStoreDetail(id: Long): StoreDetailModel {
-        return httpClient.get("http://192.168.1.7:8080/api/stores/$id").body()
+        return httpClient.get("api/stores/$id").body()
     }
 }
