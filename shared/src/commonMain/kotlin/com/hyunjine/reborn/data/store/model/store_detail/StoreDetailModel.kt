@@ -2,7 +2,6 @@ package com.hyunjine.reborn.data.store.model.store_detail
 
 import androidx.compose.runtime.Stable
 import com.hyunjine.reborn.util.ImmutableListSerializer
-import com.hyunjine.reborn.util.SerializableImmutableList
 import com.hyunjine.reborn.util.pad
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.DayOfWeek
@@ -24,12 +23,15 @@ import kotlinx.serialization.Serializable
 @Stable
 data class StoreDetailModel(
     val id: Long,
-    val imageUrls: SerializableImmutableList<String>,
+    @Serializable(with = ImmutableListSerializer::class)
+    val imageUrls: ImmutableList<String>,
     val name: String,
     val address: String,
     val description: String,
-    val businessHours: SerializableImmutableList<OperationTimeModel>,
-    val prices: SerializableImmutableList<StorePriceModel>,
+    @Serializable(with = ImmutableListSerializer::class)
+    val businessHours: ImmutableList<OperationTimeModel>,
+    @Serializable(with = ImmutableListSerializer::class)
+    val prices: ImmutableList<StorePriceModel>,
     val lastUpdated: LocalDateTime,
     val phoneNumber: String
 )

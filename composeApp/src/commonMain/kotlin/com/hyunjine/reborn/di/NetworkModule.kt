@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.di
 
+import com.hyunjine.reborn.util.immutableListSerializerModule
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -19,6 +20,7 @@ class NetworkModule {
     fun provideJson(): Json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
+        serializersModule = immutableListSerializerModule
     }
 
     @Single
