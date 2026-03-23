@@ -19,6 +19,7 @@ import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.login.LoginScreen
 import com.hyunjine.reborn.ui.main.MainScreen
+import com.hyunjine.reborn.ui.my.MyScreen
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen
 import com.hyunjine.reborn.ui.setting.SettingScreen
 import com.hyunjine.reborn.ui.setting.noti.NotificationSettingScreen
@@ -40,7 +41,7 @@ fun RebornApp() {
     }
     KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
         RebornTheme {
-            val backStack = rememberNavBackStack(configuration = navConfig, MainScreen)
+            val backStack = rememberNavBackStack(configuration = navConfig, LoginScreen)
 
             val entryProvider = entryProvider {
                 screens(
@@ -111,16 +112,19 @@ private fun EntryProviderScope<NavKey>.screens(
     onBack: () -> Unit,
 ) {
     entry<LoginScreen> {
-        LoginScreen()
+        LoginScreen(
+            kakaoLogin = { onNavigate(MainScreen) },
+            naverLogin = { onNavigate(MainScreen) }
+        )
     }
     // MainScreen은 시작 화면이므로 슬라이드 애니메이션 없이 표시
-    entry<MainScreen> {
+    entry<MainScreen>(metadata = slideTransitionMetadata) {
         MainScreen(
-            onSearch = { TODO() },
-            onNotification = { TODO() },
+            onSearch = {  },
+            onNotification = {  },
             onStoreDetail = { onNavigate(StoreDetailScreen(it)) },
             onSetting = { onNavigate(SettingScreen) },
-            onRegisterStore = { TODO() },
+            onRegisterStore = { onNavigate(RegistStoreScreen) },
         )
     }
     // 이하 화면들은 슬라이드 전환 애니메이션 적용
@@ -151,6 +155,7 @@ private val navConfig = SavedStateConfiguration {
             subclass(RegistStoreScreen::class, RegistStoreScreen.serializer())
             subclass(SettingScreen::class, SettingScreen.serializer())
             subclass(NotificationSettingScreen::class, NotificationSettingScreen.serializer())
+            subclass(MyScreen::class, MyScreen.serializer())
         }
     }
 }

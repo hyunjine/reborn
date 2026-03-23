@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.composeCompiler)
 }
 
 android {
@@ -12,10 +11,6 @@ android {
     defaultConfig {
         minSdk = 26
     }
-}
-
-composeCompiler {
-    stabilityConfigurationFile = rootProject.layout.projectDirectory.dir("composeApp").file("compose-stability.conf")
 }
 
 kotlin {

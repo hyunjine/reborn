@@ -82,13 +82,14 @@ object LoginScreen : NavKey {
      */
     @Composable
     operator fun invoke(
-
+        kakaoLogin: () ->Unit,
+        naverLogin: () ->Unit,
     ) {
         invoke(
             onEvent = { event ->
                 when (event) {
-                    is UiEvent.KakaoLoginClicked -> { /* TODO: 카카오 로그인 처리 */ }
-                    is UiEvent.NaverLoginClicked -> { /* TODO: 네이버 로그인 처리 */ }
+                    is UiEvent.KakaoLoginClicked -> { kakaoLogin() }
+                    is UiEvent.NaverLoginClicked -> { naverLogin() }
                     is UiEvent.TermsOfServiceClicked -> { /* TODO: 이용약관 페이지 이동 */ }
                     is UiEvent.PrivacyPolicyClicked -> { /* TODO: 개인정보처리방침 페이지 이동 */ }
                 }
