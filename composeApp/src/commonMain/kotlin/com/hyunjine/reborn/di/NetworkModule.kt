@@ -3,6 +3,7 @@ package com.hyunjine.reborn.di
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -22,6 +23,9 @@ class NetworkModule {
 
     @Single
     fun provideHttpClient(json: Json): HttpClient = HttpClient {
+        defaultRequest {
+            url("http://192.168.1.7:8080/")
+        }
         install(ContentNegotiation) {
             json(json)
         }
