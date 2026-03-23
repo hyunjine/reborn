@@ -15,14 +15,22 @@ import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
+/**
+ * 개발용 초기 시드 데이터 삽입기.
+ *
+ * 애플리케이션 시작 시 DB에 업체 데이터가 없으면 샘플 데이터를 삽입합니다.
+ * [ExposedConfig]에서 테이블 생성이 완료된 후 실행되도록 [Order]를 2로 설정합니다.
+ */
 @Component
 @Order(2)
 class DatabaseInitializer : ApplicationRunner {
 
     @Transactional
     override fun run(args: ApplicationArguments?) {
+        // 이미 데이터가 존재하면 중복 삽입 방지
         if (Stores.selectAll().count() > 0) return
 
+        // 업체 기본 정보 삽입
         val storeId = Stores.insert {
             it[name] = "서울고물상"
             it[address] = "서울특별시 강남구 역삼동 123-45"
@@ -31,6 +39,7 @@ class DatabaseInitializer : ApplicationRunner {
             it[lastUpdated] = LocalDateTime(2026, 3, 12, 14, 30)
         }[Stores.id]
 
+        // 업체 이미지 4장 삽입
         repeat(4) { index ->
             StoreImages.insert {
                 it[this.storeId] = storeId
@@ -38,6 +47,7 @@ class DatabaseInitializer : ApplicationRunner {
             }
         }
 
+        // 요일별 영업시간 삽입 (목요일 휴무)
         DayOfWeek.entries.forEach { day ->
             StoreBusinessHours.insert {
                 it[this.storeId] = storeId
@@ -48,6 +58,7 @@ class DatabaseInitializer : ApplicationRunner {
             }
         }
 
+        // 매입 시세 삽입
         listOf(
             "고철" to "450원/kg",
             "알루미늄" to "1,800원/kg",
