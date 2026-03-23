@@ -1,8 +1,8 @@
 package com.hyunjine.reborn.store.table
 
-import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-import org.jetbrains.exposed.sql.kotlin.datetime.time
+import org.jetbrains.exposed.v1.core.dao.id.LongIdTable
+import org.jetbrains.exposed.v1.datetime.datetime
+import org.jetbrains.exposed.v1.datetime.time
 
 /**
  * 업체 기본 정보 테이블.

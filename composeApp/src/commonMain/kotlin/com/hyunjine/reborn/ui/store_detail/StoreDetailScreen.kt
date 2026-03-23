@@ -407,7 +407,7 @@ private fun StorePriceSection(
             .padding(horizontal = 16.dp, vertical = 20.dp)
     ) {
         val lastUpdated = lastUpdated.run {
-            "${year}.${monthNumber.pad()}.${dayOfMonth.pad()} ${hour.pad()}:${minute.pad()}"
+            "${year}.${month.number.pad()}.${day.pad()} ${hour.pad()}:${minute.pad()}"
         }
         Text(
             text = "실시간 매입 시세",

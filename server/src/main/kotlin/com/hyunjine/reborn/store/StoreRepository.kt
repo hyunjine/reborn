@@ -10,7 +10,8 @@ import com.hyunjine.reborn.store.table.StorePrices
 import com.hyunjine.reborn.store.table.Stores
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
