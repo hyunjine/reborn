@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: reborn-postgres
+    environment:
+      POSTGRES_DB: reborn
+      POSTGRES_USER: reborn
+      POSTGRES_PASSWORD: reborn
+    ports:
+      - "5432:5432"
+    volumes:
+      - reborn-pgdata:/var/lib/postgresql/data
+
+volumes:
+  reborn-pgdata:

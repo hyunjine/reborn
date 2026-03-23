@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Component
 @Order(2)
-class DatabaseInitializer : ApplicationRunner {
+class SeedDataInitializer : ApplicationRunner {
 
     @Transactional
     override fun run(args: ApplicationArguments?) {
