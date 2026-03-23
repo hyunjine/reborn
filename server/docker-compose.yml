@@ -10,6 +10,22 @@ services:
       - "5432:5432"
     volumes:
       - reborn-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reborn -d reborn"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: .
+    container_name: reborn-server
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/reborn
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   reborn-pgdata:

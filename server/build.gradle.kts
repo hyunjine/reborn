@@ -15,6 +15,10 @@ java {
     }
 }
 
+configurations.all {
+    exclude(group = "org.jetbrains.compose.runtime", module = "runtime-desktop")
+}
+
 dependencies {
     implementation(projects.shared)
     implementation(libs.spring.boot.starter.web)
