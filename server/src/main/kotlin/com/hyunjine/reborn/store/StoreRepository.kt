@@ -1,0 +1,68 @@
+package com.hyunjine.reborn.store
+
+import com.hyunjine.reborn.data.store.model.store_detail.Operation
+import com.hyunjine.reborn.data.store.model.store_detail.OperationTimeModel
+import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.store_detail.StorePriceModel
+import com.hyunjine.reborn.store.table.StoreBusinessHours
+import com.hyunjine.reborn.store.table.StoreImages
+import com.hyunjine.reborn.store.table.StorePrices
+import com.hyunjine.reborn.store.table.Stores
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.datetime.DayOfWeek
+import org.jetbrains.exposed.sql.selectAll
+import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+
+@Repository
+class StoreRepository {
+
+    @Transactional(readOnly = true)
+    fun findStoreDetailById(id: Long): StoreDetailModel? {
+        val store = Stores.selectAll()
+            .where { Stores.id eq id }
+            .singleOrNull() ?: return null
+
+        val imageUrls = StoreImages.selectAll()
+            .where { StoreImages.storeId eq id }
+            .map { it[StoreImages.imageUrl] }
+            .toImmutableList()
+
+        val businessHours = StoreBusinessHours.selectAll()
+            .where { StoreBusinessHours.storeId eq id }
+            .map { row ->
+                OperationTimeModel(
+                    dayOfWeek = DayOfWeek.valueOf(row[StoreBusinessHours.dayOfWeek]),
+                    operation = if (row[StoreBusinessHours.isOpen]) {
+                        Operation.Open(
+                            start = row[StoreBusinessHours.openTime]!!,
+                            end = row[StoreBusinessHours.closeTime]!!
+                        )
+                    } else {
+                        Operation.Closed
+                    }
+                )
+            }.toImmutableList()
+
+        val prices = StorePrices.selectAll()
+            .where { StorePrices.storeId eq id }
+            .map { row ->
+                StorePriceModel(
+                    name = row[StorePrices.name],
+                    price = row[StorePrices.price]
+                )
+            }.toImmutableList()
+
+        return StoreDetailModel(
+            id = store[Stores.id].value,
+            name = store[Stores.name],
+            imageUrls = imageUrls,
+            address = store[Stores.address],
+            description = store[Stores.description],
+            businessHours = businessHours,
+            prices = prices,
+            lastUpdated = store[Stores.lastUpdated],
+            phoneNumber = store[Stores.phoneNumber]
+        )
+    }
+}

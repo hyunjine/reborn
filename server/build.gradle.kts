@@ -18,6 +18,9 @@ java {
 dependencies {
     implementation(projects.shared)
     implementation(libs.spring.boot.starter.web)
+    implementation(libs.exposed.spring.boot.starter)
+    implementation(libs.exposed.kotlin.datetime)
+    runtimeOnly(libs.postgresql)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.serialization)
     implementation(libs.kotlinx.datetime)

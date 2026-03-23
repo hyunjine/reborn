@@ -1,6 +1,13 @@
 spring:
   application:
     name: reborn-server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/reborn
+    username: reborn
+    password: reborn
+    driver-class-name: org.postgresql.Driver
+  exposed:
+    generate-ddl: true
 
 server:
   port: 8080
