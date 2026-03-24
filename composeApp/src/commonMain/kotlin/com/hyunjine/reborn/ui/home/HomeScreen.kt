@@ -322,43 +322,6 @@ fun HomeTopBar(
 }
 
 /**
- * 홈 화면의 필터 칩 목록입니다.
- * @param filters 표시할 필터 이름 목록입니다.
- * @param selectedFilter 현재 선택된 필터입니다.
- * @param onFilterSelected 필터 선택 시 호출되는 콜백입니다.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FilterChips(
-    filters: List<String>,
-    selectedFilter: String,
-    onFilterSelected: (String) -> Unit
-) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(vertical = 12.dp)
-    ) {
-        items(filters) { filter ->
-            val isSelected = filter == selectedFilter
-            FilterChip(
-                selected = isSelected,
-                onClick = { onFilterSelected(filter) },
-                label = { Text(filter, style = typography.bodyMedium14) },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = color.green500,
-                    selectedLabelColor = Color.White,
-                    containerColor = color.gray100,
-                    labelColor = color.gray800
-                ),
-                border = null,
-                shape = RoundedCornerShape(20.dp)
-            )
-        }
-    }
-}
-
-/**
  * 개별 고물상 정보를 표시하는 아이템입니다.
  * @param store 고물상 데이터 모델입니다.
  * @param onClick 아이템 클릭 시 호출되는 콜백입니다.
@@ -414,7 +377,7 @@ fun GarbageCenterItem(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            store.prices.forEach { price ->
+            store.prices.take(3).forEach { price ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -453,6 +416,8 @@ fun HomeScreenPreview() {
                         distance = Distance.meters(20),
                         prices = persistentListOf(
                             MatterModel("고철", 59040),
+                            MatterModel("고철", 540),
+                            MatterModel("고철", 540),
                             MatterModel("고철", 540),
                         )
                     )
