@@ -13,3 +13,9 @@ plugins {
     alias(libs.plugins.spring.boot) apply false
     alias(libs.plugins.spring.dependency.management) apply false
 }
+
+tasks.register("deployDocker") {
+    group = "deployment"
+    description = "Build bootJar and deploy with Docker Compose"
+    dependsOn(":server:deployDocker")
+}
