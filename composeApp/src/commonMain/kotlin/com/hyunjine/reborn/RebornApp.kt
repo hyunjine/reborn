@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import coil3.ImageLoader
@@ -55,8 +56,8 @@ fun RebornApp() {
                 entryDecorators = listOf(
                     // Composable 상태(rememberSaveable 등)를 화면별로 보존하는 데코레이터
                     rememberSaveableStateHolderNavEntryDecorator(),
-                    // ViewModel을 화면별로 보존하는 데코레이터 (필요 시 활성화)
-                    // rememberViewModelStoreNavEntryDecorator()
+                    // ViewModel을 화면별 NavEntry에 스코핑하는 데코레이터
+                    rememberViewModelStoreNavEntryDecorator()
                 ),
                 entryProvider = entryProvider,
                 onBack = { backStack.removeLastOrNull() },

@@ -8,5 +8,11 @@ class RebornApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         Napier.base(DebugAntilog())
+        appContext = this
+    }
+
+    companion object {
+        lateinit var appContext: Application
+            private set
     }
 }
