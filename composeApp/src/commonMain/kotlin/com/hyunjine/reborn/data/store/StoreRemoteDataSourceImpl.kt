@@ -25,11 +25,4 @@ class StoreRemoteDataSourceImpl(
             parameter("longitude", location.longitude)
         }.body()
     }
-
-    override suspend fun getAddress(location: Location): Location {
-        return httpClient.get("api/geocoding/reverse") {
-            parameter("latitude", location.latitude)
-            parameter("longitude", location.longitude)
-        }.body()
-    }
 }

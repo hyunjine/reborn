@@ -10,6 +10,4 @@ interface StoreRemoteDataSource {
     suspend fun getStoreDetail(id: Long): ApiResponse<StoreDetailModel>
 
     suspend fun getStores(location: Location): ApiResponse<ImmutableList<StoreModel>>
-
-    suspend fun getAddress(location: Location): Location
 }

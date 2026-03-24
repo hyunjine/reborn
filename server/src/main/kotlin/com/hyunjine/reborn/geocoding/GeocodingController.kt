@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController
 class GeocodingController(
     private val reverseGeocoder: ReverseGeocoder
 ) {
+    init {
+        println("---------------------------------")
+        println("${reverseGeocoder.getAddress(36.5256556, 127.2754122)}")
+        println("---------------------------------")
+    }
 
     /**
      * 위경도로 주소를 조회합니다.
