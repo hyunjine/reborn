@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.data
 
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 
 /**
@@ -9,4 +10,5 @@ import kotlinx.serialization.Serializable
  * @param longitude 경도
  */
 @Serializable
-data class Location(val latitude: Double, val longitude: Double)
+@Stable
+data class Location(val latitude: Double = 0.0, val longitude: Double = 0.0)

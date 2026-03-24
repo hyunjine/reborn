@@ -49,10 +49,13 @@ import com.hyunjine.reborn.common.component.NavigationItem
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
+import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.store.model.Distance
 import com.hyunjine.reborn.data.store.model.MatterModel
 import com.hyunjine.reborn.data.store.model.StoreModel
+import com.hyunjine.reborn.util.ImmutableList
 import com.hyunjine.reborn.util.readable
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
@@ -138,7 +141,7 @@ object HomeScreen : NavigationItem {
     @Composable
     operator fun invoke(
         location: Location?,
-        state: StoreState,
+        state: ApiResponse<ImmutableList<StoreModel>>,
         modifier: Modifier = Modifier.fillMaxSize(),
         onEvent: (UiEvent) -> Unit = {}
     ) {
@@ -149,7 +152,7 @@ object HomeScreen : NavigationItem {
                 onNotificationClick = { onEvent(UiEvent.NotificationClicked) }
             )
             when (state) {
-                is StoreState.Loading -> {
+                is ApiResponse.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -159,7 +162,7 @@ object HomeScreen : NavigationItem {
                         )
                     }
                 }
-                is StoreState.Loaded -> {
+                is ApiResponse.Success -> {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -168,7 +171,7 @@ object HomeScreen : NavigationItem {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(
-                            items = state.stores,
+                            items = state.data,
                             key = { it.id }
                         ) { store ->
                             GarbageCenterItem(
@@ -177,6 +180,9 @@ object HomeScreen : NavigationItem {
                             )
                         }
                     }
+                }
+                is ApiResponse.Error -> {
+
                 }
             }
         }
@@ -438,8 +444,8 @@ fun HomeScreenPreview() {
     RebornTheme {
         HomeScreen(
             location = null,
-            state = StoreState.Loaded(
-                stores = List(10) {
+            state = ApiResponse.Success(
+                data = ImmutableList(10) {
                     StoreModel(
                         id = it.toLong(),
                         name = "서울고물상",

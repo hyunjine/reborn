@@ -52,6 +52,7 @@ import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.ClipboardManager
 import com.hyunjine.reborn.common.util.clickable
+import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.store.model.Operation
 import com.hyunjine.reborn.data.store.model.OperationTimeModel
 import com.hyunjine.reborn.data.store.model.StoreDetailModel
@@ -96,7 +97,7 @@ data class StoreDetailScreen(
         data class CopyAddressClicked(val value: String) : UiEvent
 
         /** 전화 문의하기 버튼 클릭 */
-        data object CallClicked : UiEvent
+        data class CallClicked(val phone: String) : UiEvent
     }
 
     /**
@@ -119,9 +120,11 @@ data class StoreDetailScreen(
                     is UiEvent.CopyAddressClicked -> {
                         ClipboardManager().copyToClipboard(event.value)
                     }
+
                     is UiEvent.CallClicked -> {
-                        uriHandler.openUri("tel:${model.phoneNumber}")
+                        uriHandler.openUri("tel:${event.phone}")
                     }
+
                     else -> viewModel.event(event)
                 }
             }
@@ -135,38 +138,41 @@ data class StoreDetailScreen(
      */
     @Composable
     operator fun invoke(
-        model: StoreDetailModel,
+        model: ApiResponse<StoreDetailModel>,
         onEvent: (UiEvent) -> Unit = {}
     ) {
-        Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(bottom = 100.dp)
-            ) {
-                StoreImageSection(
-                    imageUrls = model.imageUrls,
-                    onBackClick = { onEvent(UiEvent.BackClicked) }
-                )
-                StoreInfoSection(
-                    name = model.name,
-                    address = model.address,
-                    onCopyClick = { onEvent(UiEvent.CopyAddressClicked(it)) }
-                )
-                StoreDescriptionSection(
-                    description = model.description,
-                    businessHours = model.businessHours
-                )
-                StorePriceSection(
-                    prices = model.prices,
-                    lastUpdated = model.lastUpdated
+        if (model is ApiResponse.Success) {
+            val model = model.data
+            Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = 100.dp)
+                ) {
+                    StoreImageSection(
+                        imageUrls = model.imageUrls,
+                        onBackClick = { onEvent(UiEvent.BackClicked) }
+                    )
+                    StoreInfoSection(
+                        name = model.name,
+                        address = model.address,
+                        onCopyClick = { onEvent(UiEvent.CopyAddressClicked(it)) }
+                    )
+                    StoreDescriptionSection(
+                        description = model.description,
+                        businessHours = model.businessHours
+                    )
+                    StorePriceSection(
+                        prices = model.prices,
+                        lastUpdated = model.lastUpdated
+                    )
+                }
+                CallButton(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    onClick = { onEvent(UiEvent.CallClicked(model.phoneNumber)) }
                 )
             }
-            CallButton(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                onClick = { onEvent(UiEvent.CallClicked) }
-            )
         }
     }
 }
@@ -508,32 +514,34 @@ private fun StorePriceSectionPreview() {
 fun StoreDetailScreenPreview() {
     RebornTheme {
         StoreDetailScreen(storeId = 1).invoke(
-            model = StoreDetailModel(
-                name = "서울고물상",
-                address = "서울특별시 강남구 역삼동 123-45".repeat(3),
-                description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
-                businessHours = DayOfWeek.entries.map {
-                    OperationTimeModel(
-                        dayOfWeek = it,
-                        operation = if (it == DayOfWeek.THURSDAY) {
-                            Operation.Closed
-                        } else {
-                            Operation.Open(
-                                start = LocalTime(hour = 5, minute = 0), end = LocalTime(hour = 21, minute = 30)
-                            )
-                        }
-                    )
-                }.toImmutableList(),
-                prices = persistentListOf(
-                    StorePriceModel("고철", 450, "kg"),
-                    StorePriceModel("알루미늄", 1800, "kg"),
-                    StorePriceModel("구리", 8500, "kg"),
-                    StorePriceModel("스텐", 1150, "kg")
-                ),
-                lastUpdated = LocalDateTime(2026, 3, 12, 14, 30),
-                phoneNumber = "010-1234-5678",
-                id = 1L,
-                imageUrls = ImmutableList(4) { "https://picsum.photos/seed/200/200" }
+            model = ApiResponse.Success(
+                StoreDetailModel(
+                    name = "서울고물상",
+                    address = "서울특별시 강남구 역삼동 123-45".repeat(3),
+                    description = "정확한 계근 약속, 대량 매입 시 추가 단가 협의 가능합니다. 30년 전통의 신뢰할 수 있는 고물상입니다.",
+                    businessHours = DayOfWeek.entries.map {
+                        OperationTimeModel(
+                            dayOfWeek = it,
+                            operation = if (it == DayOfWeek.THURSDAY) {
+                                Operation.Closed
+                            } else {
+                                Operation.Open(
+                                    start = LocalTime(hour = 5, minute = 0), end = LocalTime(hour = 21, minute = 30)
+                                )
+                            }
+                        )
+                    }.toImmutableList(),
+                    prices = persistentListOf(
+                        StorePriceModel("고철", 450, "kg"),
+                        StorePriceModel("알루미늄", 1800, "kg"),
+                        StorePriceModel("구리", 8500, "kg"),
+                        StorePriceModel("스텐", 1150, "kg")
+                    ),
+                    lastUpdated = LocalDateTime(2026, 3, 12, 14, 30),
+                    phoneNumber = "010-1234-5678",
+                    id = 1L,
+                    imageUrls = ImmutableList(4) { "https://picsum.photos/seed/200/200" }
+                )
             )
         )
     }

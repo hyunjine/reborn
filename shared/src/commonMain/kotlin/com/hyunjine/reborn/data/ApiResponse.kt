@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.data
 
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,7 +9,11 @@ import kotlinx.serialization.Serializable
  * @param T 응답 데이터 타입
  */
 @Serializable
+@Stable
 sealed interface ApiResponse<out T> {
+    @Serializable
+    data object Loading: ApiResponse<Nothing>
+
 
     /**
      * 요청 성공 응답.
