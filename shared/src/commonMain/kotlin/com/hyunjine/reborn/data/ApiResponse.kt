@@ -1,6 +1,7 @@
 package com.hyunjine.reborn.data
 
 import androidx.compose.runtime.Stable
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -21,6 +22,7 @@ sealed interface ApiResponse<out T> {
      * @param data 응답 데이터
      */
     @Serializable
+    @SerialName("success")
     data class Success<T>(val data: T) : ApiResponse<T>
 
     /**
@@ -29,5 +31,6 @@ sealed interface ApiResponse<out T> {
      * @param message 에러 메시지
      */
     @Serializable
+    @SerialName("error")
     data class Error(val message: String) : ApiResponse<Nothing>
 }
