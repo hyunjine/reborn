@@ -44,3 +44,11 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.register<Exec>("deployDocker") {
+    group = "deployment"
+    description = "Build bootJar and deploy with Docker Compose"
+    dependsOn("bootJar")
+    workingDir = projectDir
+    commandLine("docker", "compose", "up", "-d", "--build")
+}
