@@ -5,13 +5,12 @@ import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.data.store.StoreRemoteDataSource
 import com.hyunjine.reborn.data.store.model.StoreDetailModel
 import com.hyunjine.reborn.data.store.model.StoreModel
-import com.hyunjine.reborn.util.SerializableImmutableList
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -34,7 +33,7 @@ class StoreController(
     @GetMapping
     override suspend fun getStores(
         @ModelAttribute location: Location
-    ): ApiResponse<SerializableImmutableList<StoreModel>> {
+    ): ApiResponse<ImmutableList<StoreModel>> {
         val stores = storeRepository.findAllStores(location).toImmutableList()
         return ApiResponse.Success(stores)
     }

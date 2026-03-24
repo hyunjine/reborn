@@ -41,7 +41,8 @@ class PolymorphicKotlinSerializationEncoder(
         if (value is ApiResponse<*>) {
             val dataType = valueType.getGeneric(0)
             if (dataType != ResolvableType.NONE) {
-                val dataSerializer = resolveSerializer(dataType)
+
+                val dataSerializer = serializer(dataType.type)
                 val apiResponseSerializer = ApiResponse.serializer(dataSerializer)
                 @Suppress("UNCHECKED_CAST")
                 val jsonString = json.encodeToString(apiResponseSerializer as KSerializer<Any>, value)

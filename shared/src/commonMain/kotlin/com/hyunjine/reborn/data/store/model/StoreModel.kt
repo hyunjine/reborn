@@ -1,9 +1,10 @@
 package com.hyunjine.reborn.data.store.model
 
-import com.hyunjine.reborn.util.SerializableImmutableList
-import kotlin.jvm.JvmInline
 import androidx.compose.runtime.Stable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 import kotlin.math.roundToInt
 
 /**
@@ -21,7 +22,8 @@ data class StoreModel(
     val name: String,
     val imageUrl: String,
     val distance: Distance,
-    val prices: SerializableImmutableList<MatterModel>
+    @Contextual
+    val prices: ImmutableList<MatterModel>
 )
 
 /**

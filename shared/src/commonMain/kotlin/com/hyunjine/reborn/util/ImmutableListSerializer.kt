@@ -24,5 +24,3 @@ class ImmutableListSerializer<T>(
         return decoder.decodeSerializableValue(delegateSerializer).toImmutableList()
     }
 }
-
-typealias SerializableImmutableList<T> = @Serializable(with = ImmutableListSerializer::class) ImmutableList<T>

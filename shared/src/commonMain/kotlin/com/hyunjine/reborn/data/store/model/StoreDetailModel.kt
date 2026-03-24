@@ -1,11 +1,12 @@
 package com.hyunjine.reborn.data.store.model
 
 import androidx.compose.runtime.Stable
-import com.hyunjine.reborn.util.SerializableImmutableList
 import com.hyunjine.reborn.util.pad
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 /**
@@ -22,12 +23,15 @@ import kotlinx.serialization.Serializable
 @Stable
 data class StoreDetailModel(
     val id: Long,
-    val imageUrls: SerializableImmutableList<String>,
+    @Contextual
+    val imageUrls: ImmutableList<String>,
     val name: String,
     val address: String,
     val description: String,
-    val businessHours: SerializableImmutableList<OperationTimeModel>,
-    val prices: SerializableImmutableList<StorePriceModel>,
+    @Contextual
+    val businessHours: ImmutableList<OperationTimeModel>,
+    @Contextual
+    val prices: ImmutableList<StorePriceModel>,
     val lastUpdated: LocalDateTime,
     val phoneNumber: String
 )
