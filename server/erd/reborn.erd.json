@@ -4,8 +4,8 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -44.7413,
-    "scrollLeft": -2.2624,
+    "scrollTop": -30.048,
+    "scrollLeft": -1.5193,
     "zoomLevel": 0.94,
     "show": 431,
     "database": 4,
@@ -34,8 +34,7 @@
       "table-stores",
       "table-store-images",
       "table-store-business-hours",
-      "table-store-prices",
-      "table-users"
+      "table-store-prices"
     ],
     "relationshipIds": [
       "rel-store-images",
@@ -168,37 +167,6 @@
           "zIndex": 2,
           "widthName": 65,
           "widthComment": 120,
-          "color": ""
-        },
-        "meta": {
-          "updateAt": 1774341364093,
-          "createAt": 1774341364093
-        }
-      },
-      "table-users": {
-        "id": "table-users",
-        "name": "users",
-        "comment": "유저 정보 테이블",
-        "columnIds": [
-          "col-users-id",
-          "col-users-name",
-          "col-users-birth-date",
-          "col-users-gender",
-          "col-users-nickname"
-        ],
-        "seqColumnIds": [
-          "col-users-id",
-          "col-users-name",
-          "col-users-birth-date",
-          "col-users-gender",
-          "col-users-nickname"
-        ],
-        "ui": {
-          "x": 50,
-          "y": 350,
-          "zIndex": 2,
-          "widthName": 60,
-          "widthComment": 93,
           "color": ""
         },
         "meta": {
@@ -619,8 +587,8 @@
         "ui": {
           "keys": 0,
           "widthName": 60,
-          "widthComment": 147,
-          "widthDataType": 75,
+          "widthComment": 76,
+          "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
@@ -639,107 +607,7 @@
         "ui": {
           "keys": 0,
           "widthName": 60,
-          "widthComment": 120,
-          "widthDataType": 75,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1774341364093,
-          "createAt": 1774341364093
-        }
-      },
-      "col-users-id": {
-        "id": "col-users-id",
-        "tableId": "table-users",
-        "name": "id",
-        "comment": "PK (auto-generated)",
-        "dataType": "BIGINT",
-        "default": "",
-        "options": 10,
-        "ui": {
-          "keys": 1,
-          "widthName": 60,
-          "widthComment": 109,
-          "widthDataType": 60,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1774341364093,
-          "createAt": 1774341364093
-        }
-      },
-      "col-users-name": {
-        "id": "col-users-name",
-        "tableId": "table-users",
-        "name": "name",
-        "comment": "이름",
-        "dataType": "VARCHAR(50)",
-        "default": "",
-        "options": 8,
-        "ui": {
-          "keys": 0,
-          "widthName": 60,
-          "widthComment": 60,
-          "widthDataType": 75,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1774341364093,
-          "createAt": 1774341364093
-        }
-      },
-      "col-users-birth-date": {
-        "id": "col-users-birth-date",
-        "tableId": "table-users",
-        "name": "birth_date",
-        "comment": "생년월일",
-        "dataType": "DATE",
-        "default": "",
-        "options": 8,
-        "ui": {
-          "keys": 0,
-          "widthName": 60,
-          "widthComment": 60,
-          "widthDataType": 60,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1774341364093,
-          "createAt": 1774341364093
-        }
-      },
-      "col-users-gender": {
-        "id": "col-users-gender",
-        "tableId": "table-users",
-        "name": "gender",
-        "comment": "성별",
-        "dataType": "VARCHAR(10)",
-        "default": "",
-        "options": 8,
-        "ui": {
-          "keys": 0,
-          "widthName": 60,
-          "widthComment": 60,
-          "widthDataType": 75,
-          "widthDefault": 60
-        },
-        "meta": {
-          "updateAt": 1774341364093,
-          "createAt": 1774341364093
-        }
-      },
-      "col-users-nickname": {
-        "id": "col-users-nickname",
-        "tableId": "table-users",
-        "name": "nickname",
-        "comment": "닉네임",
-        "dataType": "VARCHAR(50)",
-        "default": "",
-        "options": 8,
-        "ui": {
-          "keys": 0,
-          "widthName": 60,
-          "widthComment": 60,
+          "widthComment": 89,
           "widthDataType": 75,
           "widthDefault": 60
         },
@@ -761,7 +629,7 @@
             "col-stores-id"
           ],
           "x": 530,
-          "y": 100,
+          "y": 112,
           "direction": 2
         },
         "end": {
@@ -789,7 +657,7 @@
             "col-stores-id"
           ],
           "x": 530,
-          "y": 200,
+          "y": 236,
           "direction": 2
         },
         "end": {
@@ -817,7 +685,7 @@
             "col-stores-id"
           ],
           "x": 290,
-          "y": 250,
+          "y": 298,
           "direction": 8
         },
         "end": {
@@ -826,7 +694,7 @@
             "col-store-prices-store-id"
           ],
           "x": 500,
-          "y": 576,
+          "y": 588,
           "direction": 1
         },
         "meta": {

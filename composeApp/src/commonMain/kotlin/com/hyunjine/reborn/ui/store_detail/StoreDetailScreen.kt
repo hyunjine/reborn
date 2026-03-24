@@ -52,10 +52,10 @@ import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.ClipboardManager
 import com.hyunjine.reborn.common.util.clickable
-import com.hyunjine.reborn.data.store.model.store_detail.Operation
-import com.hyunjine.reborn.data.store.model.store_detail.OperationTimeModel
-import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
-import com.hyunjine.reborn.data.store.model.store_detail.StorePriceModel
+import com.hyunjine.reborn.data.store.model.Operation
+import com.hyunjine.reborn.data.store.model.OperationTimeModel
+import com.hyunjine.reborn.data.store.model.StoreDetailModel
+import com.hyunjine.reborn.data.store.model.StorePriceModel
 import com.hyunjine.reborn.util.ImmutableList
 import com.hyunjine.reborn.util.fullName
 import com.hyunjine.reborn.util.pad
@@ -439,7 +439,7 @@ private fun StorePriceSection(
                         color = color.gray900
                     )
                     Text(
-                        text = price.price,
+                        text = "${price.price}원/${price.unit}",
                         style = typography.headingBold18,
                         color = color.gray900
                     )
@@ -493,10 +493,10 @@ private fun StorePriceSectionPreview() {
     RebornTheme {
         StorePriceSection(
             prices = persistentListOf(
-                StorePriceModel("고철", "450원/kg"),
-                StorePriceModel("알루미늄", "1,800원/kg"),
-                StorePriceModel("구리", "8,500원/kg"),
-                StorePriceModel("스텐", "1,150원/kg")
+                StorePriceModel("고철", 450, "kg"),
+                StorePriceModel("알루미늄", 1800, "kg"),
+                StorePriceModel("구리", 8500, "kg"),
+                StorePriceModel("스텐", 1150, "kg")
             ),
             lastUpdated = LocalDateTime(2026, 3, 12, 14, 30)
         )
@@ -525,10 +525,10 @@ fun StoreDetailScreenPreview() {
                     )
                 }.toImmutableList(),
                 prices = persistentListOf(
-                    StorePriceModel("고철", "450원/kg"),
-                    StorePriceModel("알루미늄", "1,800원/kg"),
-                    StorePriceModel("구리", "8,500원/kg"),
-                    StorePriceModel("스텐", "1,150원/kg")
+                    StorePriceModel("고철", 450, "kg"),
+                    StorePriceModel("알루미늄", 1800, "kg"),
+                    StorePriceModel("구리", 8500, "kg"),
+                    StorePriceModel("스텐", 1150, "kg")
                 ),
                 lastUpdated = LocalDateTime(2026, 3, 12, 14, 30),
                 phoneNumber = "010-1234-5678",
