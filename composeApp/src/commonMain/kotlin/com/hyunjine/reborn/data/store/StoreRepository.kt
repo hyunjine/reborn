@@ -1,6 +1,7 @@
 package com.hyunjine.reborn.data.store
 
 import com.hyunjine.reborn.Location
+import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
 import com.hyunjine.reborn.ui.home.Distance
 import com.hyunjine.reborn.ui.home.MatterModel
@@ -34,7 +35,7 @@ class StoreRepository(
         }
     }
 
-    suspend fun getStoreDetail(id: Long): StoreDetailModel {
+    suspend fun getStoreDetail(id: Long): ApiResponse<StoreDetailModel> {
         return storeRemoteDataSource.getStoreDetail(id)
     }
 }

@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.data.store
 
+import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.store.model.store_detail.StoreDetailModel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -10,7 +11,7 @@ import org.koin.core.annotation.Single
 class StoreRemoteDataSourceImpl(
     private val httpClient: HttpClient
 ) : StoreRemoteDataSource {
-    override suspend fun getStoreDetail(id: Long): StoreDetailModel {
+    override suspend fun getStoreDetail(id: Long): ApiResponse<StoreDetailModel> {
         return httpClient.get("api/stores/$id").body()
     }
 }

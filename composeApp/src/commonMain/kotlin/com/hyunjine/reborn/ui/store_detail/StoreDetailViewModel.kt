@@ -22,7 +22,8 @@ class StoreDetailViewModel(
 ) : BaseViewModel<StoreDetailScreen.UiEvent>() {
 
     val model: StateFlow<StoreDetailModel> = flow {
-        emit(repository.getStoreDetail(storeId))
+        val response = repository.getStoreDetail(storeId)
+        response.data?.let { emit(it) }
     }.stateIn(StoreDetailModel(
         id = storeId,
         imageUrls = persistentListOf(),
