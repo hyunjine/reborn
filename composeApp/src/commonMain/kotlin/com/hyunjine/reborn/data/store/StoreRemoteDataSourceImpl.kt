@@ -4,6 +4,7 @@ import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.data.store.model.StoreDetailModel
 import com.hyunjine.reborn.data.store.model.StoreModel
+import com.hyunjine.reborn.util.log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -25,4 +26,5 @@ class StoreRemoteDataSourceImpl(
             parameter("longitude", location.longitude)
         }.body()
     }
+
 }

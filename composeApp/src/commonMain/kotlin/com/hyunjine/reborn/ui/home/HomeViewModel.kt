@@ -24,11 +24,11 @@ class HomeViewModel(
 
     val location: StateFlow<Location?> = flow {
         emit(locationService.getCurrentLocation())
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    }.stateIn(null)
 
     val state: StateFlow<ApiResponse<ImmutableList<StoreModel>>> = location
         .filterNotNull()
         .map { location ->
             storeRemoteDataSource.getStores(location)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ApiResponse.Loading)
+        }.stateIn(ApiResponse.Loading)
 }

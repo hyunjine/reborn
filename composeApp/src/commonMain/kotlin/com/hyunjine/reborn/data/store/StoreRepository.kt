@@ -10,10 +10,6 @@ import org.koin.core.annotation.Single
 class StoreRepository(
     private val storeRemoteDataSource: StoreRemoteDataSource
 ) {
-    suspend fun getCurrentLocation(): Location? {
-        return Location(36.9638808, 127.9429039)
-    }
-
     suspend fun getStores(location: Location): ApiResponse<List<StoreModel>> {
         return storeRemoteDataSource.getStores(location)
     }
