@@ -18,6 +18,10 @@ object Stores : LongIdTable("stores") {
     val description = text("description")
     /** 업체 전화번호 */
     val phoneNumber = varchar("phone_number", 20)
+    /** 위도 */
+    val latitude = double("latitude")
+    /** 경도 */
+    val longitude = double("longitude")
     /** 시세 최종 업데이트 시각 */
     val lastUpdated = datetime("last_updated")
 }
@@ -63,6 +67,8 @@ object StorePrices : LongIdTable("store_prices") {
     val storeId = reference("store_id", Stores)
     /** 품목명 (e.g. "고철", "알루미늄") */
     val name = varchar("name", 50)
-    /** 단가 텍스트 (e.g. "450원/kg") */
-    val price = varchar("price", 50)
+    /** 단가 (원 단위) */
+    val price = integer("price")
+    /** 단위 (e.g. "kg", "톤") */
+    val unit = varchar("unit", 20)
 }

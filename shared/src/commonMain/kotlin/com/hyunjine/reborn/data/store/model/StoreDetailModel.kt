@@ -1,4 +1,4 @@
-package com.hyunjine.reborn.data.store.model.store_detail
+package com.hyunjine.reborn.data.store.model
 
 import androidx.compose.runtime.Stable
 import com.hyunjine.reborn.util.SerializableImmutableList
@@ -69,10 +69,12 @@ sealed interface Operation {
 /**
  * 업체 매입 시세 모델.
  * @param name 품목명
- * @param price 단가 텍스트
+ * @param price 단가 (원 단위)
+ * @param unit 단위 (e.g. "kg", "톤")
  */
 @Serializable
 data class StorePriceModel(
     val name: String,
-    val price: String
+    val price: Int,
+    val unit: String
 )

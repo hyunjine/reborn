@@ -34,7 +34,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,11 +44,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.hyunjine.reborn.Location
+import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.common.component.NavigationItem
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
+import com.hyunjine.reborn.data.store.model.Distance
+import com.hyunjine.reborn.data.store.model.MatterModel
+import com.hyunjine.reborn.data.store.model.StoreModel
 import com.hyunjine.reborn.util.readable
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -58,12 +60,12 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
+import reborn.composeapp.generated.resources.icon_24_home
 import reborn.composeapp.generated.resources.icon_24_location
 import reborn.composeapp.generated.resources.icon_24_location_header
-import reborn.composeapp.generated.resources.icon_24_home
-import reborn.composeapp.generated.resources.icon_24_profile
 import reborn.composeapp.generated.resources.icon_24_market_price
 import reborn.composeapp.generated.resources.icon_24_notification
+import reborn.composeapp.generated.resources.icon_24_profile
 import reborn.composeapp.generated.resources.icon_24_search
 
 /**

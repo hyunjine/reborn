@@ -1,5 +1,6 @@
 package com.hyunjine.reborn
 
+import com.hyunjine.reborn.data.Location
 import org.koin.core.annotation.Single
 
 interface Platform {
@@ -11,9 +12,6 @@ expect fun getPlatform(): Platform
 fun interface LocationService {
     suspend fun getCurrentLocation(): Location?
 }
-
-data class Location(val latitude: Double, val longitude: Double)
-
 
 @Single
 class LocationServiceImpl: LocationService {

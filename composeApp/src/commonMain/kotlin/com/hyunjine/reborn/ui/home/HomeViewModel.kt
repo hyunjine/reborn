@@ -2,8 +2,9 @@ package com.hyunjine.reborn.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hyunjine.reborn.Location
-import com.hyunjine.reborn.LocationService
+import com.hyunjine.reborn.data.Location
+import com.hyunjine.reborn.data.LocationService
+import com.hyunjine.reborn.data.store.StoreRemoteDataSource
 import com.hyunjine.reborn.data.store.StoreRepository
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -21,19 +22,19 @@ import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class HomeViewModel(
-    private val storeRepository: StoreRepository
+    private val storeRemoteDataSource: StoreRemoteDataSource
 ) : ViewModel() {
     private val uiEvent = MutableSharedFlow<HomeScreen.UiEvent>()
 
-    val location: StateFlow<Location?> = flow {
-        emit(storeRepository.getCurrentLocation())
+    val location: StateFlow<Location?> = flow<Location> {
+//        emit(storeRemoteDataSource.getCurrentLocation())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val state: StateFlow<StoreState> = location
         .filterNotNull()
         .map { location ->
             StoreState.Loaded(
-                storeRepository.getStores(location).map { store ->
+                storeRemoteDataSource.getStores(location).map { store ->
                     store.copy(
                         prices = store.prices.take(2).toImmutableList()
                     )
