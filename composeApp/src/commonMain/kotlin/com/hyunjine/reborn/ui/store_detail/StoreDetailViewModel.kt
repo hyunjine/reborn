@@ -1,6 +1,7 @@
 package com.hyunjine.reborn.ui.store_detail
 
 import com.hyunjine.reborn.common.util.BaseViewModel
+import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.store.StoreRepository
 import com.hyunjine.reborn.data.store.model.store_detail.Operation
 import com.hyunjine.reborn.data.store.model.store_detail.OperationTimeModel
@@ -22,8 +23,10 @@ class StoreDetailViewModel(
 ) : BaseViewModel<StoreDetailScreen.UiEvent>() {
 
     val model: StateFlow<StoreDetailModel> = flow {
-        val response = repository.getStoreDetail(storeId)
-        response.data?.let { emit(it) }
+        when (val response = repository.getStoreDetail(storeId)) {
+            is ApiResponse.Success -> emit(response.data)
+            is ApiResponse.Error -> { /* TODO: 에러 처리 */ }
+        }
     }.stateIn(StoreDetailModel(
         id = storeId,
         imageUrls = persistentListOf(),

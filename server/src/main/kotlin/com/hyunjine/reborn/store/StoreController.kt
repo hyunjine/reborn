@@ -28,7 +28,7 @@ class StoreController(
     @GetMapping("/{id}")
     override suspend fun getStoreDetail(@PathVariable id: Long): ApiResponse<StoreDetailModel> {
         val detail = storeRepository.findStoreDetailById(id)
-            ?: return ApiResponse.error("업체를 찾을 수 없습니다. id=$id")
-        return ApiResponse.success(detail)
+            ?: return ApiResponse.Error("업체를 찾을 수 없습니다. id=$id")
+        return ApiResponse.Success(detail)
     }
 }
