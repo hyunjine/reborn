@@ -11,3 +11,10 @@ spring:
 
 server:
   port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.hyunjine.reborn: DEBUG
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
