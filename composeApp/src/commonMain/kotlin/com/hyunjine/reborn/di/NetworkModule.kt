@@ -1,5 +1,6 @@
 package com.hyunjine.reborn.di
 
+import com.hyunjine.reborn.util.DefaultJson
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -16,10 +17,7 @@ import org.koin.core.annotation.Single
 class NetworkModule {
 
     @Single
-    fun provideJson(): Json = Json {
-        ignoreUnknownKeys = true
-        encodeDefaults = true
-    }
+    fun provideJson(): Json = DefaultJson
 
     @Single
     fun provideHttpClient(json: Json): HttpClient = HttpClient {
