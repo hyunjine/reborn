@@ -4,12 +4,12 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -162.6667,
-    "scrollLeft": -9,
+    "scrollTop": 0,
+    "scrollLeft": 0,
     "zoomLevel": 1,
     "show": 431,
     "database": 4,
-    "databaseName": "",
+    "databaseName": "reborn",
     "canvasType": "ERD",
     "language": 1,
     "tableNameCase": 4,
@@ -30,15 +30,745 @@
     "ignoreSaveSettings": 0
   },
   "doc": {
-    "tableIds": [],
-    "relationshipIds": [],
+    "tableIds": [
+      "table-stores",
+      "table-store-images",
+      "table-store-business-hours",
+      "table-store-prices",
+      "table-users"
+    ],
+    "relationshipIds": [
+      "rel-store-images",
+      "rel-store-business-hours",
+      "rel-store-prices"
+    ],
     "indexIds": [],
     "memoIds": []
   },
   "collections": {
-    "tableEntities": {},
-    "tableColumnEntities": {},
-    "relationshipEntities": {},
+    "tableEntities": {
+      "table-stores": {
+        "id": "table-stores",
+        "name": "stores",
+        "comment": "업체 기본 정보 테이블",
+        "columnIds": [
+          "col-stores-id",
+          "col-stores-name",
+          "col-stores-address",
+          "col-stores-description",
+          "col-stores-phone-number",
+          "col-stores-last-updated"
+        ],
+        "seqColumnIds": [
+          "col-stores-id",
+          "col-stores-name",
+          "col-stores-address",
+          "col-stores-description",
+          "col-stores-phone-number",
+          "col-stores-last-updated"
+        ],
+        "ui": {
+          "x": 50,
+          "y": 50,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 120,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "table-store-images": {
+        "id": "table-store-images",
+        "name": "store_images",
+        "comment": "업체 이미지 테이블",
+        "columnIds": [
+          "col-store-images-id",
+          "col-store-images-store-id",
+          "col-store-images-image-url"
+        ],
+        "seqColumnIds": [
+          "col-store-images-id",
+          "col-store-images-store-id",
+          "col-store-images-image-url"
+        ],
+        "ui": {
+          "x": 707,
+          "y": 38,
+          "zIndex": 2,
+          "widthName": 71,
+          "widthComment": 105,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1774341488533,
+          "createAt": 1774341364093
+        }
+      },
+      "table-store-business-hours": {
+        "id": "table-store-business-hours",
+        "name": "store_business_hours",
+        "comment": "업체 영업시간 테이블",
+        "columnIds": [
+          "col-store-bh-id",
+          "col-store-bh-store-id",
+          "col-store-bh-day-of-week",
+          "col-store-bh-is-open",
+          "col-store-bh-open-time",
+          "col-store-bh-close-time"
+        ],
+        "seqColumnIds": [
+          "col-store-bh-id",
+          "col-store-bh-store-id",
+          "col-store-bh-day-of-week",
+          "col-store-bh-is-open",
+          "col-store-bh-open-time",
+          "col-store-bh-close-time"
+        ],
+        "ui": {
+          "x": 687,
+          "y": 195,
+          "zIndex": 2,
+          "widthName": 114,
+          "widthComment": 117,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1774341569558,
+          "createAt": 1774341364093
+        }
+      },
+      "table-store-prices": {
+        "id": "table-store-prices",
+        "name": "store_prices",
+        "comment": "업체 매입 시세 테이블",
+        "columnIds": [
+          "col-store-prices-id",
+          "col-store-prices-store-id",
+          "col-store-prices-name",
+          "col-store-prices-price"
+        ],
+        "seqColumnIds": [
+          "col-store-prices-id",
+          "col-store-prices-store-id",
+          "col-store-prices-name",
+          "col-store-prices-price"
+        ],
+        "ui": {
+          "x": 500,
+          "y": 500,
+          "zIndex": 2,
+          "widthName": 65,
+          "widthComment": 120,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "table-users": {
+        "id": "table-users",
+        "name": "users",
+        "comment": "유저 정보 테이블",
+        "columnIds": [
+          "col-users-id",
+          "col-users-name",
+          "col-users-birth-date",
+          "col-users-gender",
+          "col-users-nickname"
+        ],
+        "seqColumnIds": [
+          "col-users-id",
+          "col-users-name",
+          "col-users-birth-date",
+          "col-users-gender",
+          "col-users-nickname"
+        ],
+        "ui": {
+          "x": 50,
+          "y": 350,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      }
+    },
+    "tableColumnEntities": {
+      "col-stores-id": {
+        "id": "col-stores-id",
+        "tableId": "table-stores",
+        "name": "id",
+        "comment": "PK (auto-generated)",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 109,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341563604,
+          "createAt": 1774341364093
+        }
+      },
+      "col-stores-name": {
+        "id": "col-stores-name",
+        "tableId": "table-stores",
+        "name": "name",
+        "comment": "업체명",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-stores-address": {
+        "id": "col-stores-address",
+        "tableId": "table-stores",
+        "name": "address",
+        "comment": "업체 주소",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-stores-description": {
+        "id": "col-stores-description",
+        "tableId": "table-stores",
+        "name": "description",
+        "comment": "업체 소개 텍스트",
+        "dataType": "TEXT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 61,
+          "widthComment": 93,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-stores-phone-number": {
+        "id": "col-stores-phone-number",
+        "tableId": "table-stores",
+        "name": "phone_number",
+        "comment": "업체 전화번호",
+        "dataType": "VARCHAR(20)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 82,
+          "widthComment": 77,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-stores-last-updated": {
+        "id": "col-stores-last-updated",
+        "tableId": "table-stores",
+        "name": "last_updated",
+        "comment": "시세 최종 업데이트 시각",
+        "dataType": "DATETIME",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 70,
+          "widthComment": 132,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-images-id": {
+        "id": "col-store-images-id",
+        "tableId": "table-store-images",
+        "name": "id",
+        "comment": "PK (auto-generated)",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 109,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-images-store-id": {
+        "id": "col-store-images-store-id",
+        "tableId": "table-store-images",
+        "name": "store_id",
+        "comment": "소속 업체 외래키",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 93,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-images-image-url": {
+        "id": "col-store-images-image-url",
+        "tableId": "table-store-images",
+        "name": "image_url",
+        "comment": "이미지 URL",
+        "dataType": "VARCHAR(500)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 62,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-bh-id": {
+        "id": "col-store-bh-id",
+        "tableId": "table-store-business-hours",
+        "name": "id",
+        "comment": "PK (auto-generated)",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 109,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-bh-store-id": {
+        "id": "col-store-bh-store-id",
+        "tableId": "table-store-business-hours",
+        "name": "store_id",
+        "comment": "소속 업체 외래키",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 93,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-bh-day-of-week": {
+        "id": "col-store-bh-day-of-week",
+        "tableId": "table-store-business-hours",
+        "name": "day_of_week",
+        "comment": "요일 (e.g. MONDAY)",
+        "dataType": "VARCHAR(10)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 69,
+          "widthComment": 109,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-bh-is-open": {
+        "id": "col-store-bh-is-open",
+        "tableId": "table-store-business-hours",
+        "name": "is_open",
+        "comment": "해당 요일 영업 여부",
+        "dataType": "BOOLEAN",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 108,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-bh-open-time": {
+        "id": "col-store-bh-open-time",
+        "tableId": "table-store-business-hours",
+        "name": "open_time",
+        "comment": "영업 시작 시각 (nullable)",
+        "dataType": "TIME",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 133,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-bh-close-time": {
+        "id": "col-store-bh-close-time",
+        "tableId": "table-store-business-hours",
+        "name": "close_time",
+        "comment": "영업 종료 시각 (nullable)",
+        "dataType": "TIME",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 133,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-prices-id": {
+        "id": "col-store-prices-id",
+        "tableId": "table-store-prices",
+        "name": "id",
+        "comment": "PK (auto-generated)",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 109,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-prices-store-id": {
+        "id": "col-store-prices-store-id",
+        "tableId": "table-store-prices",
+        "name": "store_id",
+        "comment": "소속 업체 외래키",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 93,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-prices-name": {
+        "id": "col-store-prices-name",
+        "tableId": "table-store-prices",
+        "name": "name",
+        "comment": "품목명 (e.g. 고철, 알루미늄)",
+        "dataType": "VARCHAR(50)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 148,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-store-prices-price": {
+        "id": "col-store-prices-price",
+        "tableId": "table-store-prices",
+        "name": "price",
+        "comment": "단가 텍스트 (e.g. 450원/kg)",
+        "dataType": "VARCHAR(50)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 147,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-users-id": {
+        "id": "col-users-id",
+        "tableId": "table-users",
+        "name": "id",
+        "comment": "PK (auto-generated)",
+        "dataType": "BIGINT",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 109,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-users-name": {
+        "id": "col-users-name",
+        "tableId": "table-users",
+        "name": "name",
+        "comment": "이름",
+        "dataType": "VARCHAR(50)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-users-birth-date": {
+        "id": "col-users-birth-date",
+        "tableId": "table-users",
+        "name": "birth_date",
+        "comment": "생년월일",
+        "dataType": "DATE",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-users-gender": {
+        "id": "col-users-gender",
+        "tableId": "table-users",
+        "name": "gender",
+        "comment": "성별",
+        "dataType": "VARCHAR(10)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "col-users-nickname": {
+        "id": "col-users-nickname",
+        "tableId": "table-users",
+        "name": "nickname",
+        "comment": "닉네임",
+        "dataType": "VARCHAR(50)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      }
+    },
+    "relationshipEntities": {
+      "rel-store-images": {
+        "id": "rel-store-images",
+        "identification": false,
+        "relationshipType": 16,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "table-stores",
+          "columnIds": [
+            "col-stores-id"
+          ],
+          "x": 530,
+          "y": 100,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "table-store-images",
+          "columnIds": [
+            "col-store-images-store-id"
+          ],
+          "x": 707,
+          "y": 102,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "rel-store-business-hours": {
+        "id": "rel-store-business-hours",
+        "identification": false,
+        "relationshipType": 16,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "table-stores",
+          "columnIds": [
+            "col-stores-id"
+          ],
+          "x": 530,
+          "y": 200,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "table-store-business-hours",
+          "columnIds": [
+            "col-store-bh-store-id"
+          ],
+          "x": 687,
+          "y": 295,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      },
+      "rel-store-prices": {
+        "id": "rel-store-prices",
+        "identification": false,
+        "relationshipType": 16,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "table-stores",
+          "columnIds": [
+            "col-stores-id"
+          ],
+          "x": 290,
+          "y": 250,
+          "direction": 8
+        },
+        "end": {
+          "tableId": "table-store-prices",
+          "columnIds": [
+            "col-store-prices-store-id"
+          ],
+          "x": 500,
+          "y": 576,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1774341364093,
+          "createAt": 1774341364093
+        }
+      }
+    },
     "indexEntities": {},
     "indexColumnEntities": {},
     "memoEntities": {}
