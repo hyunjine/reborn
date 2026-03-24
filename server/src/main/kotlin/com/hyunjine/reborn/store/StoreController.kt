@@ -25,7 +25,7 @@ class StoreController(
      * @return 업체 상세 정보 (존재하지 않으면 404)
      */
     @GetMapping("/{id}")
-    fun getStoreDetail(@PathVariable id: Long): ResponseEntity<StoreDetailModel> {
+    suspend fun getStoreDetail(@PathVariable id: Long): ResponseEntity<StoreDetailModel> {
         val detail = storeRepository.findStoreDetailById(id)
             ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(detail)

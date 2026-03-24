@@ -12,8 +12,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * 업체 정보를 조회하는 Repository.
@@ -33,11 +33,10 @@ class StoreRepository {
      * @param id 조회할 업체 ID
      * @return 업체 상세 모델, 존재하지 않으면 null
      */
-    @Transactional(readOnly = true)
-    fun findStoreDetailById(id: Long): StoreDetailModel? {
+    suspend fun findStoreDetailById(id: Long): StoreDetailModel? = suspendTransaction(readOnly = true) {
         val store = Stores.selectAll()
             .where { Stores.id eq id }
-            .singleOrNull() ?: return null
+            .singleOrNull() ?: return@suspendTransaction null
 
         val imageUrls = StoreImages.selectAll()
             .where { StoreImages.storeId eq id }
@@ -69,7 +68,7 @@ class StoreRepository {
                 )
             }.toImmutableList()
 
-        return StoreDetailModel(
+        StoreDetailModel(
             id = store[Stores.id].value,
             name = store[Stores.name],
             imageUrls = imageUrls,

@@ -21,7 +21,8 @@ configurations.all {
 
 dependencies {
     implementation(projects.shared)
-    implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.webflux)
+    implementation(libs.kotlinx.coroutines.reactor)
     implementation(libs.exposed.spring.boot.starter)
     implementation(libs.exposed.kotlin.datetime)
     runtimeOnly(libs.postgresql)
