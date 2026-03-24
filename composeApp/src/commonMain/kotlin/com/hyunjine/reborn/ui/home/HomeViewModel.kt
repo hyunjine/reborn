@@ -26,7 +26,9 @@ class HomeViewModel(
     private val uiEvent = MutableSharedFlow<HomeScreen.UiEvent>()
 
     val location: StateFlow<Location?> = flow {
-        emit(locationService.getCurrentLocation())
+        val loc = locationService.getCurrentLocation() ?: return@flow
+        val resolved = storeRemoteDataSource.getAddress(loc)
+        emit(resolved)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val state: StateFlow<ApiResponse<ImmutableList<StoreModel>>> = location

@@ -81,7 +81,11 @@
       "Bash(docker ps:*)",
       "Bash(./gradlew :server:deployDocker)",
       "Bash(./gradlew :server:dependencies --configuration runtimeClasspath)",
-      "Bash(./gradlew :server:compileKotlin :composeApp:compileDebugKotlinAndroid)"
+      "Bash(./gradlew :server:compileKotlin :composeApp:compileDebugKotlinAndroid)",
+      "WebFetch(domain:techblog.gccompany.co.kr)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(node:*)",
+      "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin)"
     ]
   }
 }

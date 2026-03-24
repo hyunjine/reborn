@@ -11,4 +11,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 @Stable
-data class Location(val latitude: Double = 0.0, val longitude: Double = 0.0)
+data class Location(
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val address: String = ""
+)

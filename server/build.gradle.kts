@@ -23,6 +23,7 @@ extra["kotlin-serialization.version"] = libs.versions.kotlinSerialization.get()
 
 dependencies {
     implementation(projects.shared)
+    implementation(projects.lib.geocoding)
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.kotlinx.coroutines.reactor)
     implementation(libs.exposed.spring.boot.starter)

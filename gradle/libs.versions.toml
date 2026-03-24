@@ -23,6 +23,7 @@ napier = "2.7.1"
 play-services-location = "21.3.0"
 kotlinx-datetime = "0.7.1"
 exposed = "1.1.1"
+jts = "1.20.0"
 postgresql = "42.7.7"
 spring-boot = "3.5.3"
 spring-dependency-management = "1.1.7"
@@ -75,6 +76,8 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-logging = { module = "io.ktor:ktor-client-logging" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin" }
+
+jts-core = { module = "org.locationtech.jts:jts-core", version.ref = "jts" }
 
 exposed-spring-boot-starter = { module = "org.jetbrains.exposed:exposed-spring-boot-starter", version.ref = "exposed" }
 exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }

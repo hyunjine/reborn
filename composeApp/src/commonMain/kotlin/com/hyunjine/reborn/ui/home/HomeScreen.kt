@@ -147,7 +147,7 @@ object HomeScreen : NavigationItem {
     ) {
         Column(modifier = modifier) {
             HomeTopBar(
-                location = location.toString(),
+                location = location?.address ?: "",
                 onSearchClick = { onEvent(UiEvent.SearchClicked) },
                 onNotificationClick = { onEvent(UiEvent.NotificationClicked) }
             )

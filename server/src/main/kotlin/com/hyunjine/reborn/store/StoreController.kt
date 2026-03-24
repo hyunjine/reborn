@@ -50,4 +50,8 @@ class StoreController(
             ?: return ApiResponse.Error("업체를 찾을 수 없습니다. id=$id")
         return ApiResponse.Success(detail)
     }
+
+    override suspend fun getAddress(location: Location): Location {
+        throw UnsupportedOperationException("Handled by GeocodingController")
+    }
 }
