@@ -13,6 +13,5 @@ val DefaultJson: Json = Json {
     prettyPrint = true
     serializersModule = SerializersModule {
         contextual(ImmutableList::class) { args -> ImmutableListSerializer(args[0]) }
-        contextual(ImmutableList::class) { args -> ImmutableListSerializer(args[0]) }
     }
 }
