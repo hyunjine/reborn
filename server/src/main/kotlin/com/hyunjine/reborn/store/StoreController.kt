@@ -3,8 +3,11 @@ package com.hyunjine.reborn.store
 import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.data.store.StoreRemoteDataSource
+import com.hyunjine.reborn.data.store.model.RegistStoreModel
 import com.hyunjine.reborn.data.store.model.StoreDetailModel
 import com.hyunjine.reborn.data.store.model.StoreModel
+import com.hyunjine.reborn.store.dto.DayScheduleRequest
+import com.hyunjine.reborn.store.dto.PriceItemRequest
 import com.hyunjine.reborn.store.dto.RegistStoreRequest
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -53,7 +56,7 @@ class StoreController(
      * @return 생성된 업체 ID를 담은 공통 응답 객체
      */
     @PostMapping
-    suspend fun registerStore(
+    suspend fun registerStoreMultipart(
         @RequestPart("data") data: RegistStoreRequest,
         @RequestPart("photos") photos: List<FilePart>
     ): ApiResponse<Long> {
@@ -62,6 +65,48 @@ class StoreController(
             val imageUrl = imageStorageService.saveImage(storeId, photo)
             storeRepository.insertStoreImage(storeId, imageUrl)
         }
+        return ApiResponse.Success(storeId)
+    }
+
+    /**
+     * [StoreRemoteDataSource] 인터페이스 구현.
+     *
+     * 실제 HTTP 요청은 [registerStoreMultipart]가 처리하며,
+     * 이 메서드는 인터페이스 계약을 충족하기 위한 내부 구현입니다.
+     *
+     * @param model 업체 등록 UI 모델
+     * @param latitude 위도
+     * @param longitude 경도
+     * @return 생성된 업체 ID를 담은 공통 응답 객체
+     */
+    override suspend fun registerStore(
+        model: RegistStoreModel,
+        latitude: Double,
+        longitude: Double
+    ): ApiResponse<Long> {
+        val request = RegistStoreRequest(
+            name = model.name,
+            phone = model.phone,
+            address = model.address,
+            description = model.description,
+            latitude = latitude,
+            longitude = longitude,
+            daySchedules = model.daySchedules.map { schedule ->
+                DayScheduleRequest(
+                    dayOfWeek = schedule.dayOfWeek,
+                    isEnabled = schedule.isEnabled,
+                    startTime = schedule.startTime,
+                    endTime = schedule.endTime
+                )
+            },
+            priceItems = model.priceItems.map { item ->
+                PriceItemRequest(
+                    name = item.name.value,
+                    price = item.price ?: 0
+                )
+            }
+        )
+        val storeId = storeRepository.insertStore(request)
         return ApiResponse.Success(storeId)
     }
 
