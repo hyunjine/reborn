@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.http.codec.json.KotlinSerializationJsonDecoder
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
 
 @Configuration
@@ -18,5 +19,10 @@ class WebConfig : WebFluxConfigurer {
         val json = json()
         configurer.defaultCodecs().kotlinSerializationJsonDecoder(KotlinSerializationJsonDecoder(json))
         configurer.defaultCodecs().kotlinSerializationJsonEncoder(PolymorphicKotlinSerializationEncoder(json))
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/uploads/**")
+            .addResourceLocations("file:uploads/")
     }
 }

@@ -8,13 +8,17 @@ import com.hyunjine.reborn.data.store.model.OperationTimeModel
 import com.hyunjine.reborn.data.store.model.StoreDetailModel
 import com.hyunjine.reborn.data.store.model.StoreModel
 import com.hyunjine.reborn.data.store.model.StorePriceModel
+import com.hyunjine.reborn.store.dto.RegistStoreRequest
 import com.hyunjine.reborn.store.table.StoreBusinessHours
 import com.hyunjine.reborn.store.table.StoreImages
 import com.hyunjine.reborn.store.table.StorePrices
 import com.hyunjine.reborn.store.table.Stores
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.toKotlinLocalDateTime
+import java.time.LocalDateTime
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import org.springframework.stereotype.Repository
@@ -139,6 +143,63 @@ class StoreRepository {
             lastUpdated = store[Stores.lastUpdated],
             phoneNumber = store[Stores.phoneNumber]
         )
+    }
+
+    /**
+     * 새로운 업체를 등록합니다.
+     *
+     * Stores, StoreBusinessHours, StorePrices 테이블에 데이터를 삽입합니다.
+     * 이미지는 별도로 [insertStoreImage]를 호출하여 저장합니다.
+     *
+     * @param request 업체 등록 요청 데이터
+     * @return 생성된 업체 ID
+     */
+    suspend fun insertStore(request: RegistStoreRequest): Long = suspendTransaction {
+        val now = LocalDateTime.now().toKotlinLocalDateTime()
+
+        val storeId = Stores.insert {
+            it[name] = request.name
+            it[address] = request.address
+            it[description] = request.description
+            it[phoneNumber] = request.phone
+            it[latitude] = request.latitude
+            it[longitude] = request.longitude
+            it[lastUpdated] = now
+        }[Stores.id].value
+
+        request.daySchedules.forEach { schedule ->
+            StoreBusinessHours.insert {
+                it[this.storeId] = storeId
+                it[dayOfWeek] = schedule.dayOfWeek.name
+                it[isOpen] = schedule.isEnabled
+                it[openTime] = if (schedule.isEnabled) schedule.startTime else null
+                it[closeTime] = if (schedule.isEnabled) schedule.endTime else null
+            }
+        }
+
+        request.priceItems.forEach { item ->
+            StorePrices.insert {
+                it[this.storeId] = storeId
+                it[name] = item.name
+                it[price] = item.price
+                it[unit] = item.unit
+            }
+        }
+
+        storeId
+    }
+
+    /**
+     * 업체 이미지 URL을 저장합니다.
+     *
+     * @param storeId 업체 ID
+     * @param imageUrl 이미지 URL 경로
+     */
+    suspend fun insertStoreImage(storeId: Long, imageUrl: String) = suspendTransaction {
+        StoreImages.insert {
+            it[this.storeId] = storeId
+            it[this.imageUrl] = imageUrl
+        }
     }
 
     companion object {
