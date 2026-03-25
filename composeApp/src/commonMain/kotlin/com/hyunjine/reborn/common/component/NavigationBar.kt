@@ -2,7 +2,6 @@ package com.hyunjine.reborn.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,16 +24,12 @@ import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
-import com.hyunjine.reborn.ui.home.HomeScreen
+import com.hyunjine.reborn.ui.main.home.HomeScreen
 import com.hyunjine.reborn.ui.my.MyScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import reborn.composeapp.generated.resources.Res
-import reborn.composeapp.generated.resources.icon_24_home
-import reborn.composeapp.generated.resources.icon_24_profile
-import reborn.composeapp.generated.resources.icon_24_market_price
 
 /**
  * 네비게이션 아이템에 대한 정보를 담는 열거형 클래스입니다.

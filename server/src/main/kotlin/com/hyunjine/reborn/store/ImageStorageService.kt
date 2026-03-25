@@ -1,6 +1,8 @@
 package com.hyunjine.reborn.store
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactive.awaitSingle
+import kotlinx.coroutines.withContext
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Service
 import java.nio.file.Files
@@ -31,7 +33,9 @@ class ImageStorageService {
      */
     suspend fun saveImage(storeId: Long, file: FilePart): String {
         val storeDir = uploadDir.resolve(storeId.toString())
-        Files.createDirectories(storeDir)
+        withContext(Dispatchers.IO) {
+            Files.createDirectories(storeDir)
+        }
 
         val extension = file.filename().substringAfterLast('.', "jpg")
         val fileName = "${UUID.randomUUID()}.$extension"

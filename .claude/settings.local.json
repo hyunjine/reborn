@@ -90,7 +90,10 @@
       "Bash(./gradlew :server:bootRun)",
       "Bash(cd:*)",
       "Bash(./gradlew :server:bootJar)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(./gradlew :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)",
+      "WebFetch(domain:postcode.map.kakao.com)",
+      "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)"
     ]
   }
 }

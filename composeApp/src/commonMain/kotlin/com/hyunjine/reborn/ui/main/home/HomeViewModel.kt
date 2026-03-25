@@ -1,6 +1,5 @@
-package com.hyunjine.reborn.ui.home
+package com.hyunjine.reborn.ui.main.home
 
-import androidx.lifecycle.viewModelScope
 import com.hyunjine.reborn.LocationService
 import com.hyunjine.reborn.common.util.BaseViewModel
 import com.hyunjine.reborn.data.ApiResponse
@@ -8,12 +7,10 @@ import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.data.store.StoreRemoteDataSource
 import com.hyunjine.reborn.data.store.model.StoreModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel

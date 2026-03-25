@@ -16,11 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import com.hyunjine.reborn.common.component.NavigationBar
 import com.hyunjine.reborn.common.component.NavigationItem
-import com.hyunjine.reborn.ui.home.HomeScreen
+import com.hyunjine.reborn.ui.main.home.HomeScreen
 import com.hyunjine.reborn.ui.my.MyScreen
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Serializable
