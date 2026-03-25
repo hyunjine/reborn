@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/reborn}
+    username: ${DB_USERNAME:reborn}
+    password: ${DB_PASSWORD:reborn}
+    driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    root: WARN
+    com.hyunjine.reborn: INFO

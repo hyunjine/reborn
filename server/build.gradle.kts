@@ -48,10 +48,22 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    systemProperty("spring.profiles.active", "dev")
+}
+
 tasks.register<Exec>("deployDocker") {
     group = "deployment"
-    description = "Build bootJar and deploy with Docker Compose"
+    description = "Build bootJar and deploy dev server with Docker Compose"
     dependsOn("bootJar")
     workingDir = projectDir
     commandLine("docker", "compose", "up", "-d", "--build")
+}
+
+tasks.register<Exec>("deployDockerProd") {
+    group = "deployment"
+    description = "Build bootJar and deploy prod server with Docker Compose"
+    dependsOn("bootJar")
+    workingDir = projectDir
+    commandLine("docker", "compose", "-f", "docker-compose.prod.yml", "up", "-d", "--build")
 }
