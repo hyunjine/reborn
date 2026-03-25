@@ -298,15 +298,14 @@ private fun StoreInfoSection(
                 placeholder = Placeholder(
                     width = 24.sp,
                     height = 24.sp,
-                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
                 )
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.icon_24_copy),
                     contentDescription = "주소 복사",
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { onCopyClick(address) },
+                        .fillMaxSize(),
                     tint = color.gray400
                 )
             }
@@ -321,6 +320,8 @@ private fun StoreInfoSection(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
+                modifier = Modifier
+                    .clickable { onCopyClick(address) },
                 text = annotatedAddress,
                 inlineContent = inlineContent,
                 style = typography.bodyRegular16,

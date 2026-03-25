@@ -65,7 +65,14 @@ class StoreRepository {
                 lat2 = store[Stores.latitude],
                 lng2 = store[Stores.longitude]
             )
-
+            // 5가지 핵심 정보를 담은 디버깅 로그
+            println("--- [Distance Calculation Check] ---")
+            println("1. 내 현재 위치 (My Location): Lat=${location.latitude}, Lng=${location.longitude}")
+            println("2. 고물상 이름 (Store Name): ${store[Stores.name]}")
+            println("3. 고물상 위치 (Store Location): Lat=${store[Stores.latitude]}, Lng=${store[Stores.longitude]}")
+            println("4. 계산된 직선 거리 (Calculated Distance): ${distance}m")
+            println("5. 도보 예상 시간 (Estimated Walk): 약 ${distance / 80}분") // 분당 80m 보행 기준
+            println("-------------------------------------")
             StoreModel(
                 id = storeId,
                 name = store[Stores.name],

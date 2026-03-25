@@ -131,15 +131,15 @@
           "col-store-bh-close-time"
         ],
         "ui": {
-          "x": 687,
-          "y": 195,
+          "x": 704.0213,
+          "y": 204.5745,
           "zIndex": 2,
           "widthName": 114,
           "widthComment": 117,
           "color": ""
         },
         "meta": {
-          "updateAt": 1774341569558,
+          "updateAt": 1774371223102,
           "createAt": 1774341364093
         }
       },
@@ -162,15 +162,15 @@
           "col-store-prices-unit"
         ],
         "ui": {
-          "x": 500,
-          "y": 500,
+          "x": 705.3189,
+          "y": 438.298,
           "zIndex": 2,
           "widthName": 65,
           "widthComment": 120,
           "color": ""
         },
         "meta": {
-          "updateAt": 1774341364093,
+          "updateAt": 1774371225990,
           "createAt": 1774341364093
         }
       }
@@ -629,7 +629,7 @@
             "col-stores-id"
           ],
           "x": 530,
-          "y": 112,
+          "y": 91.33333333333334,
           "direction": 2
         },
         "end": {
@@ -657,7 +657,7 @@
             "col-stores-id"
           ],
           "x": 530,
-          "y": 236,
+          "y": 174,
           "direction": 2
         },
         "end": {
@@ -665,8 +665,8 @@
           "columnIds": [
             "col-store-bh-store-id"
           ],
-          "x": 687,
-          "y": 295,
+          "x": 704.0213,
+          "y": 304.5745,
           "direction": 1
         },
         "meta": {
@@ -684,17 +684,17 @@
           "columnIds": [
             "col-stores-id"
           ],
-          "x": 290,
-          "y": 298,
-          "direction": 8
+          "x": 530,
+          "y": 256.6666666666667,
+          "direction": 2
         },
         "end": {
           "tableId": "table-store-prices",
           "columnIds": [
             "col-store-prices-store-id"
           ],
-          "x": 500,
-          "y": 588,
+          "x": 705.3189,
+          "y": 526.298,
           "direction": 1
         },
         "meta": {

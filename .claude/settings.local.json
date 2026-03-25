@@ -85,7 +85,9 @@
       "WebFetch(domain:techblog.gccompany.co.kr)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(node:*)",
-      "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin)"
+      "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin)",
+      "Bash(./gradlew bootRun)",
+      "Bash(./gradlew :server:bootRun)"
     ]
   }
 }
