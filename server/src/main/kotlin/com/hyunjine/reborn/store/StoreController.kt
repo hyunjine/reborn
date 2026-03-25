@@ -79,18 +79,14 @@ class StoreController(
      * @param longitude 경도
      * @return 생성된 업체 ID를 담은 공통 응답 객체
      */
-    override suspend fun registerStore(
-        model: RegistStoreModel,
-        latitude: Double,
-        longitude: Double
-    ): ApiResponse<Long> {
+    override suspend fun registerStore(model: RegistStoreModel): ApiResponse<Long> {
         val request = RegistStoreRequest(
             name = model.name,
             phone = model.phone,
-            address = model.address,
+            address = model.location.address,
             description = model.description,
-            latitude = latitude,
-            longitude = longitude,
+            latitude = model.location.latitude,
+            longitude = model.location.longitude,
             daySchedules = model.daySchedules.map { schedule ->
                 DayScheduleRequest(
                     dayOfWeek = schedule.dayOfWeek,

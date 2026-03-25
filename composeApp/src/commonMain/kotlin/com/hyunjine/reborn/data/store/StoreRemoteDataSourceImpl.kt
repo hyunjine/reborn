@@ -35,18 +35,14 @@ class StoreRemoteDataSourceImpl(
         }.body()
     }
 
-    override suspend fun registerStore(
-        model: RegistStoreModel,
-        latitude: Double,
-        longitude: Double
-    ): ApiResponse<Long> {
+    override suspend fun registerStore(model: RegistStoreModel): ApiResponse<Long> {
         val jsonData = buildJsonObject {
             put("name", model.name)
             put("phone", model.phone)
-            put("address", model.address)
+            put("address", model.location.address)
             put("description", model.description)
-            put("latitude", latitude)
-            put("longitude", longitude)
+            put("latitude", model.location.latitude)
+            put("longitude", model.location.longitude)
             put("daySchedules", buildJsonArray {
                 model.daySchedules.forEach { schedule ->
                     add(buildJsonObject {

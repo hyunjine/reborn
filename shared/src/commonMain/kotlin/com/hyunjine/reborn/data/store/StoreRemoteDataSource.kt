@@ -12,5 +12,5 @@ interface StoreRemoteDataSource {
 
     suspend fun getStores(location: Location): ApiResponse<ImmutableList<StoreModel>>
 
-    suspend fun registerStore(model: RegistStoreModel, latitude: Double, longitude: Double): ApiResponse<Long>
+    suspend fun registerStore(model: RegistStoreModel): ApiResponse<Long>
 }

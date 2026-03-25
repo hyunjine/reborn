@@ -19,11 +19,7 @@ class StoreRepository(
         return storeRemoteDataSource.getStoreDetail(id)
     }
 
-    suspend fun registerStore(
-        model: RegistStoreModel,
-        latitude: Double,
-        longitude: Double
-    ): ApiResponse<Long> {
-        return storeRemoteDataSource.registerStore(model, latitude, longitude)
+    suspend fun registerStore(model: RegistStoreModel): ApiResponse<Long> {
+        return storeRemoteDataSource.registerStore(model)
     }
 }
