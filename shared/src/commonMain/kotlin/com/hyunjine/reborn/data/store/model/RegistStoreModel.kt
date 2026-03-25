@@ -1,14 +1,17 @@
-package com.hyunjine.reborn.ui.regist_store
+package com.hyunjine.reborn.data.store.model
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import com.hyunjine.reborn.util.now
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
@@ -20,10 +23,11 @@ import kotlin.jvm.JvmInline
  * @param photos 등록된 사진 ByteArray 목록
  * @param batchStartTime 일괄 적용 시작 시간
  * @param batchEndTime 일괄 적용 종료 시간
- * @param daySchedules 요일별 영업 시간 목록
+ * @param daySchedules 요일별 영업 시간 목록(월~일)
  * @param priceItems 매입 단가 항목 목록
  */
 @Stable
+@Serializable
 data class RegistStoreModel(
     val name: String = "",
     val phone: String = "010",
@@ -32,9 +36,7 @@ data class RegistStoreModel(
     val photos: ImmutableList<ByteArray> = persistentListOf(),
     val batchStartTime: LocalTime = LocalTime(0, 0),
     val batchEndTime: LocalTime = LocalTime(0, 0),
-    val daySchedules: PersistentMap<DayOfWeek, DayScheduleModel> = DayOfWeek.entries
-        .associateWith { DayScheduleModel() }
-        .toPersistentHashMap(),
+    val daySchedules: ImmutableList<DayScheduleModel> = DayOfWeek.entries.map { DayScheduleModel() }.toImmutableList(),
     val priceItems: ImmutableList<PriceItemModel> = persistentListOf(PriceItemModel()),
 ) {
     fun isValid(): String? {
@@ -49,7 +51,7 @@ data class RegistStoreModel(
             return "영업 종료 시각은 시작 시각보다 늦어야 합니다."
         }
 
-        val hasInvalidSchedule = daySchedules.values.any { schedule ->
+        val hasInvalidSchedule = daySchedules.any { schedule ->
             if (!schedule.isEnabled) return@any false
             val is24Hour = schedule.startTime == LocalTime(0, 0) && schedule.endTime == LocalTime(0, 0)
             !is24Hour && schedule.startTime >= schedule.endTime
@@ -78,7 +80,10 @@ data class RegistStoreModel(
  * @param startTime 영업 시작 시간
  * @param endTime 영업 종료 시간
  */
+@Serializable
+@Stable
 data class DayScheduleModel(
+    val dayOfWeek: DayOfWeek = DayOfWeek.MONDAY,
     val isEnabled: Boolean = true,
     val startTime: LocalTime = LocalTime(0, 0),
     val endTime: LocalTime = LocalTime(0, 0)
@@ -90,6 +95,7 @@ data class DayScheduleModel(
  * @param price 단가 텍스트
  */
 @Stable
+@Serializable
 data class PriceItemModel(
     val name: ItemName = ItemName.None,
     val price: Int? = null
@@ -109,6 +115,8 @@ data class PriceItemModel(
     }
 }
 
+@Serializable
+@Stable
 sealed interface ItemName {
     val value: String
     data object None: ItemName {
@@ -116,8 +124,12 @@ sealed interface ItemName {
     }
 
     @JvmInline
+    @Serializable
+    @SerialName("Basic")
     value class Basic(override val value: String): ItemName
 
     @JvmInline
+    @Serializable
+    @SerialName("Custom")
     value class Custom(override val value: String): ItemName
 }

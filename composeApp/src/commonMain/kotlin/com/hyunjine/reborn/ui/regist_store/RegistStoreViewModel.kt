@@ -1,34 +1,23 @@
 package com.hyunjine.reborn.ui.regist_store
 
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.hyunjine.reborn.common.util.BaseViewModel
 import com.hyunjine.reborn.data.store.StoreRepository
+import com.hyunjine.reborn.data.store.model.PriceItemModel
+import com.hyunjine.reborn.data.store.model.RegistStoreModel
 import com.hyunjine.reborn.ui.regist_store.RegistStoreScreen.UiEvent
+import com.hyunjine.reborn.util.mapStable
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import org.koin.core.annotation.KoinViewModel
-import kotlin.collections.map
-import kotlin.collections.plus
 
 @KoinViewModel
 class RegistStoreViewModel(
@@ -73,27 +62,27 @@ class RegistStoreViewModel(
                     }
                 }
                 is UiEvent.ApplyBatchTime -> old.copy(
-                    daySchedules = old.daySchedules.mapValues { schedule ->
-                        schedule.value.copy(
+                    daySchedules = old.daySchedules.mapStable { schedule ->
+                        schedule.copy(
                             startTime = old.batchStartTime,
                             endTime = old.batchEndTime
                         )
-                    }.toPersistentHashMap()
+                    }
                 )
                 is UiEvent.DayEnabledChanged -> old.copy(
-                    daySchedules = old.daySchedules.mapValues { schedule ->
-                        if (schedule.key == event.key) schedule.value.copy(isEnabled = event.enabled) else schedule.value
-                    }.toPersistentHashMap()
+                    daySchedules = old.daySchedules.mapStable { schedule ->
+                        if (schedule.dayOfWeek == event.key) schedule.copy(isEnabled = event.enabled) else schedule
+                    }
                 )
                 is UiEvent.DayStartTimeChanged -> old.copy(
-                    daySchedules = old.daySchedules.mapValues { schedule ->
-                        if (schedule.key == event.key) schedule.value.copy(startTime = event.time) else schedule.value
-                    }.toPersistentHashMap()
+                    daySchedules = old.daySchedules.mapStable { schedule ->
+                        if (schedule.dayOfWeek == event.key) schedule.copy(startTime = event.time) else schedule
+                    }
                 )
                 is UiEvent.DayEndTimeChanged -> old.copy(
-                    daySchedules = old.daySchedules.mapValues { schedule ->
-                        if (schedule.key == event.key) schedule.value.copy(endTime = event.time) else schedule.value
-                    }.toPersistentHashMap()
+                    daySchedules = old.daySchedules.mapStable { schedule ->
+                        if (schedule.dayOfWeek == event.key) schedule.copy(endTime = event.time) else schedule
+                    }
                 )
                 is UiEvent.AddPriceItem -> old.copy(
                     priceItems = (old.priceItems + PriceItemModel()).toImmutableList()

@@ -90,8 +90,14 @@ import reborn.composeapp.generated.resources.icon_24_close
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import com.hyunjine.reborn.data.store.model.DayScheduleModel
+import com.hyunjine.reborn.data.store.model.ItemName
+import com.hyunjine.reborn.data.store.model.PriceItemModel
+import com.hyunjine.reborn.data.store.model.RegistStoreModel
 import com.hyunjine.reborn.util.shortName
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.datetime.DayOfWeek
@@ -169,7 +175,6 @@ object RegistStoreScreen : NavKey {
      * @param viewModel Koin에서 주입받는 ViewModel
      * @param onBack 뒤로가기 콜백
      */
-
     @Composable
     operator fun invoke(
         viewModel: RegistStoreViewModel = koinViewModel(),
@@ -834,7 +839,7 @@ private object ThousandSeparatorTransformation : VisualTransformation {
 private fun BusinessHoursSection(
     batchStartTime: LocalTime,
     batchEndTime: LocalTime,
-    daySchedules: ImmutableMap<DayOfWeek, DayScheduleModel>,
+    daySchedules: ImmutableList<DayScheduleModel>,
     onBatchStartTimeChanged: (LocalTime) -> Unit,
     onBatchEndTimeChanged: (LocalTime) -> Unit,
     onApplyBatchTime: () -> Unit,
@@ -905,11 +910,10 @@ private fun BusinessHoursSection(
 
         // Day schedules
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            daySchedules.forEach { (key, value) ->
+            daySchedules.forEach { item ->
 
                 DayScheduleRow(
-                    dayOfWeek = key,
-                    schedule = value,
+                    schedule = item,
                     onEnabledChanged = onDayEnabledChanged,
                     onStartTimeChanged = onDayStartTimeChanged,
                     onEndTimeChanged = onDayEndTimeChanged
@@ -929,7 +933,6 @@ private fun BusinessHoursSection(
  */
 @Composable
 private fun DayScheduleRow(
-    dayOfWeek: DayOfWeek,
     schedule: DayScheduleModel,
     onEnabledChanged: (DayOfWeek, Boolean) -> Unit,
     onStartTimeChanged: (DayOfWeek, LocalTime) -> Unit,
@@ -946,7 +949,7 @@ private fun DayScheduleRow(
         ) {
             Checkbox(
                 checked = schedule.isEnabled,
-                onCheckedChange = { onEnabledChanged(dayOfWeek, it) },
+                onCheckedChange = { onEnabledChanged(schedule.dayOfWeek, it) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = color.green500,
                     uncheckedColor = color.gray300
@@ -955,7 +958,7 @@ private fun DayScheduleRow(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = dayOfWeek.shortName,
+                text = schedule.dayOfWeek.shortName,
                 style = typography.bodyMedium14,
                 color = color.gray800
             )
@@ -963,13 +966,13 @@ private fun DayScheduleRow(
         if (schedule.isEnabled) {
             TimePickerField(
                 value = schedule.startTime,
-                onValueChange = { onStartTimeChanged(dayOfWeek, it) },
+                onValueChange = { onStartTimeChanged(schedule.dayOfWeek, it) },
                 modifier = Modifier.weight(1f)
             )
             Text(text = "~", style = typography.bodyRegular14, color = color.gray400)
             TimePickerField(
                 value = schedule.endTime,
-                onValueChange = { onEndTimeChanged(dayOfWeek, it) },
+                onValueChange = { onEndTimeChanged(schedule.dayOfWeek, it) },
                 modifier = Modifier.weight(1f)
             )
         } else {
@@ -1061,7 +1064,6 @@ private fun PriceSection(
  * 품목명 입력, kg당 매입가 입력, 삭제 버튼을 포함합니다.
  * @param item 품목 데이터
  * @param onNameChanged 품목명 변경 콜백
- * @param onCustomNameChanged 직접 입력 품목명 변경 콜백
  * @param onPriceChanged 단가 변경 콜백
  * @param onRemove 삭제 콜백 (null이면 삭제 버튼 숨김)
  */
@@ -1362,9 +1364,7 @@ private fun BusinessHoursSectionPreview() {
         BusinessHoursSection(
             batchStartTime = LocalTime(9, 0),
             batchEndTime = LocalTime(18, 0),
-            daySchedules = DayOfWeek.entries
-                .associateWith { DayScheduleModel() }
-                .toPersistentHashMap(),
+            daySchedules = DayOfWeek.entries.map { DayScheduleModel() }.toImmutableList(),
             onBatchStartTimeChanged = {},
             onBatchEndTimeChanged = {},
             onApplyBatchTime = {},
