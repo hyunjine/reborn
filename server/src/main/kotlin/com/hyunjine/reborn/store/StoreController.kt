@@ -6,6 +6,7 @@ import com.hyunjine.reborn.data.store.StoreRemoteDataSource
 import com.hyunjine.reborn.data.store.model.RegistStoreModel
 import com.hyunjine.reborn.data.store.model.StoreDetailModel
 import com.hyunjine.reborn.data.store.model.StoreModel
+import com.hyunjine.reborn.geocoding.ReverseGeocoder
 import com.hyunjine.reborn.store.dto.DayScheduleRequest
 import com.hyunjine.reborn.store.dto.PriceItemRequest
 import com.hyunjine.reborn.store.dto.RegistStoreRequest
@@ -29,7 +30,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/stores")
 class StoreController(
     private val storeRepository: StoreRepository,
-    private val imageStorageService: ImageStorageService
+    private val imageStorageService: ImageStorageService,
+    private val reverseGeocoder: ReverseGeocoder
 ): StoreRemoteDataSource {
 
     /**
@@ -60,7 +62,10 @@ class StoreController(
         @RequestPart("data") data: RegistStoreRequest,
         @RequestPart("photos") photos: List<FilePart>
     ): ApiResponse<Long> {
-        val storeId = storeRepository.insertStore(data)
+        val (latitude, longitude) = reverseGeocoder.getCoordinate(data.address)
+            ?: return ApiResponse.Error("주소에서 좌표를 찾을 수 없습니다: ${data.address}")
+        val requestWithCoord = data.copy(latitude = latitude, longitude = longitude)
+        val storeId = storeRepository.insertStore(requestWithCoord)
         photos.forEach { photo ->
             val imageUrl = imageStorageService.saveImage(storeId, photo)
             storeRepository.insertStoreImage(storeId, imageUrl)
@@ -75,18 +80,18 @@ class StoreController(
      * 이 메서드는 인터페이스 계약을 충족하기 위한 내부 구현입니다.
      *
      * @param model 업체 등록 UI 모델
-     * @param latitude 위도
-     * @param longitude 경도
      * @return 생성된 업체 ID를 담은 공통 응답 객체
      */
     override suspend fun registerStore(model: RegistStoreModel): ApiResponse<Long> {
+        val (latitude, longitude) = reverseGeocoder.getCoordinate(model.location.address)
+            ?: return ApiResponse.Error("주소에서 좌표를 찾을 수 없습니다: ${model.location.address}")
         val request = RegistStoreRequest(
             name = model.name,
             phone = model.phone,
             address = model.location.address,
             description = model.description,
-            latitude = model.location.latitude,
-            longitude = model.location.longitude,
+            latitude = latitude,
+            longitude = longitude,
             daySchedules = model.daySchedules.map { schedule ->
                 DayScheduleRequest(
                     dayOfWeek = schedule.dayOfWeek,

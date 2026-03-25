@@ -14,13 +14,16 @@ import org.locationtech.jts.geom.Polygon
 import org.locationtech.jts.index.strtree.STRtree
 
 /**
- * 한국 행정구역 경계 데이터 기반 역지오코딩.
- * 위경도를 입력하면 "시도 시군구" 형태의 주소를 반환합니다.
+ * 한국 행정구역 경계 데이터 기반 지오코딩.
+ *
+ * - 역지오코딩: 위경도 → "시도 시군구" 주소
+ * - 순방향 지오코딩: 주소 → 해당 행정구역 중심 위경도
  */
 class ReverseGeocoder {
 
     private val spatialIndex: STRtree
     private val geometryFactory = GeometryFactory()
+    private val addressToCentroid: Map<String, Coordinate>
 
     init {
         val json = Json { ignoreUnknownKeys = true }
@@ -32,13 +35,19 @@ class ReverseGeocoder {
         val collection = json.decodeFromString<GeoFeatureCollection>(text)
 
         spatialIndex = STRtree()
+        val centroidMap = mutableMapOf<String, Coordinate>()
         for (feature in collection.features) {
             val jtsGeom = parseGeometry(feature.geometry)
             val province = PROVINCE_MAP[feature.properties.code.take(2)] ?: ""
-            val entry = IndexedEntry(jtsGeom, "$province ${feature.properties.name}")
+            val address = "$province ${feature.properties.name}"
+            val entry = IndexedEntry(jtsGeom, address)
             spatialIndex.insert(jtsGeom.envelopeInternal, entry)
+
+            val centroid = jtsGeom.centroid.coordinate
+            centroidMap[address] = centroid
         }
         spatialIndex.build()
+        addressToCentroid = centroidMap
     }
 
     /**
@@ -55,6 +64,32 @@ class ReverseGeocoder {
             val entry = candidate as IndexedEntry
             if (entry.geometry.contains(point)) {
                 return entry.address
+            }
+        }
+        return null
+    }
+
+    /**
+     * 주소 문자열로 위경도를 조회합니다.
+     *
+     * 입력 주소에 포함된 "시도 시군구"를 매칭하여
+     * 해당 행정구역 폴리곤의 중심점 좌표를 반환합니다.
+     *
+     * @param address 주소 문자열 (e.g. "서울특별시 영등포구 문래동3가 55-16")
+     * @return 위도/경도 Pair, 매칭 실패 시 null
+     */
+    fun getCoordinate(address: String): Pair<Double, Double>? {
+        // 정확히 일치하는 키 먼저 탐색
+        for ((key, centroid) in addressToCentroid) {
+            if (address.startsWith(key)) {
+                return Pair(centroid.y, centroid.x) // (latitude, longitude)
+            }
+        }
+        // 시군구명 부분 매칭
+        for ((key, centroid) in addressToCentroid) {
+            val municipality = key.substringAfter(" ")
+            if (address.contains(municipality)) {
+                return Pair(centroid.y, centroid.x)
             }
         }
         return null

@@ -13,8 +13,8 @@ import kotlinx.serialization.Serializable
  * @param phone 전화번호 (숫자만)
  * @param address 업체 주소
  * @param description 업체 소개
- * @param latitude 위도
- * @param longitude 경도
+ * @param latitude 위도 (서버에서 주소 기반으로 자동 설정)
+ * @param longitude 경도 (서버에서 주소 기반으로 자동 설정)
  * @param daySchedules 요일별 영업 시간 목록
  * @param priceItems 매입 단가 항목 목록
  */
@@ -24,8 +24,8 @@ data class RegistStoreRequest(
     val phone: String,
     val address: String,
     val description: String,
-    val latitude: Double,
-    val longitude: Double,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
     val daySchedules: List<DayScheduleRequest>,
     val priceItems: List<PriceItemRequest>
 )

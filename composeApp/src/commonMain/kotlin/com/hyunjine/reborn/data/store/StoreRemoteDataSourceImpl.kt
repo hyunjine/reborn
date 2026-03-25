@@ -41,8 +41,6 @@ class StoreRemoteDataSourceImpl(
             put("phone", model.phone)
             put("address", model.location.address)
             put("description", model.description)
-            put("latitude", model.location.latitude)
-            put("longitude", model.location.longitude)
             put("daySchedules", buildJsonArray {
                 model.daySchedules.forEach { schedule ->
                     add(buildJsonObject {
