@@ -31,7 +31,7 @@ class RegistStoreViewModel(
         field: Channel<Effect> = Channel()
 
     val model: StateFlow<RegistStoreModel> = uiEvent
-        .runningFold(RegistStoreModel()) { old, event ->
+        .runningFold(RegistStoreModel(phone = "0l0")) { old, event ->
             when (event) {
                 is UiEvent.PhotosAdded -> old.copy(photos = event.photos.toImmutableList())
                 is UiEvent.PhotoRemoved -> old.copy(
@@ -104,7 +104,7 @@ class RegistStoreViewModel(
                 )
                 else -> old
             }
-        }.stateIn(RegistStoreModel())
+        }.stateIn(RegistStoreModel(phone = "0l0"))
 
     private val submitEvent = uiEvent
         .filterIsInstance<UiEvent.SubmitClicked>()

@@ -1,8 +1,6 @@
 package com.hyunjine.reborn.config
 
 import com.hyunjine.reborn.data.ApiResponse
-import com.hyunjine.reborn.util.ImmutableListSerializer
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
@@ -50,21 +48,5 @@ class PolymorphicKotlinSerializationEncoder(
             }
         }
         return super.encodeValue(value, bufferFactory, valueType, mimeType, hints)
-    }
-
-    /**
-     * [ResolvableType]에서 kotlinx serialization [KSerializer]를 해석합니다.
-     * JVM에서 typealias가 소거되어 serializer를 찾을 수 없는 [ImmutableList]를
-     * [ImmutableListSerializer]로 수동 매핑합니다.
-     */
-    @Suppress("UNCHECKED_CAST")
-    private fun resolveSerializer(type: ResolvableType): KSerializer<Any> {
-        val clazz = type.toClass()
-        if (ImmutableList::class.java.isAssignableFrom(clazz)) {
-            val elementType = type.getGeneric(0)
-            val elementSerializer = resolveSerializer(elementType)
-            return ImmutableListSerializer(elementSerializer) as KSerializer<Any>
-        }
-        return serializer(type.type)
     }
 }

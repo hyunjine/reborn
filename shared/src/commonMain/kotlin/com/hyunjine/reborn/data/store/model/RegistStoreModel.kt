@@ -2,14 +2,11 @@ package com.hyunjine.reborn.data.store.model
 
 import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -30,13 +27,16 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class RegistStoreModel(
     val name: String = "",
-    val phone: String = "010",
+    val phone: String = "",
     val address: String = "",
     val description: String = "",
+    @Contextual
     val photos: ImmutableList<ByteArray> = persistentListOf(),
     val batchStartTime: LocalTime = LocalTime(0, 0),
     val batchEndTime: LocalTime = LocalTime(0, 0),
+    @Contextual
     val daySchedules: ImmutableList<DayScheduleModel> = DayOfWeek.entries.map { DayScheduleModel() }.toImmutableList(),
+    @Contextual
     val priceItems: ImmutableList<PriceItemModel> = persistentListOf(PriceItemModel()),
 ) {
     fun isValid(): String? {

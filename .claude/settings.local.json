@@ -87,7 +87,10 @@
       "Bash(node:*)",
       "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin)",
       "Bash(./gradlew bootRun)",
-      "Bash(./gradlew :server:bootRun)"
+      "Bash(./gradlew :server:bootRun)",
+      "Bash(cd:*)",
+      "Bash(./gradlew :server:bootJar)",
+      "Bash(docker compose:*)"
     ]
   }
 }
