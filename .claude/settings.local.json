@@ -93,7 +93,8 @@
       "Bash(docker compose:*)",
       "Bash(./gradlew :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)",
       "WebFetch(domain:postcode.map.kakao.com)",
-      "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)"
+      "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)",
+      "Bash(./gradlew :composeApp:compileCommonMainKotlinMetadata)"
     ]
   }
 }

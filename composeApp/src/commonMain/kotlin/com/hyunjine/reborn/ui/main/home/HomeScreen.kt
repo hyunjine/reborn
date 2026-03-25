@@ -142,7 +142,6 @@ object HomeScreen : NavigationItem {
     ) {
         Column(modifier = modifier) {
             HomeTopBar(
-                location = location?.address ?: "",
                 onSearchClick = { onEvent(UiEvent.SearchClicked) },
                 onNotificationClick = { onEvent(UiEvent.NotificationClicked) }
             )
@@ -246,13 +245,11 @@ fun HomeBottomNavigation(
 
 /**
  * 홈 화면의 상단 바입니다.
- * @param location 현재 표시될 위치 텍스트입니다.
  * @param onSearchClick 검색 아이콘 클릭 시 호출되는 콜백입니다.
  * @param onNotificationClick 알림 아이콘 클릭 시 호출되는 콜백입니다.
  */
 @Composable
 fun HomeTopBar(
-    location: String,
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit
 ) {
@@ -271,7 +268,6 @@ fun HomeTopBar(
                 .weight(1F)
                 .clickable { /* TODO: Change location */ }
                 .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
                 painter = painterResource(Res.drawable.icon_24_location),
@@ -279,8 +275,10 @@ fun HomeTopBar(
                 tint = color.gray900,
                 modifier = Modifier.size(24.dp)
             )
+            Spacer(Modifier.width(4.dp))
             Text(
-                text = location,
+                text = "내 위치",
+                modifier = Modifier.weight(1f, fill = false), // fill = false는 텍스트가 짧을 때 공간을 다 채우지 않게 함
                 style = typography.titleSemibold16,
                 color = color.gray900,
                 overflow = TextOverflow.Ellipsis,
@@ -289,7 +287,7 @@ fun HomeTopBar(
             Icon(
                 painter = painterResource(Res.drawable.icon_24_arrow_right),
                 contentDescription = null,
-                tint = color.gray900,
+                tint = color.gray500,
                 modifier = Modifier.size(18.dp)
             )
         }

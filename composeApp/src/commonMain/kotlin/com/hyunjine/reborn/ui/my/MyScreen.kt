@@ -134,11 +134,6 @@ object MyScreen : NavigationItem {
                     .padding(horizontal = 16.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                ProfileCard(
-                    userName = state.userName,
-                    email = state.email
-                )
-                Spacer(modifier = Modifier.height(20.dp))
                 if (state.hasStore && state.storeInfo != null) {
                     StoreCard(
                         storeInfo = state.storeInfo,
