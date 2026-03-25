@@ -18,9 +18,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,9 +60,9 @@ import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_home
 import reborn.composeapp.generated.resources.icon_24_location
-import reborn.composeapp.generated.resources.icon_24_location_header
 import reborn.composeapp.generated.resources.icon_24_market_price
-import reborn.composeapp.generated.resources.icon_24_notification
+import reborn.composeapp.generated.resources.icon_24_arrow_right
+import reborn.composeapp.generated.resources.icon_24_bell
 import reborn.composeapp.generated.resources.icon_24_profile
 import reborn.composeapp.generated.resources.icon_24_search
 
@@ -252,7 +250,6 @@ fun HomeBottomNavigation(
  * @param onSearchClick 검색 아이콘 클릭 시 호출되는 콜백입니다.
  * @param onNotificationClick 알림 아이콘 클릭 시 호출되는 콜백입니다.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
     location: String,
@@ -263,7 +260,8 @@ fun HomeTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .height(56.dp)
+            .padding(start = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -272,14 +270,15 @@ fun HomeTopBar(
             modifier = Modifier
                 .weight(1F)
                 .clickable { /* TODO: Change location */ }
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                painter = painterResource(Res.drawable.icon_24_location_header),
+                painter = painterResource(Res.drawable.icon_24_location),
                 contentDescription = null,
                 tint = color.gray900,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(24.dp)
             )
-            Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = location,
                 style = typography.titleSemibold16,
@@ -287,32 +286,30 @@ fun HomeTopBar(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
+            Icon(
+                painter = painterResource(Res.drawable.icon_24_arrow_right),
+                contentDescription = null,
+                tint = color.gray900,
+                modifier = Modifier.size(18.dp)
+            )
         }
 
         Row {
             IconButton(onClick = onSearchClick) {
                 Icon(
                     painter = painterResource(Res.drawable.icon_24_search),
-                    contentDescription = "Search",
-                    modifier = Modifier.size(24.dp)
+                    contentDescription = "검색",
+                    modifier = Modifier.size(24.dp),
+                    tint = color.gray900
                 )
             }
-            BadgedBox(
-                badge = {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(color.green500, CircleShape)
-                    )
-                }
-            ) {
-                IconButton(onClick = onNotificationClick) {
-                    Icon(
-                        painter = painterResource(Res.drawable.icon_24_notification),
-                        contentDescription = "Notifications",
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+            IconButton(onClick = onNotificationClick) {
+                Icon(
+                    painter = painterResource(Res.drawable.icon_24_bell),
+                    contentDescription = "알림",
+                    modifier = Modifier.size(24.dp),
+                    tint = color.gray900
+                )
             }
         }
     }
