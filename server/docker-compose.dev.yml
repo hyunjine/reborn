@@ -1,3 +1,5 @@
+name: reborn-dev
+
 services:
   postgres:
     image: postgres:17
