@@ -52,12 +52,12 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
     systemProperty("spring.profiles.active", "dev")
 }
 
-tasks.register<Exec>("deployDocker") {
+tasks.register<Exec>("deployDockerDev") {
     group = "deployment"
     description = "Build bootJar and deploy dev server with Docker Compose"
     dependsOn("bootJar")
     workingDir = projectDir
-    commandLine("docker", "compose", "up", "-d", "--build")
+    commandLine("docker", "compose", "-f", "docker-compose.dev.yml", "up", "-d", "--build")
 }
 
 tasks.register<Exec>("deployDockerProd") {
