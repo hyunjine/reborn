@@ -115,7 +115,7 @@ fun StoreListItem(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = price.price.readable(),
+                            text = price.price.readable() + "원/" + price.unit,
                             style = typography.bodySemibold14,
                             color = color.gray900
                         )
@@ -140,8 +140,8 @@ private fun StoreListItemPreview() {
                 imageUrl = "",
                 distance = Distance.meters(3100),
                 prices = persistentListOf(
-                    MatterModel("철근", 7200),
-                    MatterModel("동", 7200),
+                    MatterModel("철근", price = 7200, unit = "kg"),
+                    MatterModel("동", price = 7200, unit = "kg"),
                 )
             ),
             onClick = {}

@@ -59,7 +59,8 @@ class StoreRepository {
                 .map { row ->
                     MatterModel(
                         name = row[StorePrices.name],
-                        price = row[StorePrices.price]
+                        price = row[StorePrices.price],
+                        unit = row[StorePrices.unit]
                     )
                 }.toImmutableList()
 

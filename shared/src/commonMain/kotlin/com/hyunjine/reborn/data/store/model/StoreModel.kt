@@ -33,8 +33,9 @@ data class StoreModel(
  */
 @Serializable
 data class MatterModel(
-    val name: String,
-    val price: Int
+    val name: String = "",
+    val unit: String = "",
+    val price: Int = 0
 )
 
 @Stable

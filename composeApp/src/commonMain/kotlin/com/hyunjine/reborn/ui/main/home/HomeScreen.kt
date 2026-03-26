@@ -2,6 +2,7 @@ package com.hyunjine.reborn.ui.main.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -149,6 +150,7 @@ object HomeScreen : NavigationItem {
                 }
                 is ApiResponse.Success -> {
                     LazyColumn(
+                        contentPadding = PaddingValues(bottom = 28.dp),
                         state = listState,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -250,10 +252,10 @@ fun HomeScreenPreview() {
                         imageUrl = "",
                         distance = Distance.meters(20),
                         prices = persistentListOf(
-                            MatterModel("고철", 59040),
-                            MatterModel("고철", 540),
-                            MatterModel("고철", 540),
-                            MatterModel("고철", 540),
+                            MatterModel("고철", price = 59040, unit = "kg"),
+                            MatterModel("고철", price = 540, unit = "kg"),
+                            MatterModel("고철", price = 540, unit = "kg"),
+                            MatterModel("고철", price = 540, unit = "kg"),
                         )
                     )
                 }.toImmutableList()
