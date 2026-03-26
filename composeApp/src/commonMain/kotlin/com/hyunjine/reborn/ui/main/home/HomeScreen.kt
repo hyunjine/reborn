@@ -1,55 +1,43 @@
 package com.hyunjine.reborn.ui.main.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
-import com.hyunjine.reborn.data.Location
+import com.hyunjine.reborn.common.component.HomeTopBar
 import com.hyunjine.reborn.common.component.NavigationItem
+import com.hyunjine.reborn.common.component.StoreListItem
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.data.ApiResponse
+import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.data.store.model.Distance
 import com.hyunjine.reborn.data.store.model.MatterModel
 import com.hyunjine.reborn.data.store.model.StoreModel
 import com.hyunjine.reborn.util.ImmutableList
-import com.hyunjine.reborn.util.readable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -59,12 +47,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_home
-import reborn.composeapp.generated.resources.icon_24_location
 import reborn.composeapp.generated.resources.icon_24_market_price
-import reborn.composeapp.generated.resources.icon_24_arrow_right
-import reborn.composeapp.generated.resources.icon_24_bell
 import reborn.composeapp.generated.resources.icon_24_profile
-import reborn.composeapp.generated.resources.icon_24_search
 
 /**
  * Re-born 앱의 홈 화면입니다.
@@ -140,8 +124,15 @@ object HomeScreen : NavigationItem {
         modifier: Modifier = Modifier.fillMaxSize(),
         onEvent: (UiEvent) -> Unit = {}
     ) {
+        val listState = rememberLazyListState()
+        val isScrolled by remember {
+            derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 }
+        }
+
         Column(modifier = modifier) {
             HomeTopBar(
+                isScrolled = isScrolled,
+                onLocationClick = { /* TODO: Change location */ },
                 onSearchClick = { onEvent(UiEvent.SearchClicked) },
                 onNotificationClick = { onEvent(UiEvent.NotificationClicked) }
             )
@@ -158,17 +149,16 @@ object HomeScreen : NavigationItem {
                 }
                 is ApiResponse.Success -> {
                     LazyColumn(
+                        state = listState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1F),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(
                             items = state.data,
                             key = { it.id }
                         ) { store ->
-                            GarbageCenterItem(
+                            StoreListItem(
                                 store = store,
                                 onClick = { onEvent(UiEvent.StoreClicked(store.id)) }
                             )
@@ -240,153 +230,6 @@ fun HomeBottomNavigation(
                 indicatorColor = Color.Transparent
             )
         )
-    }
-}
-
-/**
- * 홈 화면의 상단 바입니다.
- * @param onSearchClick 검색 아이콘 클릭 시 호출되는 콜백입니다.
- * @param onNotificationClick 알림 아이콘 클릭 시 호출되는 콜백입니다.
- */
-@Composable
-fun HomeTopBar(
-    onSearchClick: () -> Unit,
-    onNotificationClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .statusBarsPadding()
-            .height(56.dp)
-            .padding(start = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .weight(1F)
-                .clickable { /* TODO: Change location */ }
-                .padding(vertical = 16.dp),
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.icon_24_location),
-                contentDescription = null,
-                tint = color.gray900,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(
-                text = "내 위치",
-                modifier = Modifier.weight(1f, fill = false), // fill = false는 텍스트가 짧을 때 공간을 다 채우지 않게 함
-                style = typography.titleSemibold16,
-                color = color.gray900,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
-            Icon(
-                painter = painterResource(Res.drawable.icon_24_arrow_right),
-                contentDescription = null,
-                tint = color.gray500,
-                modifier = Modifier.size(18.dp)
-            )
-        }
-
-        Row {
-            IconButton(onClick = onSearchClick) {
-                Icon(
-                    painter = painterResource(Res.drawable.icon_24_search),
-                    contentDescription = "검색",
-                    modifier = Modifier.size(24.dp),
-                    tint = color.gray900
-                )
-            }
-            IconButton(onClick = onNotificationClick) {
-                Icon(
-                    painter = painterResource(Res.drawable.icon_24_bell),
-                    contentDescription = "알림",
-                    modifier = Modifier.size(24.dp),
-                    tint = color.gray900
-                )
-            }
-        }
-    }
-}
-
-/**
- * 개별 고물상 정보를 표시하는 아이템입니다.
- * @param store 고물상 데이터 모델입니다.
- * @param onClick 아이템 클릭 시 호출되는 콜백입니다.
- */
-@Composable
-fun GarbageCenterItem(
-    store: StoreModel,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        AsyncImage(
-            model = store.imageUrl,
-            contentDescription = "${store.name} 이미지",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(112.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(color.gray100)
-        )
-
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = store.name,
-                style = typography.headingSemibold18,
-                color = color.gray900
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(vertical = 4.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.icon_24_location),
-                    contentDescription = null,
-                    tint = color.gray600,
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Text(
-                    text = store.distance.toString(),
-                    style = typography.bodyRegular14,
-                    color = color.gray600
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            store.prices.take(3).forEach { price ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = price.name,
-                        style = typography.bodyRegular14,
-                        color = color.gray900
-                    )
-                    Text(
-                        text = price.price.readable(),
-                        style = typography.bodySemibold14,
-                        color = color.gray900
-                    )
-                }
-            }
-        }
     }
 }
 
