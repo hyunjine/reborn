@@ -46,44 +46,38 @@ class StoreRepository {
      * @return 업체 목록
      */
     suspend fun findAllStores(location: Location): List<StoreModel> = suspendTransaction(readOnly = true) {
-        Stores.selectAll().map { store ->
-            val storeId = store[Stores.id].value
+        val imagesByStoreId = StoreImages.selectAll()
+            .groupBy { it[StoreImages.storeId].value }
+            .mapValues { (_, rows) -> rows.first()[StoreImages.imageUrl] }
 
-            val imageUrl = StoreImages.selectAll()
-                .where { StoreImages.storeId eq storeId }
-                .firstOrNull()
-                ?.get(StoreImages.imageUrl) ?: ""
-
-            val prices = StorePrices.selectAll()
-                .where { StorePrices.storeId eq storeId }
-                .map { row ->
+        val pricesByStoreId = StorePrices.selectAll()
+            .groupBy { it[StorePrices.storeId].value }
+            .mapValues { (_, rows) ->
+                rows.map { row ->
                     MatterModel(
                         name = row[StorePrices.name],
                         price = row[StorePrices.price],
                         unit = row[StorePrices.unit]
                     )
                 }.toImmutableList()
+            }
 
-            val distance = calculateDistance(
-                lat1 = location.latitude,
-                lng1 = location.longitude,
-                lat2 = store[Stores.latitude],
-                lng2 = store[Stores.longitude]
-            )
-            // 5가지 핵심 정보를 담은 디버깅 로그
-            println("--- [Distance Calculation Check] ---")
-            println("1. 내 현재 위치 (My Location): Lat=${location.latitude}, Lng=${location.longitude}")
-            println("2. 고물상 이름 (Store Name): ${store[Stores.name]}")
-            println("3. 고물상 위치 (Store Location): Lat=${store[Stores.latitude]}, Lng=${store[Stores.longitude]}")
-            println("4. 계산된 직선 거리 (Calculated Distance): ${distance}m")
-            println("5. 도보 예상 시간 (Estimated Walk): 약 ${distance / 80}분") // 분당 80m 보행 기준
-            println("-------------------------------------")
+        Stores.selectAll().map { store ->
+            val storeId = store[Stores.id].value
+
             StoreModel(
                 id = storeId,
                 name = store[Stores.name],
-                imageUrl = imageUrl,
-                distance = Distance.meters(distance),
-                prices = prices
+                imageUrl = imagesByStoreId[storeId] ?: "",
+                distance = Distance.meters(
+                    calculateDistance(
+                        lat1 = location.latitude,
+                        lng1 = location.longitude,
+                        lat2 = store[Stores.latitude],
+                        lng2 = store[Stores.longitude]
+                    )
+                ),
+                prices = pricesByStoreId[storeId] ?: emptyList<MatterModel>().toImmutableList()
             )
         }
     }
