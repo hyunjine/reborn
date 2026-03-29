@@ -97,7 +97,10 @@
       "Bash(./gradlew :composeApp:compileCommonMainKotlinMetadata)",
       "Bash(./gradlew server:compileKotlin)",
       "mcp__figma__use_figma",
-      "Bash(./gradlew clean:*)"
+      "Bash(./gradlew clean:*)",
+      "Bash(keytool -exportcert -alias androiddebugkey -keystore $HOME/.android/debug.keystore -storepass android)",
+      "Bash(openssl dgst:*)",
+      "Bash(openssl base64:*)"
     ]
   },
   "enabledPlugins": {

@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.hyunjine.reborn.R
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -15,6 +16,9 @@ import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 
 /**
  * 카카오 지도를 표시하는 Android 구현체입니다.
@@ -46,6 +50,10 @@ actual fun KakaoMapView(
                     kakaoMapState.value = kakaoMap
                     val position = LatLng.from(latitude, longitude)
                     kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(position))
+
+                    val labelStyles = LabelStyles.from(LabelStyle.from(R.drawable.ic_my_location_dot))
+                    val labelOptions = LabelOptions.from("my_location", position).setStyles(labelStyles)
+                    kakaoMap.labelManager?.layer?.addLabel(labelOptions)
                 }
             }
         )
