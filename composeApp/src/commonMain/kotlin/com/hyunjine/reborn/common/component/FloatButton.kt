@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.util.animClickable
+import com.hyunjine.reborn.common.util.shadowStrong
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
@@ -39,10 +39,9 @@ fun FloatButton(
     Box(
         modifier = modifier
             .size(56.dp)
-            .shadow(elevation = 4.dp, shape = CircleShape)
-            .clip(CircleShape)
-            .background(color.green500)
-            .animClickable(shape = CircleShape, onClick = onClick),
+            .animClickable(shape = CircleShape, onClick = onClick)
+            .shadowStrong(shape = CircleShape)
+            .background(color = color.green500, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Icon(

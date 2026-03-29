@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +24,7 @@ import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.animClickable
+import com.hyunjine.reborn.common.util.shadowStrong
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_bell
@@ -58,7 +58,7 @@ fun HomeAppBar(
                 if (style == HomeAppBarStyle.Float) {
                     Modifier
                         .padding(horizontal = 8.dp)
-                        .shadow(elevation = 4.dp, shape = shape)
+                        .shadowStrong(shape = shape)
                 } else {
                     Modifier
                 }

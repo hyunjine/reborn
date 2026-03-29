@@ -16,10 +16,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.hyunjine.reborn.common.theme.color
+
+/**
+ * Figma의 shadow strong 스타일을 적용합니다.
+ * offset: (0, 3), blur: 4, color: black 15%
+ * @param shape 그림자의 모양입니다.
+ */
+fun Modifier.shadowStrong(shape: Shape = RoundedCornerShape(0.dp)): Modifier =
+    shadow(elevation = 4.dp, shape = shape)
+
+/**
+ * Figma의 shadow weak 스타일을 적용합니다.
+ * offset: (0, 1), blur: 2, color: black 15%
+ * @param shape 그림자의 모양입니다.
+ */
+fun Modifier.shadowWeak(shape: Shape = RoundedCornerShape(0.dp)): Modifier =
+    shadow(elevation = 2.dp, shape = shape)
 
 fun Modifier.animClickable(
     shape: Shape = RoundedCornerShape(12.dp),

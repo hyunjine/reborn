@@ -24,8 +24,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,6 +38,7 @@ import com.hyunjine.reborn.common.component.StoreCard
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.util.animClickable
+import com.hyunjine.reborn.common.util.shadowWeak
 import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.Location
 import com.hyunjine.reborn.data.store.model.Distance
@@ -129,22 +130,25 @@ object HomeScreen : NavigationItem {
         var isMapMode by rememberSaveable { mutableStateOf(false) }
 
         Box(modifier = modifier) {
-            if (isMapMode) {
-                MapContent(
-                    location = location,
-                    onSearchClick = { onEvent(UiEvent.SearchClicked) },
-                    onNotificationClick = { onEvent(UiEvent.NotificationClicked) },
-                    onToggleMode = { isMapMode = false }
-                )
-            } else {
-                ListContent(
-                    state = state,
-                    onSearchClick = { onEvent(UiEvent.SearchClicked) },
-                    onNotificationClick = { onEvent(UiEvent.NotificationClicked) },
-                    onStoreClick = { onEvent(UiEvent.StoreClicked(it)) },
-                    onToggleMode = { isMapMode = true }
-                )
-            }
+            MapContent(
+                location = location,
+                onSearchClick = { onEvent(UiEvent.SearchClicked) },
+                onNotificationClick = { onEvent(UiEvent.NotificationClicked) },
+                onToggleMode = { isMapMode = false },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (isMapMode) Modifier else Modifier.alpha(0f))
+            )
+            ListContent(
+                state = state,
+                onSearchClick = { onEvent(UiEvent.SearchClicked) },
+                onNotificationClick = { onEvent(UiEvent.NotificationClicked) },
+                onStoreClick = { onEvent(UiEvent.StoreClicked(it)) },
+                onToggleMode = { isMapMode = true },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (!isMapMode) Modifier else Modifier.alpha(0f))
+            )
         }
     }
 
@@ -159,6 +163,7 @@ object HomeScreen : NavigationItem {
  * @param onNotificationClick 알림 클릭 시 호출되는 콜백입니다.
  * @param onStoreClick 고물상 클릭 시 호출되는 콜백입니다.
  * @param onToggleMode 지도 모드 전환 클릭 시 호출되는 콜백입니다.
+ * @param modifier Modifier입니다.
  */
 @Composable
 private fun ListContent(
@@ -166,14 +171,15 @@ private fun ListContent(
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit,
     onStoreClick: (Long) -> Unit,
-    onToggleMode: () -> Unit
+    onToggleMode: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
     val isScrolled by remember {
         derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize()) {
             HomeAppBar(
                 onSearchClick = onSearchClick,
@@ -230,15 +236,17 @@ private fun ListContent(
  * @param onSearchClick 검색 클릭 시 호출되는 콜백입니다.
  * @param onNotificationClick 알림 클릭 시 호출되는 콜백입니다.
  * @param onToggleMode 리스트 모드 전환 클릭 시 호출되는 콜백입니다.
+ * @param modifier Modifier입니다.
  */
 @Composable
 private fun MapContent(
     location: Location?,
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit,
-    onToggleMode: () -> Unit
+    onToggleMode: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         KakaoMapView(
             latitude = location?.latitude ?: 37.5665,
             longitude = location?.longitude ?: 126.978,
@@ -259,7 +267,7 @@ private fun MapContent(
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 80.dp)
                 .size(36.dp)
-                .shadow(elevation = 2.dp, shape = CircleShape)
+                .shadowWeak(shape = CircleShape)
                 .clip(CircleShape)
                 .background(color.white)
                 .animClickable(shape = CircleShape, onClick = { /* TODO: 내 위치로 이동 */ }),
