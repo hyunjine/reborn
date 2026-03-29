@@ -104,7 +104,12 @@ object HomeScreen : NavigationItem {
         viewModel: HomeViewModel = koinViewModel(),
         onItemClick: (Long) -> Unit = {},
     ) {
-        RequestLocationPermission(onResult = {})
+        var permissionChecked by rememberSaveable { mutableStateOf(false) }
+
+        if (!permissionChecked) {
+            RequestLocationPermission(onResult = { permissionChecked = true })
+            return
+        }
 
         val state by viewModel.state.collectAsStateWithLifecycle()
         val location by viewModel.location.collectAsStateWithLifecycle()
