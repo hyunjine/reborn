@@ -240,7 +240,7 @@ private fun ListContent(
             onClick = onToggleMode,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp)
+                .padding(end = 16.dp, bottom = 40.dp)
         )
     }
 }
@@ -310,6 +310,7 @@ private fun MapContent(
     }
 }
 
+
 /**
  * 홈 화면 리스트 모드 프리뷰입니다.
  */
@@ -317,8 +318,7 @@ private fun MapContent(
 @Composable
 fun HomeScreenListPreview() {
     RebornTheme {
-        HomeScreen(
-            location = Location(37.5666, 126.9784),
+        ListContent(
             state = ApiResponse.Success(
                 data = ImmutableList(6) {
                     StoreModel(
@@ -332,7 +332,11 @@ fun HomeScreenListPreview() {
                         )
                     )
                 }.toImmutableList()
-            )
+            ),
+            onSearchClick = {},
+            onNotificationClick = {},
+            onStoreClick = {},
+            onToggleMode = {},
         )
     }
 }

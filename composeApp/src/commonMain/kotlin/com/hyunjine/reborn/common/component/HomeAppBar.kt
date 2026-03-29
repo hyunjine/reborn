@@ -102,9 +102,8 @@ fun HomeAppBar(
             modifier = Modifier
                 .weight(1f)
                 .height(44.dp)
-                .clip(RoundedCornerShape(99.dp))
-                .background(color.gray50)
                 .animClickable(shape = RoundedCornerShape(99.dp), onClick = onSearchClick)
+                .background(color = color.gray100, shape = RoundedCornerShape(99.dp))
                 .padding(horizontal = 12.dp),
             contentAlignment = Alignment.CenterStart
         ) {

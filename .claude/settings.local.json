@@ -104,7 +104,11 @@
       "Bash(find ~/.gradle/caches -path *kakao*maps* -name *.aar)",
       "Read(//c/tmp/**)",
       "Bash(cp ~/.gradle/caches/modules-2/files-2.1/com.kakao.maps.open/android/2.11.9/*/android-2.11.9.aar .)",
-      "Bash(unzip -l android-2.11.9.aar)"
+      "Bash(unzip -l android-2.11.9.aar)",
+      "Bash(find /c/AndroidProjects/MyProjects/Reborn -type f -name .env* -o -name *secret* -o -name *credentials*)",
+      "Bash(find ~/.gradle/caches -path *koin-compose* -name *.jar)",
+      "mcp__figma__search_design_system",
+      "Bash(./gradlew compileKotlin)"
     ]
   },
   "enabledPlugins": {

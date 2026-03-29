@@ -3,7 +3,9 @@ package com.hyunjine.reborn
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -17,6 +19,7 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.hyunjine.reborn.common.theme.RebornTheme
+import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.di.RebornAppKoin
 import com.hyunjine.reborn.ui.login.LoginScreen
 import com.hyunjine.reborn.ui.main.MainScreen
@@ -53,6 +56,8 @@ fun RebornApp() {
             }
 
             NavDisplay(
+                modifier = Modifier
+                    .background(color = color.white),
                 backStack = backStack,
                 entryDecorators = listOf(
                     // Composable 상태(rememberSaveable 등)를 화면별로 보존하는 데코레이터

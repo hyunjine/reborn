@@ -39,7 +39,7 @@ class LocationServiceImpl(
         }
 
         val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
+            Priority.PRIORITY_BALANCED_POWER_ACCURACY,
             10_000L
         ).setMinUpdateDistanceMeters(50f)
             .build()
