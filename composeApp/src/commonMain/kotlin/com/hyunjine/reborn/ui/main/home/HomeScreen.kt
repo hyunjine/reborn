@@ -33,6 +33,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hyunjine.reborn.common.component.FloatButton
 import com.hyunjine.reborn.common.component.HomeAppBar
+import com.hyunjine.reborn.common.component.RequestLocationPermission
 import com.hyunjine.reborn.common.component.HomeAppBarStyle
 import com.hyunjine.reborn.common.component.KakaoMapView
 import com.hyunjine.reborn.common.component.NavigationItem
@@ -47,7 +48,6 @@ import com.hyunjine.reborn.data.store.model.Distance
 import com.hyunjine.reborn.data.store.model.MatterModel
 import com.hyunjine.reborn.data.store.model.StoreModel
 import com.hyunjine.reborn.util.ImmutableList
-import com.hyunjine.reborn.util.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -95,17 +95,22 @@ object HomeScreen : NavigationItem {
      * @param onItemClick 고물상 클릭 시 호출되는 콜백입니다.
      * @param modifier Modifier입니다.
      */
+    /** 서울 시청 좌표 (권한 거부 시 기본값) */
+    private val DEFAULT_LOCATION = Location(37.5666, 126.9784)
+
     @Composable
     operator fun invoke(
         modifier: Modifier = Modifier,
         viewModel: HomeViewModel = koinViewModel(),
         onItemClick: (Long) -> Unit = {},
     ) {
+        RequestLocationPermission(onResult = {})
+
         val state by viewModel.state.collectAsStateWithLifecycle()
         val location by viewModel.location.collectAsStateWithLifecycle()
         invoke(
             modifier = modifier,
-            location = location,
+            location = location ?: DEFAULT_LOCATION,
             state = state,
             onEvent = { event ->
                 when (event) {
@@ -125,7 +130,7 @@ object HomeScreen : NavigationItem {
      */
     @Composable
     operator fun invoke(
-        location: Location?,
+        location: Location,
         state: ApiResponse<ImmutableList<StoreModel>>,
         modifier: Modifier = Modifier.fillMaxSize(),
         onEvent: (UiEvent) -> Unit = {}
@@ -245,18 +250,17 @@ private fun ListContent(
  */
 @Composable
 private fun MapContent(
-    location: Location?,
+    location: Location,
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit,
     onToggleMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    log(location)
     var moveToMyLocation by remember { mutableIntStateOf(0) }
 
     Box(modifier = modifier) {
         KakaoMapView(
-            location = location ?: Location(37.5665, 126.978),
+            location = location,
             moveToMyLocation = moveToMyLocation,
             modifier = Modifier.fillMaxSize()
         )
@@ -308,7 +312,7 @@ private fun MapContent(
 private fun HomeScreenListPreview() {
     RebornTheme {
         HomeScreen(
-            location = null,
+            location = Location(37.5666, 126.9784),
             state = ApiResponse.Success(
                 data = ImmutableList(6) {
                     StoreModel(

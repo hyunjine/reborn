@@ -31,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavKey
-import com.hyunjine.reborn.common.component.RequestLocationPermission
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
@@ -86,7 +85,6 @@ object LoginScreen : NavKey {
         kakaoLogin: () ->Unit,
         naverLogin: () ->Unit,
     ) {
-        RequestLocationPermission(onResult = {})
         invoke(
             onEvent = { event ->
                 when (event) {
