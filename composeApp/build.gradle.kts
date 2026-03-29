@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -36,6 +37,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.play.services.location)
             implementation(libs.kotlinx.coroutines.play.services)
+            implementation(libs.kakao.map)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -96,6 +98,11 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
+        val localProperties = Properties().apply {
+            rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+        }
+        manifestPlaceholders["KAKAO_MAP_API_KEY"] = localProperties.getProperty("KAKAO_MAP_API_KEY", "")
     }
     packaging {
         resources {

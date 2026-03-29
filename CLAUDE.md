@@ -166,3 +166,7 @@ class ReservationDetailViewModel(
 ## 13. Click & Button Convention
 - `Modifier.clickable` 대신 반드시 `Modifier.animClickable`을 사용한다. (`com.hyunjine.reborn.common.util.animClickable`)
 - `Button` Composable은 사용하지 않는다. 대신 `Box` + `background` + `clip` + `animClickable` + `Text` 조합으로 버튼 UI를 구현한다.
+
+## 14. Common Component Convention
+- 여러 화면에서 재사용되는 Composable 컴포넌트는 `common/component` 패키지에 생성한다.
+- 플랫폼별 구현이 필요한 컴포넌트는 `expect/actual` 패턴을 사용한다.

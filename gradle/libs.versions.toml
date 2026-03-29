@@ -21,6 +21,7 @@ kotlinx-collections-immutable = "0.3.8"
 coil = "3.2.0"
 napier = "2.7.1"
 play-services-location = "21.3.0"
+kakao-map = "2.11.9"
 kotlinx-datetime = "0.7.1"
 exposed = "1.1.1"
 jts = "1.20.0"
@@ -67,6 +68,7 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
+kakao-map = { module = "com.kakao.maps.open:android", version.ref = "kakao-map" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version = "1.10.2" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }

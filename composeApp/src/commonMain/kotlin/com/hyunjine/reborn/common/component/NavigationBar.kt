@@ -102,7 +102,7 @@ private fun NavigationTab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val contentColor = if (isSelected) color.gray900 else color.gray400
+    val contentColor = if (isSelected) color.green500 else color.gray600
 
     Column(
         modifier = modifier
