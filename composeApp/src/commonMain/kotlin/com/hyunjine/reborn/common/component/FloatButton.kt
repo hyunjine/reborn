@@ -39,9 +39,9 @@ fun FloatButton(
     Box(
         modifier = modifier
             .size(56.dp)
-            .animClickable(shape = CircleShape, onClick = onClick)
             .shadowStrong(shape = CircleShape)
-            .background(color = color.green500, shape = CircleShape),
+            .background(color = color.green500, shape = CircleShape)
+            .animClickable(shape = CircleShape, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(
