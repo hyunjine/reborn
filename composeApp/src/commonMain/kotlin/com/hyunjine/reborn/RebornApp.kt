@@ -28,12 +28,11 @@ import com.hyunjine.reborn.ui.store_detail.StoreDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
-import org.koin.dsl.KoinConfiguration
 import org.koin.plugin.module.dsl.koinConfiguration
 
 @Composable
 @Preview
-fun RebornApp(platformConfiguration: KoinConfiguration = KoinConfiguration {}) {
+fun RebornApp() {
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
             .components {
@@ -42,11 +41,7 @@ fun RebornApp(platformConfiguration: KoinConfiguration = KoinConfiguration {}) {
             .build()
     }
     KoinApplication(
-        configuration = KoinConfiguration {
-            platformConfiguration()
-            koinConfiguration<RebornAppKoin>()()
-        }
-    ) {
+        configuration = koinConfiguration<RebornAppKoin>()) {
         RebornTheme {
             val backStack = rememberNavBackStack(configuration = navConfig, LoginScreen)
 
