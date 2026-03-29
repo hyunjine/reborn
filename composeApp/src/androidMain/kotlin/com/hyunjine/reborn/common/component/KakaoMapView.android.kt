@@ -51,8 +51,9 @@ actual fun KakaoMapView(
                     val position = LatLng.from(latitude, longitude)
                     kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(position))
 
-                    val labelStyles = LabelStyles.from(LabelStyle.from(R.drawable.ic_my_location_dot))
-                    val labelOptions = LabelOptions.from("my_location", position).setStyles(labelStyles)
+                    val labelStyles = LabelStyles.from(LabelStyle.from(R.drawable.my_location))
+                    val labelOptions = LabelOptions.from("my_location", position)
+                        .setStyles(labelStyles)
                     kakaoMap.labelManager?.layer?.addLabel(labelOptions)
                 }
             }
