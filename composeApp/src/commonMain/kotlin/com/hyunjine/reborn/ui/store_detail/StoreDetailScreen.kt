@@ -24,8 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -51,7 +49,7 @@ import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
 import com.hyunjine.reborn.common.util.ClipboardManager
-import com.hyunjine.reborn.common.util.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import com.hyunjine.reborn.data.ApiResponse
 import com.hyunjine.reborn.data.store.model.Operation
 import com.hyunjine.reborn.data.store.model.OperationTimeModel
@@ -321,7 +319,7 @@ private fun StoreInfoSection(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 modifier = Modifier
-                    .clickable { onCopyClick(address) },
+                    .animClickable { onCopyClick(address) },
                 text = annotatedAddress,
                 inlineContent = inlineContent,
                 style = typography.bodyRegular16,
@@ -472,15 +470,14 @@ private fun CallButton(
             .background(Color.White)
             .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 40.dp)
     ) {
-        Button(
-            onClick = onClick,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = color.green500
-            )
+                .height(52.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(color.green500)
+                .animClickable(onClick = onClick),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "문의하기",

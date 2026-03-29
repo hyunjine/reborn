@@ -892,11 +892,14 @@ private fun BusinessHoursSection(
                     backgroundColor = Color.White
                 )
             }
-            Button(
-                onClick = onApplyBatchTime,
-                modifier = Modifier.fillMaxWidth().height(40.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = color.green500)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(color.green500)
+                    .animClickable(onClick = onApplyBatchTime),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "모두 적용",
@@ -1288,11 +1291,14 @@ private fun SubmitButton(onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 17.dp)
     ) {
-        Button(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth().height(52.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = color.green500)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(color.green500)
+                .animClickable(onClick = onClick),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "등록하기",

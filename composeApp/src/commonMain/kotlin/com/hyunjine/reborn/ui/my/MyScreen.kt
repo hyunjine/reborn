@@ -283,16 +283,14 @@ private fun RegisterStoreBanner(
                 )
             }
         }
-        Button(
-            onClick = onRegisterClick,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = color.green500,
-                contentColor = Color.White
-            )
+                .height(52.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(color.green500)
+                .animClickable(onClick = onRegisterClick),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "업체 등록하기",
