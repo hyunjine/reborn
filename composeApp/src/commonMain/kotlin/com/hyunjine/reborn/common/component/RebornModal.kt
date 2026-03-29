@@ -41,7 +41,7 @@ import com.hyunjine.reborn.common.util.animClickable
  * @param modifier Modifier입니다.
  * @param content 모달 내용입니다. null이면 내용 영역이 표시되지 않습니다. 최대 3줄까지 표시됩니다.
  * @param state 모달 상태입니다. [RebornModalState.Positive] 또는 [RebornModalState.Negative]를 지정합니다.
- * @param cancelText 취소 버튼 텍스트입니다.
+ * @param cancelText 취소 버튼 텍스트입니다. null이면 확인 버튼만 표시됩니다.
  * @param confirmText 확인 버튼 텍스트입니다.
  */
 @Composable
@@ -52,7 +52,7 @@ fun Modal(
     modifier: Modifier = Modifier,
     content: String? = null,
     state: RebornModalState = RebornModalState.Positive,
-    cancelText: String = "취소",
+    cancelText: String? = "취소",
     confirmText: String = "확인",
 ) {
     Dialog(
@@ -78,7 +78,7 @@ fun Modal(
  * @param title 모달 제목입니다.
  * @param content 모달 내용입니다. null이면 표시되지 않습니다.
  * @param state 모달 상태입니다.
- * @param cancelText 취소 버튼 텍스트입니다.
+ * @param cancelText 취소 버튼 텍스트입니다. null이면 확인 버튼만 표시됩니다.
  * @param confirmText 확인 버튼 텍스트입니다.
  * @param onDismiss 취소 버튼 클릭 시 호출되는 콜백입니다.
  * @param onConfirm 확인 버튼 클릭 시 호출되는 콜백입니다.
@@ -89,7 +89,7 @@ fun RebornModalContent(
     title: String,
     content: String?,
     state: RebornModalState,
-    cancelText: String,
+    cancelText: String?,
     confirmText: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -138,24 +138,26 @@ fun RebornModalContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             // 취소 버튼
-            val cancelShape = RoundedCornerShape(14.dp)
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(52.dp)
-                    .clip(cancelShape)
-                    .background(color.gray50)
-                    .animClickable(shape = cancelShape, onClick = onDismiss)
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = cancelText,
-                    style = typography.titleBold16,
-                    color = color.gray500,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+            if (cancelText != null) {
+                val cancelShape = RoundedCornerShape(14.dp)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(52.dp)
+                        .clip(cancelShape)
+                        .background(color.gray50)
+                        .animClickable(shape = cancelShape, onClick = onDismiss)
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = cancelText,
+                        style = typography.titleBold16,
+                        color = color.gray500,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
 
             // 확인 버튼
@@ -269,6 +271,30 @@ private fun RebornModalTitleOnlyPreview() {
                 content = null,
                 state = RebornModalState.Positive,
                 cancelText = "취소",
+                confirmText = "확인",
+                onDismiss = {},
+                onConfirm = {},
+            )
+        }
+    }
+}
+
+/**
+ * RebornModal 버튼 1개 프리뷰입니다.
+ */
+@Preview(showBackground = true)
+@Composable
+private fun RebornModalSingleButtonPreview() {
+    RebornTheme {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            RebornModalContent(
+                title = "업체 등록이 완료되었습니다",
+                content = "업체 정보를 확인해주세요.",
+                state = RebornModalState.Positive,
+                cancelText = null,
                 confirmText = "확인",
                 onDismiss = {},
                 onConfirm = {},
