@@ -41,9 +41,7 @@ class RegistStoreViewModel(
                 )
                 is UiEvent.StoreNameChanged -> old.copy(name = event.name)
                 is UiEvent.PhoneChanged -> old.copy(phone = event.phone)
-                is UiEvent.AddressChanged -> old.copy(
-                    location = old.location.copy(address = event.address)
-                )
+                is UiEvent.AddressChanged -> old.copy(address = event.address)
                 is UiEvent.DescriptionChanged -> old.copy(description = event.description)
                 is UiEvent.BatchStartTimeChanged -> {
                     val is24Hour = event.time == LocalTime(0, 0) && old.batchEndTime == LocalTime(0, 0)

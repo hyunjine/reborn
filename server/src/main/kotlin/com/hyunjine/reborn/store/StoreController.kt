@@ -83,12 +83,12 @@ class StoreController(
      * @return 생성된 업체 ID를 담은 공통 응답 객체
      */
     override suspend fun registerStore(model: RegistStoreModel): ApiResponse<Long> {
-        val (latitude, longitude) = reverseGeocoder.getCoordinate(model.location.address)
-            ?: return ApiResponse.Error("주소에서 좌표를 찾을 수 없습니다: ${model.location.address}")
+        val (latitude, longitude) = reverseGeocoder.getCoordinate(model.address)
+            ?: return ApiResponse.Error("주소에서 좌표를 찾을 수 없습니다: ${model.address}")
         val request = RegistStoreRequest(
             name = model.name,
             phone = model.phone,
-            address = model.location.address,
+            address = model.address,
             description = model.description,
             latitude = latitude,
             longitude = longitude,

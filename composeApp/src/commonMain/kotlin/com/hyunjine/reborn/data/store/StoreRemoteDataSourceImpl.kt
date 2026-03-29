@@ -39,7 +39,7 @@ class StoreRemoteDataSourceImpl(
         val jsonData = buildJsonObject {
             put("name", model.name)
             put("phone", model.phone)
-            put("address", model.location.address)
+            put("address", model.address)
             put("description", model.description)
             put("daySchedules", buildJsonArray {
                 model.daySchedules.forEach { schedule ->

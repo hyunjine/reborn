@@ -262,7 +262,7 @@ object RegistStoreScreen : NavKey {
                 BasicInfoSection(
                     storeName = model.name,
                     phone = model.phone,
-                    address = model.location.address,
+                    address = model.address,
                     description = model.description,
                     isShowingAddressSearch = addressState,
                     onStoreNameChanged = { onEvent(UiEvent.StoreNameChanged(it)) },

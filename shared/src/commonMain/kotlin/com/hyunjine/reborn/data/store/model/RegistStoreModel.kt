@@ -1,7 +1,6 @@
 package com.hyunjine.reborn.data.store.model
 
 import androidx.compose.runtime.Stable
-import com.hyunjine.reborn.data.Location
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -16,7 +15,7 @@ import kotlin.jvm.JvmInline
  * 업체 등록 화면의 UI 상태 모델.
  * @param name 업체명
  * @param phone 전화번호 (숫자만)
- * @param location 업체 위치 (위도, 경도, 주소)
+ * @param address 업체 주소
  * @param description 업체 소개
  * @param photos 등록된 사진 ByteArray 목록
  * @param batchStartTime 일괄 적용 시작 시간
@@ -29,7 +28,7 @@ import kotlin.jvm.JvmInline
 data class RegistStoreModel(
     val name: String = "",
     val phone: String = "",
-    val location: Location = Location(),
+    val address: String = "",
     val description: String = "",
     @Contextual
     val photos: ImmutableList<ByteArray> = persistentListOf(),
@@ -43,7 +42,7 @@ data class RegistStoreModel(
     fun isValid(): String? {
         if (photos.isEmpty()) return "가게 사진을 최소 1장 이상 등록해주세요."
         if (name.isBlank()) return "업체명을 입력해주세요."
-        if (location.address.isBlank()) return "주소를 입력해주세요."
+        if (address.isBlank()) return "주소를 입력해주세요."
         if (phone.isBlank()) return "전화번호를 입력해주세요."
 
         // 2. 영업 시간 검증 (둘 다 00:00이면 24시간 운영)

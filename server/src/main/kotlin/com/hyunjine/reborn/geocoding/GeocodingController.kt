@@ -21,11 +21,10 @@ class GeocodingController(
      * 위경도로 주소를 조회합니다.
      *
      * @param location 위경도 정보
-     * @return address가 채워진 Location
+     * @return 역지오코딩된 주소 문자열
      */
     @GetMapping("/reverse")
-    suspend fun reverse(@ModelAttribute location: Location): Location {
-        val address = reverseGeocoder.getAddress(location.latitude, location.longitude) ?: ""
-        return location.copy(address = address)
+    suspend fun reverse(@ModelAttribute location: Location): String {
+        return reverseGeocoder.getAddress(location.latitude, location.longitude) ?: ""
     }
 }
