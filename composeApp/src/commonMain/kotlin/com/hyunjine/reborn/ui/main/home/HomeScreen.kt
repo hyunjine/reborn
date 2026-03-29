@@ -289,8 +289,8 @@ private fun MapContent(
                 modifier = Modifier
                     .size(36.dp)
                     .shadowWeak(shape = CircleShape)
-                    .background(color = color.white, shape = CircleShape)
                     .animClickable(shape = CircleShape, onClick = { moveToMyLocation++ })
+                    .background(color = color.white, shape = CircleShape)
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
