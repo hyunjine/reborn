@@ -30,7 +30,7 @@ import reborn.composeapp.generated.resources.icon_24_map
  * @param modifier Modifier입니다.
  */
 @Composable
-fun RebornFloatingButton(
+fun FloatButton(
     icon: DrawableResource,
     contentDescription: String,
     onClick: () -> Unit,
@@ -55,13 +55,13 @@ fun RebornFloatingButton(
 }
 
 /**
- * RebornFloatingButton 프리뷰입니다.
+ * FloatButton 프리뷰입니다.
  */
 @Preview(showBackground = true)
 @Composable
-private fun RebornFloatingButtonPreview() {
+private fun FloatButtonPreview() {
     RebornTheme {
-        RebornFloatingButton(
+        FloatButton(
             icon = Res.drawable.icon_24_map,
             contentDescription = "지도 보기",
             onClick = {}

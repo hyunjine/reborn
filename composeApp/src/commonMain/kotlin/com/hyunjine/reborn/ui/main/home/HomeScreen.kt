@@ -33,8 +33,8 @@ import com.hyunjine.reborn.common.component.HomeAppBar
 import com.hyunjine.reborn.common.component.HomeAppBarStyle
 import com.hyunjine.reborn.common.component.KakaoMapView
 import com.hyunjine.reborn.common.component.NavigationItem
-import com.hyunjine.reborn.common.component.RebornFloatingButton
-import com.hyunjine.reborn.common.component.StoreListItem
+import com.hyunjine.reborn.common.component.FloatButton
+import com.hyunjine.reborn.common.component.StoreCard
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.util.animClickable
@@ -202,7 +202,7 @@ private fun ListContent(
                             items = state.data,
                             key = { it.id }
                         ) { store ->
-                            StoreListItem(
+                            StoreCard(
                                 store = store,
                                 onClick = { onStoreClick(store.id) }
                             )
@@ -213,7 +213,7 @@ private fun ListContent(
             }
         }
 
-        RebornFloatingButton(
+        FloatButton(
             icon = Res.drawable.icon_24_map,
             contentDescription = "지도 보기",
             onClick = onToggleMode,
@@ -273,7 +273,7 @@ private fun MapContent(
             )
         }
 
-        RebornFloatingButton(
+        FloatButton(
             icon = Res.drawable.icon_24_list,
             contentDescription = "리스트 보기",
             onClick = onToggleMode,

@@ -35,13 +35,13 @@ import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_location
 
 /**
- * 고물상 목록에서 개별 고물상 정보를 표시하는 아이템입니다.
+ * 고물상 목록에서 개별 고물상 정보를 표시하는 카드 아이템입니다.
  * @param store 고물상 데이터 모델입니다.
  * @param onClick 아이템 클릭 시 호출되는 콜백입니다.
  * @param modifier Modifier입니다.
  */
 @Composable
-fun StoreListItem(
+fun StoreCard(
     store: StoreModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -127,13 +127,13 @@ fun StoreListItem(
 }
 
 /**
- * StoreListItem 프리뷰입니다.
+ * StoreCard 프리뷰입니다.
  */
 @Preview(showBackground = true)
 @Composable
-private fun StoreListItemPreview() {
+private fun StoreCardPreview() {
     RebornTheme {
-        StoreListItem(
+        StoreCard(
             store = StoreModel(
                 id = 1L,
                 name = "서울철강",
