@@ -102,7 +102,12 @@ android {
         val localProperties = Properties().apply {
             rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
         }
-        manifestPlaceholders["KAKAO_MAP_API_KEY"] = localProperties.getProperty("KAKAO_MAP_API_KEY", "")
+        val kakaoMapApiKey = localProperties.getProperty("KAKAO_MAP_API_KEY", "")
+        manifestPlaceholders["KAKAO_MAP_API_KEY"] = kakaoMapApiKey
+        buildConfigField("String", "KAKAO_MAP_API_KEY", "\"$kakaoMapApiKey\"")
+    }
+    buildFeatures {
+        buildConfig = true
     }
     packaging {
         resources {
