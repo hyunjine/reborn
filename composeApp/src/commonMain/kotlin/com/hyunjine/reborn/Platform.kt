@@ -1,6 +1,7 @@
 package com.hyunjine.reborn
 
 import com.hyunjine.reborn.data.Location
+import kotlinx.coroutines.flow.Flow
 
 interface Platform {
     val name: String
@@ -8,6 +9,6 @@ interface Platform {
 
 expect fun getPlatform(): Platform
 
-fun interface LocationService {
-    suspend fun getCurrentLocation(): Location?
+interface LocationService {
+    fun getLocationFlow(): Flow<Location>
 }
