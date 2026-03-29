@@ -1,6 +1,7 @@
 package com.hyunjine.reborn.ui.main.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -89,27 +91,23 @@ object HomeScreen : NavigationItem {
         data object NotificationClicked : UiEvent
     }
 
+
+    /** 서울 시청 좌표 (권한 거부 시 기본값) */
+    private val DEFAULT_LOCATION = Location(37.5666, 126.9784)
+
     /**
      * 홈 화면의 Stateful Wrapper입니다.
      * @param viewModel Koin을 통해 주입되는 ViewModel입니다.
      * @param onItemClick 고물상 클릭 시 호출되는 콜백입니다.
      * @param modifier Modifier입니다.
      */
-    /** 서울 시청 좌표 (권한 거부 시 기본값) */
-    private val DEFAULT_LOCATION = Location(37.5666, 126.9784)
-
     @Composable
     operator fun invoke(
         modifier: Modifier = Modifier,
         viewModel: HomeViewModel = koinViewModel(),
         onItemClick: (Long) -> Unit = {},
     ) {
-        var permissionChecked by rememberSaveable { mutableStateOf(false) }
-
-        if (!permissionChecked) {
-            RequestLocationPermission(onResult = { permissionChecked = true })
-            return
-        }
+        RequestLocationPermission(onResult = { })
 
         val state by viewModel.state.collectAsStateWithLifecycle()
         val location by viewModel.location.collectAsStateWithLifecycle()
@@ -211,6 +209,7 @@ private fun ListContent(
                         )
                     }
                 }
+
                 is ApiResponse.Success -> {
                     LazyColumn(
                         contentPadding = PaddingValues(bottom = 28.dp),
@@ -230,7 +229,8 @@ private fun ListContent(
                         }
                     }
                 }
-                is ApiResponse.Error -> { }
+
+                is ApiResponse.Error -> {}
             }
         }
 
@@ -278,34 +278,35 @@ private fun MapContent(
                 .align(Alignment.TopCenter)
                 .statusBarsPadding()
         )
-
-        Box(
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 80.dp)
-                .size(36.dp)
-                .shadowWeak(shape = CircleShape)
-                .clip(CircleShape)
-                .background(color.white)
-                .animClickable(shape = CircleShape, onClick = { moveToMyLocation++ }),
-            contentAlignment = Alignment.Center
+                .padding(end = 16.dp, bottom = 40.dp),
+            verticalArrangement = Arrangement.spacedBy(space = 10.dp, alignment = Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.icon_24_target),
-                contentDescription = "내 위치",
-                modifier = Modifier.size(24.dp),
-                tint = color.gray900
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .shadowWeak(shape = CircleShape)
+                    .background(color = color.white, shape = CircleShape)
+                    .animClickable(shape = CircleShape, onClick = { moveToMyLocation++ })
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.icon_24_target),
+                    contentDescription = "내 위치",
+                    modifier = Modifier.fillMaxSize(),
+                    tint = color.gray900
+                )
+            }
+            FloatButton(
+                icon = Res.drawable.icon_24_list,
+                contentDescription = "리스트 보기",
+                onClick = onToggleMode,
             )
         }
-
-        FloatButton(
-            icon = Res.drawable.icon_24_list,
-            contentDescription = "리스트 보기",
-            onClick = onToggleMode,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp)
-        )
     }
 }
 
@@ -314,7 +315,7 @@ private fun MapContent(
  */
 @Preview(showBackground = true)
 @Composable
-private fun HomeScreenListPreview() {
+fun HomeScreenListPreview() {
     RebornTheme {
         HomeScreen(
             location = Location(37.5666, 126.9784),
