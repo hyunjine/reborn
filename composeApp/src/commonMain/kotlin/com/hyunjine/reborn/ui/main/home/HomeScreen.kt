@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -249,10 +250,13 @@ private fun MapContent(
     onToggleMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var moveToMyLocation by remember { mutableIntStateOf(0) }
+
     Box(modifier = modifier) {
         KakaoMapView(
             latitude = location?.latitude ?: 37.5665,
             longitude = location?.longitude ?: 126.978,
+            moveToMyLocation = moveToMyLocation,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -273,7 +277,7 @@ private fun MapContent(
                 .shadowWeak(shape = CircleShape)
                 .clip(CircleShape)
                 .background(color.white)
-                .animClickable(shape = CircleShape, onClick = { /* TODO: 내 위치로 이동 */ }),
+                .animClickable(shape = CircleShape, onClick = { moveToMyLocation++ }),
             contentAlignment = Alignment.Center
         ) {
             Icon(
