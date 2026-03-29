@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -137,7 +138,7 @@ object HomeScreen : NavigationItem {
                 onToggleMode = { isMapMode = false },
                 modifier = Modifier
                     .fillMaxSize()
-                    .then(if (isMapMode) Modifier else Modifier.alpha(0f))
+                    .then(if (!isMapMode) Modifier.alpha(0f).pointerInput(Unit) {} else Modifier)
             )
             ListContent(
                 state = state,
@@ -147,7 +148,7 @@ object HomeScreen : NavigationItem {
                 onToggleMode = { isMapMode = true },
                 modifier = Modifier
                     .fillMaxSize()
-                    .then(if (!isMapMode) Modifier else Modifier.alpha(0f))
+                    .then(if (isMapMode) Modifier.alpha(0f).pointerInput(Unit) {} else Modifier)
             )
         }
     }
