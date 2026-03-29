@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
-import com.hyunjine.reborn.common.util.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_arrow_right
@@ -73,7 +73,7 @@ fun HomeTopBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .weight(weight = 1F, fill = false)
-                .clickable(ripple = false, onClick = onLocationClick)
+                .animClickable(onClick = onLocationClick)
                 .padding(vertical = 15.dp),
         ) {
             Icon(
@@ -103,7 +103,7 @@ fun HomeTopBar(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable(onClick = onSearchClick),
+                    .animClickable(onClick = onSearchClick),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -116,7 +116,7 @@ fun HomeTopBar(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable(onClick = onNotificationClick),
+                    .animClickable(onClick = onNotificationClick),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

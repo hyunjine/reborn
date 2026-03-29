@@ -238,11 +238,11 @@ private fun SocialLoginButton(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
+            .animClickable(onClick = onClick)
             .background(
                 color = backgroundColor,
                 shape = RoundedCornerShape(14.dp)
-            )
-            .animClickable(onClick = onClick),
+            ),
         contentAlignment = Alignment.Center
     ) {
         Row(

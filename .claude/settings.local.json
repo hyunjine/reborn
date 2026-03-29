@@ -94,7 +94,13 @@
       "Bash(./gradlew :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)",
       "WebFetch(domain:postcode.map.kakao.com)",
       "Bash(./gradlew :lib:geocoding:compileKotlin :server:compileKotlin :composeApp:compileCommonMainKotlinMetadata)",
-      "Bash(./gradlew :composeApp:compileCommonMainKotlinMetadata)"
+      "Bash(./gradlew :composeApp:compileCommonMainKotlinMetadata)",
+      "Bash(./gradlew server:compileKotlin)",
+      "mcp__figma__use_figma",
+      "Bash(./gradlew clean:*)"
     ]
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
   }
 }
