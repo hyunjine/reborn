@@ -34,9 +34,11 @@ data class AppTypography(
     val headingBold18: TextStyle,
     val headingSemibold18: TextStyle,
     val headingMedium18: TextStyle,
+    val titleBold16: TextStyle,
     val titleSemibold16: TextStyle,
     val bodyRegular16: TextStyle,
     val bodyMedium16: TextStyle,
+    val bodyBold14: TextStyle,
     val bodyRegular14: TextStyle,
     val bodySemibold14: TextStyle,
     val bodyMedium14: TextStyle,
@@ -85,6 +87,12 @@ fun appTypography(fontFamily: FontFamily = PretendardFontFamily()): AppTypograph
         fontSize = 18.sp,
         lineHeight = 28.sp,
     ),
+    titleBold16 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+    ),
     titleSemibold16 = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.SemiBold,
@@ -102,6 +110,12 @@ fun appTypography(fontFamily: FontFamily = PretendardFontFamily()): AppTypograph
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 24.sp,
+    ),
+    bodyBold14 = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
     ),
     bodyRegular14 = TextStyle(
         fontFamily = fontFamily,
