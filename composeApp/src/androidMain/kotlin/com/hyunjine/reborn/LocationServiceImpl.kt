@@ -1,6 +1,7 @@
 package com.hyunjine.reborn
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Build
@@ -10,6 +11,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.hyunjine.reborn.data.Location
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
@@ -17,8 +19,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Single
-class LocationServiceImpl : LocationService {
-    private val context get() = RebornApplication.appContext
+class LocationServiceImpl(
+    private val context: Context
+) : LocationService {
     private val fusedLocationClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
     }
@@ -51,7 +54,7 @@ class LocationServiceImpl : LocationService {
 
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                suspendCoroutine { cont ->
+                suspendCancellableCoroutine { cont ->
                     geocoder.getFromLocation(latitude, longitude, 1) { addresses ->
                         cont.resume(addresses.firstOrNull()?.let { formatAddress(it) } ?: "")
                     }

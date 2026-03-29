@@ -40,7 +40,7 @@ import org.jetbrains.compose.resources.painterResource
 import reborn.composeapp.generated.resources.Res
 import reborn.composeapp.generated.resources.icon_24_kakao
 import reborn.composeapp.generated.resources.icon_24_naver
-import reborn.composeapp.generated.resources.icon_logo
+import reborn.composeapp.generated.resources.logo
 
 /**
  * 로그인 화면.
@@ -144,7 +144,7 @@ private fun LogoSection(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(Res.drawable.icon_logo),
+            painter = painterResource(Res.drawable.logo),
             contentDescription = "리본 로고",
             modifier = Modifier.size(108.dp)
         )

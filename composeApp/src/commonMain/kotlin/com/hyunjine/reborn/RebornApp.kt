@@ -40,7 +40,8 @@ fun RebornApp() {
             }
             .build()
     }
-    KoinApplication(configuration = koinConfiguration<RebornAppKoin>()) {
+    KoinApplication(
+        configuration = koinConfiguration<RebornAppKoin>()) {
         RebornTheme {
             val backStack = rememberNavBackStack(configuration = navConfig, LoginScreen)
 

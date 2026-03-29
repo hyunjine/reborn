@@ -57,7 +57,6 @@ fun HomeAppBar(
             .then(
                 if (style == HomeAppBarStyle.Float) {
                     Modifier
-                        .padding(horizontal = 8.dp)
                         .shadowStrong(shape = shape)
                 } else {
                     Modifier

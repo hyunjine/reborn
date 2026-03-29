@@ -26,16 +26,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.zIndex
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hyunjine.reborn.common.component.FloatButton
 import com.hyunjine.reborn.common.component.HomeAppBar
 import com.hyunjine.reborn.common.component.HomeAppBarStyle
 import com.hyunjine.reborn.common.component.KakaoMapView
 import com.hyunjine.reborn.common.component.NavigationItem
-import com.hyunjine.reborn.common.component.FloatButton
 import com.hyunjine.reborn.common.component.StoreCard
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
@@ -47,6 +47,7 @@ import com.hyunjine.reborn.data.store.model.Distance
 import com.hyunjine.reborn.data.store.model.MatterModel
 import com.hyunjine.reborn.data.store.model.StoreModel
 import com.hyunjine.reborn.util.ImmutableList
+import com.hyunjine.reborn.util.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -250,12 +251,12 @@ private fun MapContent(
     onToggleMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    log(location)
     var moveToMyLocation by remember { mutableIntStateOf(0) }
 
     Box(modifier = modifier) {
         KakaoMapView(
-            latitude = location?.latitude ?: 37.5665,
-            longitude = location?.longitude ?: 126.978,
+            location = location ?: Location(37.5665, 126.978),
             moveToMyLocation = moveToMyLocation,
             modifier = Modifier.fillMaxSize()
         )

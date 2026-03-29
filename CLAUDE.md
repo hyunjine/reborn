@@ -170,3 +170,23 @@ class ReservationDetailViewModel(
 ## 14. Common Component Convention
 - 여러 화면에서 재사용되는 Composable 컴포넌트는 `common/component` 패키지에 생성한다.
 - 플랫폼별 구현이 필요한 컴포넌트는 `expect/actual` 패턴을 사용한다.
+
+## 15. Navigation Convention
+- 화면 간 네비게이션은 **람다 콜백**(예: `onBack: () -> Unit`)을 사용한다. UiEvent sealed class 패턴으로 네비게이션을 처리하지 않는다.
+
+## 16. API Convention
+- 기존 API 래퍼 패턴(예: `ApiResponse`)을 임의로 제거하거나 변경하지 않는다. 변경이 필요한 경우 반드시 사전 확인을 받는다.
+- 불필요한 Controller를 임의로 생성하지 않는다.
+
+## 17. KMP Convention
+- 이 프로젝트는 Kotlin Multiplatform (KMP) 프로젝트로 Android와 iOS를 동시 타겟팅한다.
+- 공유 모듈(shared)에는 JVM-only 코드를 작성하지 않는다. 반드시 KMP 멀티플랫폼 호환성을 보장한다.
+
+## 18. Workflow Rules
+- 코드 변경 후 반드시 즉시 커밋한다. 사용자가 요청할 때까지 기다리지 않는다.
+- 리팩토링 시 **모든 관련 파일**(ViewModel, Preview, 호출부)을 반드시 함께 업데이트한다. 완료 전 grep으로 누락된 사용처가 없는지 확인한다.
+- 커밋 시 변경된 파일을 전부 포함한다.
+
+## 19. Figma Icon Convention
+- Figma 아이콘 변환 시 **fill vs stroke** 렌더링 차이를 확인한다. 원본과 시각적으로 일치하는지 검증 후 진행한다.
+- 아이콘 변환 품질이 불만족스러운 경우 먼저 사용자에게 확인한다.

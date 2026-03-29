@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.hyunjine.reborn.R
+import com.hyunjine.reborn.data.Location
+import com.hyunjine.reborn.util.log
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -30,8 +32,7 @@ import com.kakao.vectormap.label.LabelStyles
  */
 @Composable
 actual fun KakaoMapView(
-    latitude: Double,
-    longitude: Double,
+    location: Location,
     moveToMyLocation: Int,
     modifier: Modifier
 ) {
@@ -48,7 +49,7 @@ actual fun KakaoMapView(
             object : KakaoMapReadyCallback() {
                 override fun onMapReady(kakaoMap: KakaoMap) {
                     kakaoMapState.value = kakaoMap
-                    val position = LatLng.from(latitude, longitude)
+                    val position = LatLng.from(location.latitude, location.longitude)
                     kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(position))
 
                     val labelStyles = LabelStyles.from(LabelStyle.from(R.drawable.my_location))
@@ -66,7 +67,7 @@ actual fun KakaoMapView(
     LaunchedEffect(moveToMyLocation) {
         if (moveToMyLocation > 0) {
             kakaoMapState.value?.moveCamera(
-                CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude)),
+                CameraUpdateFactory.newCenterPosition(LatLng.from(location.latitude, location.longitude)),
                 CameraAnimation.from(300)
             )
         }
