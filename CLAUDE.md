@@ -162,3 +162,7 @@ class ReservationDetailViewModel(
 ## 12. ERD
 - 새로운 엔티티(테이블)가 추가되거나 기존 테이블의 컬럼이 변경되면 반드시 `server/erd/reborn.erd.json` ERD 파일도 함께 업데이트한다.
 - ERD 파일은 dineug/erd-editor 스키마 형식을 따른다.
+
+## 13. Click & Button Convention
+- `Modifier.clickable` 대신 반드시 `Modifier.animClickable`을 사용한다. (`com.hyunjine.reborn.common.util.animClickable`)
+- `Button` Composable은 사용하지 않는다. 대신 `Box` + `background` + `clip` + `animClickable` + `Text` 조합으로 버튼 UI를 구현한다.
