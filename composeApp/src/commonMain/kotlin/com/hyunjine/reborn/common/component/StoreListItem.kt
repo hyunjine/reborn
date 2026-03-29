@@ -1,7 +1,6 @@
 package com.hyunjine.reborn.common.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +24,7 @@ import coil3.compose.AsyncImage
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
+import com.hyunjine.reborn.common.util.animClickable
 import com.hyunjine.reborn.data.store.model.Distance
 import com.hyunjine.reborn.data.store.model.MatterModel
 import com.hyunjine.reborn.data.store.model.StoreModel
@@ -49,7 +49,7 @@ fun StoreListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .animClickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically

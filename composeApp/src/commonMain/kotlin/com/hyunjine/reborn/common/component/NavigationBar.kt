@@ -1,7 +1,7 @@
 package com.hyunjine.reborn.common.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -107,7 +107,7 @@ private fun NavigationTab(
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .clickable(onClick = onClick),
+            .animClickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

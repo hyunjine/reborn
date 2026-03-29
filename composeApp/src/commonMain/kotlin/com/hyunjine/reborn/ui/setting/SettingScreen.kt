@@ -1,6 +1,6 @@
 package com.hyunjine.reborn.ui.setting
 
-import androidx.compose.foundation.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -182,7 +182,7 @@ private fun SettingMenuItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .animClickable(onClick = onClick)
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

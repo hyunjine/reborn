@@ -4,7 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -76,6 +75,7 @@ import com.hyunjine.reborn.common.component.TimePickerBottomSheet
 import com.hyunjine.reborn.common.theme.RebornTheme
 import com.hyunjine.reborn.common.theme.color
 import com.hyunjine.reborn.common.theme.typography
+import com.hyunjine.reborn.common.util.animClickable
 import com.hyunjine.reborn.common.util.decodeToImageBitmap
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -410,7 +410,7 @@ private fun PhotoThumbnail(
                 .align(Alignment.TopEnd)
                 .padding(top = 4.dp, end = 4.dp)
                 .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-                .clickable { onRemove() },
+                .animClickable { onRemove() },
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -554,7 +554,7 @@ private fun BasicInfoSection(
                 .clip(RoundedCornerShape(8.dp))
                 .background(color.gray50)
                 .border(1.dp, color.gray200, RoundedCornerShape(8.dp))
-                .clickable { requestAddressSearchState(true) }
+                .animClickable { requestAddressSearchState(true) }
                 .padding(horizontal = 12.dp),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -690,7 +690,7 @@ private fun TimePickerField(
             .clip(RoundedCornerShape(10.dp))
             .background(backgroundColor)
             .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-            .clickable { showBottomSheet = true }
+            .animClickable { showBottomSheet = true }
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -1105,7 +1105,7 @@ private fun PriceItemCard(
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color.White)
                         .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-                        .clickable { showPicker = true }
+                        .animClickable { showPicker = true }
                         .padding(horizontal = 12.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {

@@ -2,7 +2,7 @@ package com.hyunjine.reborn.ui.my
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -321,7 +319,7 @@ private fun StoreCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(color.gray50)
-            .clickable(onClick = onClick)
+            .animClickable(onClick = onClick)
     ) {
         AsyncImage(
             model = storeInfo.imageUrl,
@@ -395,7 +393,7 @@ private fun MenuItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .animClickable(onClick = onClick)
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

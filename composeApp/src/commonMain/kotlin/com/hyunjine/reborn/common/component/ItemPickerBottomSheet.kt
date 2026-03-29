@@ -2,7 +2,7 @@ package com.hyunjine.reborn.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.hyunjine.reborn.common.util.animClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,7 +78,7 @@ fun ItemPickerBottomSheet(
                             .height(48.dp)
                             .background(color.gray50, RoundedCornerShape(10.dp))
                             .border(1.dp, color.gray200, RoundedCornerShape(10.dp))
-                            .clickable {
+                            .animClickable {
                                 onItemSelected(item)
                                 onDismiss()
                             },
